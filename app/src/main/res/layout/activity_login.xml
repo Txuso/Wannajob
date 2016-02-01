@@ -9,8 +9,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.txuso.wannajob.LoginActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.facebook.widget.LoginButton
+        android:id="@+id/login_with_facebook"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp" />
 </RelativeLayout>

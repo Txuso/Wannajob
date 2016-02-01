@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Wannajob</string>
+    <string name="facebook_app_id">1704723056477453</string>
+    <string name="title_activity_main">Wannajob</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_settings">Settings</string>
+    <string name="nav_messages_option">Messages</string>
+    <string name="nav_discovery_preferences_option">Discovery preferences</string>
+    <string name="nav_share_option">Share Wannajob</string>
+
 </resources>
