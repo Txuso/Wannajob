@@ -11,12 +11,26 @@
 
     <string name="job_description">Job description</string>
     <string name="job_name">Job name</string>
+    <string name="job_location">Job location</string>
     <string name="job_salary">Salary per hour</string>
+    <string name="job_location_button">Change Job Location</string>
+    <string name="job_distance">Job distance: </string>
+    <string name="use_my_location">Use my location</string>
     <string name="job_category">CHOOSE A CATEGORY</string>
     <string name="data_wrong_dialog">Some of the data is wrong. Check it again.</string>
     <string name="job_created_dialog">Your job has been created</string>
 
+    <string name="save_changes">Save Changes</string>
+    <string name="enter_location">Enter a location</string>
+
+    <string name="from_you"> from you.</string>
+    <string name="you_find_jobs_own_location">You will find encounters in your own location and around </string>
+    <string name="you_find_encounters"> You will find encounters in </string>
+    <string name="and_around"> and around </string>
+
+
+
     <string name="create_job">Create Job</string>
-
-
+    <string name="share_wannajob_message">\n Download this application and discover jobs around you!!\n\n</string>
+    <string name="choose_app_share_wannajob_message">Choose an application to share Wannajob</string>
 </resources>

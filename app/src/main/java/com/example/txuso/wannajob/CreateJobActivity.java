@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,6 +30,8 @@ public class CreateJobActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_job);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         extra = getIntent().getExtras();
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobs");
         AppCompatButton createJobB = (AppCompatButton) findViewById(R.id.createJobButton);
@@ -90,5 +93,20 @@ public class CreateJobActivity extends AppCompatActivity {
                 jobSalary.getEditText().getText().toString().trim().equals("") ||
                 jobCategoryB.getText().toString().equals(R.string.job_category));
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

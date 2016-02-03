@@ -18,8 +18,10 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    /**
+     * Extra data from the login containing the ID of the loged user
+     */
     Bundle extras;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,9 +29,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         extras = getIntent().getExtras();
-        Toast.makeText(getApplicationContext(), extras.getString("userID"), Toast.LENGTH_SHORT).show();
 
-
+        /**
+         * The floating button that allows the creation of jobs
+         */
         FloatingActionButton createJob = (FloatingActionButton) findViewById(R.id.createJobButton);
         createJob.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,27 +43,39 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
+        /**
+         * The drawer layout settings
+         */
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        /**
+         * We set the navigation drawer that will be displayed to the user
+         */
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /**
+         * We get the header so that the user can click on it and
+         * go to his/her profiles when it is clicked
+         */
         View headerview = navigationView.getHeaderView(0);
-
         LinearLayout header = (LinearLayout) headerview.findViewById(R.id.nav_profile);
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent userProf = new Intent(MainActivity.this, UserProfile.class);
+                startActivity(userProf);
             }
         });
     }
 
+    /**
+     * Action when the back button is pressed
+     */
     @Override
     public void onBackPressed() {
         super.onResume();
@@ -71,6 +86,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -93,18 +109,29 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /**
+     *
+     * @param item the navigation drawer
+     * @return boolean with the clicked option
+     * Here we open the following activities:
+     *  - Messages activity
+     *  - Discovery preferences activity
+     *  - Share Wannajob activity
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_messages) {
-            // Handle the camera action
+
         } else if (id == R.id.nav_options) {
-
+            Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferences.class);
+            discoPref.putExtra("userID", extras.getString("userID"));
+            startActivity(discoPref);
         } else if (id == R.id.nav_share) {
-
+            Intent shareW = new Intent(MainActivity.this, ShareWannajob.class);
+            startActivity(shareW);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

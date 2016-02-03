@@ -14,21 +14,35 @@ import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
 import com.firebase.client.Firebase;
+
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
 
 
 public class LoginActivity extends Activity {
 
+    /**
+     * Boolean attribute that is on when the app is resumed
+     */
     boolean isResumed = false;
 
+    /**
+     * Firebase object
+     */
     Firebase mFirebaseRef;
 
-    //UiLifecycleHelper helps to create automatically open, save and restore the Active Session
+    /**
+     * UiLifecycleHelper helps to create automatically open, save and restore the Active Session
+     */
     private UiLifecycleHelper uiHelper;
 
-
+    /**
+     * Callback controls the session
+     */
     private Session.StatusCallback callback = new Session.StatusCallback() {
         @Override
         public void call(Session session, SessionState state,
@@ -42,20 +56,33 @@ public class LoginActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        /**
+         * We set the the uihelper and the firebase context.
+         */
         uiHelper = new UiLifecycleHelper(this, callback);
         uiHelper.onCreate(savedInstanceState);
         Firebase.setAndroidContext(this);
 
-
-
+        /**
+         * We create the firebase object with the reference to the users
+         */
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
-        //The Facebook login button which a component within the GUI
+
+        /**
+         *The Facebook login button which a component within the GUI
+         */
         LoginButton mFacebookLoginButton  = (LoginButton) findViewById(R.id.login_with_facebook);
-        //Data that will be gathered from the user's Facebook account is set here
-        mFacebookLoginButton.setReadPermissions("public_profile", "user_birthday");
+
+        /**
+         * Data that will be gathered from the user's Facebook account is set here
+         */
+        mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "user_birthday"));
 
     }
-    /* Handle any changes to the Facebook session */
+    /**
+     *  Handle any changes to the Facebook session
+     <  */
     private void onFacebookSessionStateChange(final Session session, SessionState state, Exception exception) {
 
         if (isResumed) {
@@ -65,15 +92,21 @@ public class LoginActivity extends Activity {
                     public void onCompleted(GraphUser user, Response response) {
                         //we get data from the Facebook account
                         String fbName = user.getName();
-                        String fbAge = user.getBirthday();
+                        String fbAge = "22";
+
+
+                        //String fbAge = user.getBirthday().toString();
+                        //String fbAge = "22";
                         //we create the instance of the MainMenu
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         //we put the user's name as an extra data to the next activity
                         intent.putExtra("name", fbName);
 
                         //We set the default image and we encode it to base64
-                        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
-                        String im = ImageManager.encodeTobase64(bm);
+                        //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
+
+                        //String im = ImageManager.encodeTobase64(bm);
+                        String im = "3asdasd";
                         //We create the tandem user with the needed data
 
 
@@ -173,6 +206,5 @@ public class LoginActivity extends Activity {
         super.onSaveInstanceState(outState);
         uiHelper.onSaveInstanceState(outState);
     }
-
 
 }
