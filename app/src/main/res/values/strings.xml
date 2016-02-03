@@ -9,4 +9,14 @@
     <string name="nav_discovery_preferences_option">Discovery preferences</string>
     <string name="nav_share_option">Share Wannajob</string>
 
+    <string name="job_description">Job description</string>
+    <string name="job_name">Job name</string>
+    <string name="job_salary">Salary per hour</string>
+    <string name="job_category">CHOOSE A CATEGORY</string>
+    <string name="data_wrong_dialog">Some of the data is wrong. Check it again.</string>
+    <string name="job_created_dialog">Your job has been created</string>
+
+    <string name="create_job">Create Job</string>
+
+
 </resources>

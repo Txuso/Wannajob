@@ -46,6 +46,8 @@ public class LoginActivity extends Activity {
         uiHelper.onCreate(savedInstanceState);
         Firebase.setAndroidContext(this);
 
+
+
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         //The Facebook login button which a component within the GUI
         LoginButton mFacebookLoginButton  = (LoginButton) findViewById(R.id.login_with_facebook);
@@ -86,8 +88,7 @@ public class LoginActivity extends Activity {
                         //we get the created user's ID
                         String logedUserID = newTandRef.getKey();
                         //we put it as an extra data in the next activity
-                        intent.putExtra("id", logedUserID);
-
+                        intent.putExtra("userID", logedUserID);
 
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
