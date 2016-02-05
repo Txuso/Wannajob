@@ -50,7 +50,7 @@ public class DiscoveryPreferences extends AppCompatActivity {
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(gps.getLatitude());
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(gps.getLongitude());
 
-                    Toast.makeText(getApplicationContext(), R.string.you_find_jobs_own_location + progressValue + R.string.from_you, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.you_find_jobs_own_location) + progressValue + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     gps.showSettingsAlert();
@@ -116,14 +116,14 @@ public class DiscoveryPreferences extends AppCompatActivity {
                         tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(longitude);
                         tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
 
-                        Toast.makeText(getApplicationContext(), R.string.you_find_encounters + " " + location.getLocality() + R.string.and_around + progressValue + R.string.from_you, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + getString(R.string.and_around) + progressValue + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         finish();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
                 else
-                    Toast.makeText(getApplicationContext(), "Enter a location", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.enter_location), Toast.LENGTH_SHORT).show();
 
                 return true;}
             default:
