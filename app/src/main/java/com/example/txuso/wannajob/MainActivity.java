@@ -13,7 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,6 +67,8 @@ public class MainActivity extends AppCompatActivity
          */
         View headerview = navigationView.getHeaderView(0);
         LinearLayout header = (LinearLayout) headerview.findViewById(R.id.nav_profile);
+        TextView headerNane = (TextView) findViewById(R.id.user_text);
+        headerNane.setText(extras.getString("name"));
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

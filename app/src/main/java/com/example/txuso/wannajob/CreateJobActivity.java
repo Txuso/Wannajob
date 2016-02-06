@@ -12,6 +12,10 @@ import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import wannajob.classes.CharacterCountErrorWatcher;
 import wannajob.classes.Job;
 
@@ -73,7 +77,7 @@ public class CreateJobActivity extends AppCompatActivity {
                             jobDescription.getEditText().getText().toString(),
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
                             jobCategoryB.getText().toString(),
-                            extra.getString("userID"));
+                            extra.getString("userID"), new SimpleDateFormat("yyyy/MM/dd").format(new Date()));
 
                     mFirebaseRef.push().setValue(newJob);
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();

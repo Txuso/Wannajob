@@ -1,5 +1,7 @@
 package wannajob.classes;
 
+import java.util.Date;
+
 /**
  * Created by Txuso on 03/02/16.
  */
@@ -10,14 +12,23 @@ public class Job {
     private int salary;
     private String category;
     private String creatorID;
+    private String createdDate;
 
-    public Job (String name, String description, int salary, String category, String creatorID){
+    public Job (String name, String description, int salary, String category, String creatorID, String createdDate){
         this.name = name;
         this.description = description;
         this.salary = salary;
         this.category = category;
         this.creatorID = creatorID;
+        this.createdDate = createdDate;
+    }
 
+    public String getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(String createdDate) {
+        this.createdDate = createdDate;
     }
 
     public String getCreatorID() {

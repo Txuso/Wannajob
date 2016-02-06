@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -13,11 +15,15 @@ import com.facebook.SessionState;
 import com.facebook.UiLifecycleHelper;
 import com.facebook.model.GraphUser;
 import com.facebook.widget.LoginButton;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
@@ -25,6 +31,10 @@ import wannajob.classes.WannajobUser;
 
 public class LoginActivity extends Activity {
 
+    Intent intent;
+
+
+    boolean isLoged = false;
     /**
      * Boolean attribute that is on when the app is resumed
      */
@@ -79,6 +89,8 @@ public class LoginActivity extends Activity {
          */
         mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "user_birthday"));
 
+        intent = new Intent(LoginActivity.this, MainActivity.class);
+
     }
     /**
      *  Handle any changes to the Facebook session
@@ -87,45 +99,76 @@ public class LoginActivity extends Activity {
 
         if (isResumed) {
             if (session != null && session.isOpened())
+
                 Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
                     @Override
-                    public void onCompleted(GraphUser user, Response response) {
+                    public void onCompleted(final GraphUser user, Response response) {
+
+                    mFirebaseRef.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
+
+                            if (dataSnapshot.getKey().equals(user.getId()))
+                                isLoged = true;
+
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(FirebaseError firebaseError) {
+
+                        }
+                    });
+                        if (!isLoged){
+                            String fbName = user.getName();
+                            String fbAge = "22";
+
+                            //String fbAge = user.getBirthday().toString();
+                            //String fbAge = "22";
+                            //we create the instance of the MainMenu
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            //we put the user's name as an extra data to the next activity
+                            intent.putExtra("name", fbName);
+
+                            //We set the default image and we encode it to base64
+                            //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
+
+                            //String im = ImageManager.encodeTobase64(bm);
+                            String im = "3asdasd";
+                            //We create the tandem user with the needed data
+
+                            // we create a new instance cause it will be useful to get the ID of the new user
+                            WannajobUser newUser = new WannajobUser(fbName, fbAge, im);
+
+                            //We store the user in the Firebase root
+                            mFirebaseRef.child(user.getId()).setValue(newUser);
+
+                            //we put it as an extra data in the next activity
+                            intent.putExtra("userID", user.getId());
+
+                        }
                         //we get data from the Facebook account
-                        String fbName = user.getName();
-                        String fbAge = "22";
-
-
-                        //String fbAge = user.getBirthday().toString();
-                        //String fbAge = "22";
-                        //we create the instance of the MainMenu
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        //we put the user's name as an extra data to the next activity
-                        intent.putExtra("name", fbName);
-
-                        //We set the default image and we encode it to base64
-                        //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
-
-                        //String im = ImageManager.encodeTobase64(bm);
-                        String im = "3asdasd";
-                        //We create the tandem user with the needed data
-
-
-                        mFirebaseRef.removeValue();
-                        // we create a new instance cause it will be useful to get the ID of the new user
-
-                        WannajobUser newUser = new WannajobUser(fbName, fbAge, im);
-
-                        Firebase newTandRef = mFirebaseRef.push();
-                        //We store the user in the Firebase root
-                        newTandRef.setValue(newUser);
-                        //we get the created user's ID
-                        String logedUserID = newTandRef.getKey();
-                        //we put it as an extra data in the next activity
-                        intent.putExtra("userID", logedUserID);
-
+                        intent.putExtra("userID", user.getId());
+                        intent.putExtra("name", user.getName());
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
+
                     }
                 });
         }

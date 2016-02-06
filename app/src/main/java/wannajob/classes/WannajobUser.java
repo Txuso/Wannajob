@@ -2,7 +2,9 @@ package wannajob.classes;
 
 import android.media.Image;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Txuso on 01/02/16.
@@ -15,6 +17,8 @@ public class WannajobUser {
     private String longitude;
     private String latitude;
     private int distance;
+    private String registeredDate;
+    private int publishedJobs;
 
     public WannajobUser(String name, String age, String image) {
         this.name = name;
@@ -23,8 +27,21 @@ public class WannajobUser {
         this.latitude = "0";
         this.longitude = "0";
         this.distance = 50;
+        this.registeredDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+        this.publishedJobs = 0;
     }
 
+    public int getPublishedJobs() {
+        return publishedJobs;
+    }
+
+    public void setPublishedJobs(int publishedJobs) {
+        this.publishedJobs = publishedJobs;
+    }
+
+    public String getRegisteredDate() {
+        return registeredDate;
+    }
 
     public void setAge(String age) {
         this.age = age;
