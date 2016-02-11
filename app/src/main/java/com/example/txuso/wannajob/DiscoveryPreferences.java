@@ -1,8 +1,10 @@
 package com.example.txuso.wannajob;
 
+import android.content.DialogInterface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
@@ -50,7 +52,7 @@ public class DiscoveryPreferences extends AppCompatActivity {
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(gps.getLatitude());
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(gps.getLongitude());
 
-                    Toast.makeText(getApplicationContext(), getString(R.string.you_find_jobs_own_location) + progressValue + getString(R.string.from_you), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.you_find_jobs_own_location) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                     finish();
                 } else {
                     gps.showSettingsAlert();
@@ -99,7 +101,44 @@ public class DiscoveryPreferences extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                onBackPressed();
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(DiscoveryPreferences.this);
+                builder2.setMessage("Do you want to save the changes?");
+                builder2.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        String place = search.getEditText().getText().toString();
+                        if (!place.trim().equals("")) {
+                            try {
+                                List<Address> loc = gc.getFromLocationName(place, 1);
+                                Address location = loc.get(0);
+                                longitude = location.getLongitude();
+                                latitude = location.getLatitude();
+
+                                tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(latitude);
+                                tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(longitude);
+                                tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
+
+                                Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
+                                finish();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else
+                            Toast.makeText(getApplicationContext(), getString(R.string.enter_location), Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder2.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onBackPressed();
+                    }
+
+                });
+
+                builder2.show();
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
@@ -116,7 +155,7 @@ public class DiscoveryPreferences extends AppCompatActivity {
                         tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(longitude);
                         tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
 
-                        Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + getString(R.string.and_around) + progressValue + getString(R.string.from_you), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         finish();
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -8,19 +8,70 @@ import java.util.Date;
 public class Job {
 
     private String name;
+
     private String description;
     private int salary;
     private String category;
     private String creatorID;
     private String createdDate;
+    private String jobDuration;
+    private String jobImage;
+    private String latitude;
+    private String longitude;
 
-    public Job (String name, String description, int salary, String category, String creatorID, String createdDate){
+    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, String latitude, String longitude){
         this.name = name;
         this.description = description;
         this.salary = salary;
         this.category = category;
         this.creatorID = creatorID;
         this.createdDate = createdDate;
+        this.jobImage = jobImage;
+        this.jobDuration = jobDuration;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Job (String name, int salary, String jobImage){
+        this.name = name;
+        this.description = description;
+        this.salary = salary;
+        this.category = category;
+        this.creatorID = creatorID;
+        this.createdDate = createdDate;
+        this.jobImage = jobImage;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getJobDuration() {
+        return jobDuration;
+    }
+
+    public void setJobDuration(String jobDuration) {
+        this.jobDuration = jobDuration;
+    }
+
+    public String getJobImage() {
+        return jobImage;
+    }
+
+    public void setJobImage(String jobImage) {
+        this.jobImage = jobImage;
     }
 
     public String getCreatedDate() {

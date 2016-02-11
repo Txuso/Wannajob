@@ -66,6 +66,21 @@
                     android:hint="@string/job_salary" />
             </android.support.design.widget.TextInputLayout>
 
+            <!-- Duration Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/input_job_duration">
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="@string/job_duration" />
+            </android.support.design.widget.TextInputLayout>
+
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/btn_categories"
                 android:layout_width="fill_parent"

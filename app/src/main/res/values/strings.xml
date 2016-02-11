@@ -12,7 +12,8 @@
     <string name="job_description">Job description</string>
     <string name="job_name">Job name</string>
     <string name="job_location">Job location</string>
-    <string name="job_salary">Salary per hour</string>
+    <string name="job_salary">Salary</string>
+    <string name="job_duration">Duration</string>
     <string name="job_location_button">Change Job Location</string>
     <string name="job_distance">Job distance: </string>
     <string name="use_my_location">Use my location</string>

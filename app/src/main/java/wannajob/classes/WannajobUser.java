@@ -18,7 +18,6 @@ public class WannajobUser {
     private String latitude;
     private int distance;
     private String registeredDate;
-    private int publishedJobs;
 
     public WannajobUser(String name, String age, String image) {
         this.name = name;
@@ -28,16 +27,8 @@ public class WannajobUser {
         this.longitude = "0";
         this.distance = 50;
         this.registeredDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-        this.publishedJobs = 0;
     }
 
-    public int getPublishedJobs() {
-        return publishedJobs;
-    }
-
-    public void setPublishedJobs(int publishedJobs) {
-        this.publishedJobs = publishedJobs;
-    }
 
     public String getRegisteredDate() {
         return registeredDate;

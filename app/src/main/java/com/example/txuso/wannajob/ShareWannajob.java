@@ -1,5 +1,6 @@
 package com.example.txuso.wannajob;
 
+import android.app.DownloadManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,10 +17,12 @@ public class ShareWannajob extends AppCompatActivity {
         try{
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name));
             String sAux = getString(R.string.share_wannajob_message);
             sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             startActivity(Intent.createChooser(i, "Choose an application to share Wannajob"));
+            finish();
         }
         catch (Exception e){
 

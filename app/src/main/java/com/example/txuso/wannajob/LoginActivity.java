@@ -143,7 +143,6 @@ public class LoginActivity extends Activity {
                             //we create the instance of the MainMenu
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             //we put the user's name as an extra data to the next activity
-                            intent.putExtra("name", fbName);
 
                             //We set the default image and we encode it to base64
                             //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
@@ -163,6 +162,7 @@ public class LoginActivity extends Activity {
 
                         }
                         //we get data from the Facebook account
+
                         intent.putExtra("userID", user.getId());
                         intent.putExtra("name", user.getName());
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
