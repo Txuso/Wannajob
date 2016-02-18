@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.txuso.wannajob.JobListItem;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.ShowJob;
 
@@ -23,10 +24,10 @@ import java.util.List;
 public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHolder> {
 
 
-    List<Job> jobs;
+    List<JobListItem> jobs;
     OnItemClickListener mItemClickListener;
 
-    public RVUserAdapter(List<Job> jobs){
+    public RVUserAdapter(List<JobListItem> jobs){
 
         this.jobs = jobs;
     }
@@ -45,7 +46,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
         holder.jobName.setText(jobs.get(position).getName());
         holder.jobSalary.setText(jobs.get(position).getSalary() + " €");
         //holder.jobPhoto.setImageResource(jobs.get(position).photoId);
-        holder.jobPhoto.setImageResource(R.drawable.profileimage);
+        holder.jobPhoto.setBackground(jobs.get(position).getImageId());
 
     }
 
@@ -54,7 +55,17 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
         return jobs.size();
     }
 
+    public void clearContent() {
+        this.jobs.clear();
+        int size = getItemCount();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+                this.jobs.remove(0);
+            }
 
+            this.notifyItemRangeRemoved(0, size);
+        }
+    }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
@@ -81,10 +92,6 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
             if (mItemClickListener != null) {
                 mItemClickListener.onItemClick(v, getPosition());
             }
-            Intent newInt = new Intent(v.getContext(), ShowJob.class);
-            v.getContext().startActivity(newInt);
-            Toast.makeText(v.getContext(), jobName.getText().toString(), Toast.LENGTH_SHORT).show();
-
 
         }
     }

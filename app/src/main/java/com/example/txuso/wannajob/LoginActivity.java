@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -25,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import wannajob.classes.GPSTracker;
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
 
@@ -32,6 +31,10 @@ import wannajob.classes.WannajobUser;
 public class LoginActivity extends Activity {
 
     Intent intent;
+
+    GPSTracker gps;
+    double latitude;
+    double longitude;
 
 
     boolean isLoged = false;
@@ -162,6 +165,18 @@ public class LoginActivity extends Activity {
 
                         }
                         //we get data from the Facebook account
+                        gps = new GPSTracker(LoginActivity.this);
+                        if (gps.canGetLocation()){
+
+                            //latitude = gps.getLatitude();
+                            latitude = 40.4167754;
+                            longitude = -3.7037902;
+                            mFirebaseRef.child(user.getId()).child("latitude").setValue(latitude);
+                            //longitude = gps.getLongitude();
+                            mFirebaseRef.child(user.getId()).child("longitude").setValue(longitude);
+                        }
+                        else
+                            gps.showSettingsAlert();
 
                         intent.putExtra("userID", user.getId());
                         intent.putExtra("name", user.getName());

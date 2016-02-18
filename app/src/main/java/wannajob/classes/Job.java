@@ -8,7 +8,6 @@ import java.util.Date;
 public class Job {
 
     private String name;
-
     private String description;
     private int salary;
     private String category;
@@ -40,6 +39,10 @@ public class Job {
         this.creatorID = creatorID;
         this.createdDate = createdDate;
         this.jobImage = jobImage;
+    }
+
+    public Job () {
+
     }
 
     public String getLatitude() {

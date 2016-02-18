@@ -2,7 +2,10 @@ package com.example.txuso.wannajob;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
+import android.media.Image;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import wannajob.classes.CharacterCountErrorWatcher;
+import wannajob.classes.ImageManager;
 import wannajob.classes.Job;
 
 public class CreateJobActivity extends AppCompatActivity {
@@ -52,38 +56,6 @@ public class CreateJobActivity extends AppCompatActivity {
         extra = getIntent().getExtras();
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
-        mFirebaseRef.child("wannajobUsers").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-                    latitude = user.get("latitude").toString();
-                    longitude = user.get("longitude").toString();
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-                    latitude = user.get("latitude").toString();
-                    longitude = user.get("longitude").toString();
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
         AppCompatButton createJobB = (AppCompatButton) findViewById(R.id.createJobButton);
 
         jobName = (TextInputLayout) findViewById(R.id.input_job_name);
@@ -120,11 +92,15 @@ public class CreateJobActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!checkConditions()) {
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.job);
+                    String im = ImageManager.encodeTobase64(bm);
+
+
                     Job newJob = new Job(jobName.getEditText().getText().toString(),
                             jobDescription.getEditText().getText().toString(),
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
                             jobCategoryB.getText().toString(),
-                            extra.getString("userID"), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), "Esto y lo otro",
+                            extra.getString("userID"), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), im,
                             jobDuration.getEditText().getText().toString(),latitude, longitude);
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
 

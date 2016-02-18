@@ -1,6 +1,7 @@
 package com.example.txuso.wannajob;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.support.design.widget.TextInputLayout;
@@ -121,6 +122,9 @@ public class DiscoveryPreferences extends AppCompatActivity {
                                 tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
+                                Intent intent = getIntent();
+                                intent.putExtra("distance", progressValue + "");
+                                setResult(RESULT_OK, intent);
                                 finish();
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -156,6 +160,9 @@ public class DiscoveryPreferences extends AppCompatActivity {
                         tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
 
                         Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
+                        Intent intent = getIntent();
+                        intent.putExtra("distance", progressValue + "");
+                        setResult(RESULT_OK, intent);
                         finish();
                     } catch (IOException e) {
                         e.printStackTrace();

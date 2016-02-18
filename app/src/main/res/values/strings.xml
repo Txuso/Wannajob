@@ -20,6 +20,11 @@
     <string name="job_category">CHOOSE A CATEGORY</string>
     <string name="data_wrong_dialog">Some of the data is wrong. Check it again.</string>
     <string name="job_created_dialog">Your job has been created</string>
+    <string name="send_message_button">CONTACT ME</string>
+    <string name="output_category">Category</string>
+
+    <string name="request_job_text_button">IT\'S MINE</string>
+
 
     <string name="save_changes">Save Changes</string>
     <string name="enter_location">Enter a location</string>

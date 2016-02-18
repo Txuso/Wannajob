@@ -1,10 +1,15 @@
 package com.example.txuso.wannajob;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -30,18 +35,27 @@ import java.util.List;
 import java.util.Map;
 
 import wannajob.classes.GPSTracker;
+import wannajob.classes.ImageManager;
 import wannajob.classes.Job;
 import wannajob.classes.RVUserAdapter;
+import wannajob.classes.RoundedImageView;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
     Firebase mFirebaseRef;
-    private List<Job> jobs;
+    private List<JobListItem> jobs;
     private RecyclerView rv;
+    RVUserAdapter adapter;
 
-    GPSTracker gps;
     double latitude;
     double longitude;
+
+    ProgressDialog progress;
+    JobListItem item;
+    private SwipeRefreshLayout swipeRefreshLayout;
+
+
+
 
 
     /**
@@ -57,25 +71,23 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         extras = getIntent().getExtras();
         Firebase.setAndroidContext(this);
-        latitude = 0;
-        longitude = 0;
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
+        latitude = 40.4167754;
+        longitude = -3.7037902;
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
-        gps = new GPSTracker(MainActivity.this);
-        if (gps.canGetLocation()){
+        swipeRefreshLayout.setOnRefreshListener(this);
 
-                //latitude = gps.getLatitude();
-            latitude = 40.4167754;
-            longitude = -3.7037902;
-                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
-                //longitude = gps.getLongitude();
-                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipeRefreshLayout.setRefreshing(true);
 
-
-        }
-        else
-            gps.showSettingsAlert();
+                                        fetchJobs();
+                                    }
+                                }
+        );
 
         /**
          * The floating button that allows the creation of jobs
@@ -86,6 +98,9 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
                 newJobIntent.putExtra("userID", extras.getString("userID"));
+                newJobIntent.putExtra("latitude", latitude);
+                newJobIntent.putExtra("longitude", longitude);
+
                 startActivity(newJobIntent);
             }
         });
@@ -125,45 +140,73 @@ public class MainActivity extends AppCompatActivity
         });
 
         rv = (RecyclerView)findViewById(R.id.rv);
-
         LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
         //initializeData();
 
-/*
+
+
+
+     //   progress = ProgressDialog.show(MainActivity.this, "Wait please",
+       //         "Retrieving jobs around you", true);
+
+        //initializeData();
+
+    }
+
+    private void fetchJobs() {
+        swipeRefreshLayout.setRefreshing(true);
+
+        jobs = new ArrayList<>();
+        adapter = new RVUserAdapter(jobs);
+        adapter.clearContent();
+        rv.setAdapter(adapter);
+
+
+
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+
 
                 double latitude2 = Double.parseDouble(job.get("latitude").toString());
                 double longitude2 = Double.parseDouble(job.get("longitude").toString());
                 double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
 
-
                 if (distance <= 50) {
-                    Toast.makeText(getApplicationContext(), job.get("name").toString() + " " + Integer.parseInt(job.get("salary").toString()) + " " + job.get("jobImage").toString(), Toast.LENGTH_SHORT).show();
-                  //  jobs.add(new Job(job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), job.get("jobImage").toString()));
+
+                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()), 100, 100);
+                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
+                    BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
+
+                    item = new JobListItem(dataSnapshot.getKey(), job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), ima);
+                    adapter = new RVUserAdapter(jobs);
+
+                    jobs.add(item);
+                    rv.setAdapter(adapter);
+
+                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            startActivity(showJob);
+                        }
+                    });
 
                 }
+                swipeRefreshLayout.setRefreshing(false);
+                //     progress.dismiss();
+
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
 
-                double latitude2 = Double.parseDouble(job.get("latitude").toString());
-                double longitude2 = Double.parseDouble(job.get("longitude").toString());
-                double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
-
-                if (distance < 50) {
-
-                  //  jobs.add(new Job(job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), job.get("jobImage").toString()));
-
-                }
 
             }
 
@@ -181,20 +224,9 @@ public class MainActivity extends AppCompatActivity
             public void onCancelled(FirebaseError firebaseError) {
 
             }
-        });
-        */
 
-        initializeData();
-        RVUserAdapter adapter = new RVUserAdapter(jobs);
-        adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent showJob = new Intent(MainActivity.this, ShowJob.class);
-                startActivity(showJob);
-            }
-        });
-        rv.setAdapter(adapter);
 
+        });
 
     }
 
@@ -211,7 +243,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
 
     @Override
@@ -267,29 +298,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void initializeData(){
-        jobs = new ArrayList<>();
-        jobs.add(new Job("Ayudar en Mudanza", 12, ""));
-        jobs.add(new Job("Repartir Muestras", 30, ""));
-        /*
-        jobs.add(new Job("Esto y lo Otro", 24 , ""));
-        jobs.add(new Job("Ayudar en Mudanza", 12, ""));
-        jobs.add(new Job("Hacerme cositis", 30, ""));
-        jobs.add(new Job("Pasear Perros", 24 , "")); jobs.add(new Job("Cocinarme la comida", 12, ""));
-        jobs.add(new Job("Pasear Perros", 30, ""));
-        jobs.add(new Job("Ayudar en Mudanza", 24 , "")); jobs.add(new Job("Putun Putun", 12, ""));
-        jobs.add(new Job("Putun Putun", 30, ""));
-        jobs.add(new Job("Ayudar en Mudanza", 24, ""));
-*/
-
-
-    }
-
-    private void initializeAdapter(){
-        RVUserAdapter adapter = new RVUserAdapter(jobs);
-        rv.setAdapter(adapter);
-    }
-
     //This method calculates the exact distance between two points and it returns the number depending on the unit
     private double distance(double lat1, double lon1, double lat2, double lon2, char unit) {
         double theta = lon1 - lon2;
@@ -317,5 +325,10 @@ public class MainActivity extends AppCompatActivity
     /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
     private double rad2deg(double rad) {
         return (rad * 180.0 / Math.PI);
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
     }
 }
