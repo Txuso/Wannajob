@@ -15,10 +15,10 @@ public class Job {
     private String createdDate;
     private String jobDuration;
     private String jobImage;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
 
-    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, String latitude, String longitude){
+    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude){
         this.name = name;
         this.description = description;
         this.salary = salary;
@@ -45,19 +45,19 @@ public class Job {
 
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 

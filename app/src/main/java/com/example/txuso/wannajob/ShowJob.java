@@ -82,10 +82,10 @@ public class ShowJob extends AppCompatActivity {
                 if (jobID.equals(dataSnapshot.getKey())) {
                     jobShow = dataSnapshot.getValue(Job.class);
                     collapsingToolbarLayout.setTitle(jobShow.getName());
-                  //  Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
-                   // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                    Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+                    BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
 
-                    //image.setBackground(ob);
+                    image.setImageDrawable(ob);
 
                     jobName.getEditText().setText(jobShow.getName());
                     jobDescription.getEditText().setText(jobShow.getDescription());

@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import com.facebook.Request;
 import com.facebook.Response;
@@ -18,6 +20,9 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -151,7 +156,27 @@ public class LoginActivity extends Activity {
                             //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
 
                             //String im = ImageManager.encodeTobase64(bm);
-                            String im = "3asdasd";
+                            String im = "";
+                            try {
+                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                        .permitAll().build();
+                                StrictMode.setThreadPolicy(policy);
+                                URL imgUrl = new URL("https://graph.facebook.com/"
+                                        + user.getId() + "/picture?type=large");
+                                Bitmap mIcon1 = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
+                                im = ImageManager.encodeTobase64(mIcon1);
+
+
+                            }
+                            catch (MalformedURLException e){
+                                im = "lksnflksdnflsd";
+                            }
+
+                            catch (IOException e2) {
+
+                                im = "odfnsdfisdjf";
+
+                            }
                             //We create the tandem user with the needed data
 
                             // we create a new instance cause it will be useful to get the ID of the new user
@@ -168,11 +193,9 @@ public class LoginActivity extends Activity {
                         gps = new GPSTracker(LoginActivity.this);
                         if (gps.canGetLocation()){
 
-                            //latitude = gps.getLatitude();
-                            latitude = 40.4167754;
-                            longitude = -3.7037902;
+                            latitude = gps.getLatitude();
                             mFirebaseRef.child(user.getId()).child("latitude").setValue(latitude);
-                            //longitude = gps.getLongitude();
+                            longitude = gps.getLongitude();
                             mFirebaseRef.child(user.getId()).child("longitude").setValue(longitude);
                         }
                         else
@@ -180,6 +203,8 @@ public class LoginActivity extends Activity {
 
                         intent.putExtra("userID", user.getId());
                         intent.putExtra("name", user.getName());
+                        intent.putExtra("latitude", latitude);
+                        intent.putExtra("longitude", longitude);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();

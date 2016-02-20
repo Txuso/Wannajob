@@ -1,15 +1,12 @@
 package com.example.txuso.wannajob;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -24,7 +21,6 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,7 +29,6 @@ import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import wannajob.classes.GPSTracker;
 import wannajob.classes.ImageManager;
 import wannajob.classes.Job;
@@ -46,17 +41,13 @@ public class MainActivity extends AppCompatActivity
     private List<JobListItem> jobs;
     private RecyclerView rv;
     RVUserAdapter adapter;
+    JobListItem item;
+    GPSTracker gps;
 
     double latitude;
     double longitude;
 
-    ProgressDialog progress;
-    JobListItem item;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-
-
-
 
     /**
      * Extra data from the login containing the ID of the loged user
@@ -73,8 +64,6 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
-        latitude = 40.4167754;
-        longitude = -3.7037902;
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -82,13 +71,14 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        swipeRefreshLayout.setRefreshing(true);
-
                                         fetchJobs();
+
                                     }
                                 }
         );
 
+        latitude = (double)extras.get("latitude");
+        longitude = (double)extras.get("longitude");
         /**
          * The floating button that allows the creation of jobs
          */
@@ -98,8 +88,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
                 newJobIntent.putExtra("userID", extras.getString("userID"));
-                newJobIntent.putExtra("latitude", latitude);
-                newJobIntent.putExtra("longitude", longitude);
+                newJobIntent.putExtra("latitude", (double) extras.get("latitude"));
+                newJobIntent.putExtra("longitude",(double) extras.get("longitude"));
 
                 startActivity(newJobIntent);
             }
@@ -144,16 +134,6 @@ public class MainActivity extends AppCompatActivity
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
 
-        //initializeData();
-
-
-
-
-     //   progress = ProgressDialog.show(MainActivity.this, "Wait please",
-       //         "Retrieving jobs around you", true);
-
-        //initializeData();
-
     }
 
     private void fetchJobs() {
@@ -165,24 +145,24 @@ public class MainActivity extends AppCompatActivity
         rv.setAdapter(adapter);
 
 
-
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                Job job = dataSnapshot.getValue(Job.class);
 
 
-                double latitude2 = Double.parseDouble(job.get("latitude").toString());
-                double longitude2 = Double.parseDouble(job.get("longitude").toString());
+                double latitude2 = job.getLatitude();
+                double longitude2 = job.getLongitude();
                 double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
+
 
                 if (distance <= 50) {
 
-                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()), 100, 100);
+                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
                     BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), ima);
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
                     adapter = new RVUserAdapter(jobs);
 
                     jobs.add(item);
@@ -198,15 +178,48 @@ public class MainActivity extends AppCompatActivity
                     });
 
                 }
+
                 swipeRefreshLayout.setRefreshing(false);
-                //     progress.dismiss();
 
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Job job = dataSnapshot.getValue(Job.class);
 
+
+                double latitude2 = job.getLatitude();
+                double longitude2 = job.getLongitude();
+                double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
+
+
+                if (distance <= 50) {
+
+                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
+                    BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
+
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
+                    adapter = new RVUserAdapter(jobs);
+
+                    jobs.add(item);
+                    rv.setAdapter(adapter);
+
+                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            startActivity(showJob);
+                        }
+                    });
+
+                }
+
+
+
+                swipeRefreshLayout.setRefreshing(false);
 
             }
 
@@ -227,6 +240,7 @@ public class MainActivity extends AppCompatActivity
 
 
         });
+
 
     }
 
@@ -284,9 +298,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_messages) {
 
         } else if (id == R.id.nav_options) {
-            Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferences.class);
-            discoPref.putExtra("userID", extras.getString("userID"));
-            startActivity(discoPref);
+            callDiscoveryPreferences();
         } else if (id == R.id.nav_share) {
             Intent shareW = new Intent(MainActivity.this, ShareWannajob.class);
             startActivity(shareW);
@@ -329,6 +341,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(true);
+        gps = new GPSTracker(MainActivity.this);
+        if (gps.canGetLocation()){
+            latitude = gps.getLatitude();
+            longitude = gps.getLongitude();
+            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
+            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+        }
+        else
+            gps.showSettingsAlert();
+
+        swipeRefreshLayout.setRefreshing(false);
+
+    }
+
+    public void callDiscoveryPreferences () {
+        Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferences.class);
+        discoPref.putExtra("userID", extras.getString("userID"));
+        startActivity(discoPref);
     }
 }

@@ -41,8 +41,8 @@ public class CreateJobActivity extends AppCompatActivity {
     TextInputLayout jobSalary;
     TextInputLayout jobDuration;
     AppCompatButton jobCategoryB;
-    String latitude;
-    String longitude;
+    double latitude;
+    double longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +50,11 @@ public class CreateJobActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_job);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        this.latitude = "0";
-        this.longitude = "0";
+
 
         extra = getIntent().getExtras();
+        this.latitude = (double)extra.get("latitude");
+        this.longitude = (double)extra.get("longitude");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
         AppCompatButton createJobB = (AppCompatButton) findViewById(R.id.createJobButton);

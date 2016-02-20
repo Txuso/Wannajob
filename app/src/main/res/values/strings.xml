@@ -21,8 +21,9 @@
     <string name="data_wrong_dialog">Some of the data is wrong. Check it again.</string>
     <string name="job_created_dialog">Your job has been created</string>
     <string name="send_message_button">CONTACT ME</string>
-    <string name="output_category">Category</string>
 
+    <string name="output_category">Category</string>
+    <string name="modify_discovery_pref_message">There are not jobs around you. Change your discovery preferences and try again.</string>
     <string name="request_job_text_button">IT\'S MINE</string>
 
 
