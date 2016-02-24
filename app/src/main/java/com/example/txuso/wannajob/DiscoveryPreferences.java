@@ -52,7 +52,10 @@ public class DiscoveryPreferences extends AppCompatActivity {
 
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(gps.getLatitude());
                     tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(gps.getLongitude());
-
+                    Intent intent = getIntent();
+                    intent.putExtra("latitude", gps.getLatitude());
+                    intent.putExtra("longitude", gps.getLongitude());
+                    setResult(RESULT_OK, intent);
                     Toast.makeText(getApplicationContext(), getString(R.string.you_find_jobs_own_location) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                     finish();
                 } else {
@@ -123,7 +126,8 @@ public class DiscoveryPreferences extends AppCompatActivity {
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                                 Intent intent = getIntent();
-                                intent.putExtra("distance", progressValue + "");
+                                intent.putExtra("latitude", latitude);
+                                intent.putExtra("longitude", longitude);
                                 setResult(RESULT_OK, intent);
                                 finish();
                             } catch (IOException e) {
@@ -161,8 +165,10 @@ public class DiscoveryPreferences extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         Intent intent = getIntent();
-                        intent.putExtra("distance", progressValue + "");
+                        intent.putExtra("latitude", latitude);
+                        intent.putExtra("longitude", longitude);
                         setResult(RESULT_OK, intent);
+
                         finish();
                     } catch (IOException e) {
                         e.printStackTrace();

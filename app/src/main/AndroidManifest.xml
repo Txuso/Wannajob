@@ -37,9 +37,10 @@
         <activity android:name=".CreateJobActivity" />
         <activity android:name=".ShareWannajob" />
         <activity android:name=".DiscoveryPreferences" />
-        <activity android:name=".ShowJob" android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+        <activity
+            android:name=".ShowJob"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ChatActivity"></activity>
     </application>
 
 </manifest>

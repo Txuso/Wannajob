@@ -2,6 +2,7 @@ package com.example.txuso.wannajob;
 
 import android.app.ActionBar;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -24,8 +25,11 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 
+import wannajob.chat.WannajobEncounter;
 import wannajob.classes.ImageManager;
 import wannajob.classes.Job;
 
@@ -37,6 +41,7 @@ public class ShowJob extends AppCompatActivity {
     TextInputLayout jobSalary;
     TextInputLayout jobDuration;
     TextInputLayout jobCategory;
+
 
     android.support.v7.widget.Toolbar toolbar;
     Bundle extras;
@@ -55,6 +60,12 @@ public class ShowJob extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         jobID = extras.getString("jobID");
+        final String fromId = extras.getString("fromID");
+        final String toId = extras.getString("toID");
+        final String to = extras.getString("to");
+
+        final Intent chat = new Intent(this, ChatActivity.class);
+
 
 
         Button messageB = (Button) findViewById(R.id.send_message_button);
@@ -70,6 +81,35 @@ public class ShowJob extends AppCompatActivity {
         jobDuration = (TextInputLayout) findViewById(R.id.output_job_duration);
         jobCategory = (TextInputLayout) findViewById(R.id.output_job_category);
         //collapsingToolbarLayout.setTitle(extras.getString("jobName"));
+        final Firebase mFirebaseRef2 = new Firebase("https://wannajob.firebaseio.com/wannajobEncounter");
+
+
+        messageB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //we put some extra data on the next activity
+                chat.putExtra("from", to);
+                chat.putExtra("to", to);
+                chat.putExtra("fromID", fromId);
+                chat.putExtra("toID", toId);
+                //we get the current time
+                String timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
+                //we create the TandemEncounter instance
+                WannajobEncounter enc = new WannajobEncounter(fromId, toId, to, timeStamp, false);
+                //we create a new instance of TandemEncounter to get later the ID
+                Firebase newTandRef = mFirebaseRef2.push();
+                //we store the new TandemEncounter on the Firebase root
+                newTandRef.setValue(enc);
+                //we get the created TandemEncounter's ID
+                String encounterID = newTandRef.getKey();
+                //we put the extra data on the chat activity that is about to be launched
+                chat.putExtra("encounterID", encounterID);
+                //we start the new activity
+                startActivity(chat);
+
+            }
+        });
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
         setPalette();

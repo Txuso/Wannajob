@@ -25,6 +25,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity
      * Extra data from the login containing the ID of the loged user
      */
     Bundle extras;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,18 +70,30 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this);
+        //we get data from the Facebook account
+        gps = new GPSTracker(MainActivity.this);
+        if (gps.canGetLocation()){
+
+            latitude = gps.getLatitude();
+            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
+            longitude = gps.getLongitude();
+            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+        }
+        else
+            gps.showSettingsAlert();
+
+
+
 
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        fetchJobs();
+                                        fetchJobs(latitude, longitude);
 
                                     }
                                 }
         );
 
-        latitude = (double)extras.get("latitude");
-        longitude = (double)extras.get("longitude");
         /**
          * The floating button that allows the creation of jobs
          */
@@ -88,8 +103,8 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
                 newJobIntent.putExtra("userID", extras.getString("userID"));
-                newJobIntent.putExtra("latitude", (double) extras.get("latitude"));
-                newJobIntent.putExtra("longitude",(double) extras.get("longitude"));
+                newJobIntent.putExtra("latitude", latitude);
+                newJobIntent.putExtra("longitude",longitude);
 
                 startActivity(newJobIntent);
             }
@@ -136,7 +151,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void fetchJobs() {
+    private void fetchJobs(final double latitude, final double longitude) {
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
@@ -148,7 +163,7 @@ public class MainActivity extends AppCompatActivity
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                Job job = dataSnapshot.getValue(Job.class);
+                final Job job = dataSnapshot.getValue(Job.class);
 
 
                 double latitude2 = job.getLatitude();
@@ -173,6 +188,9 @@ public class MainActivity extends AppCompatActivity
                         public void onItemClick(View view, int position) {
                             Intent showJob = new Intent(MainActivity.this, ShowJob.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("fromID", extras.getString("userID"));
+                            showJob.putExtra("toID", job.getCreatorID());
+                            showJob.putExtra("to", job.getName());
                             startActivity(showJob);
                         }
                     });
@@ -186,7 +204,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Job job = dataSnapshot.getValue(Job.class);
+                final Job job = dataSnapshot.getValue(Job.class);
 
 
                 double latitude2 = job.getLatitude();
@@ -211,6 +229,9 @@ public class MainActivity extends AppCompatActivity
                         public void onItemClick(View view, int position) {
                             Intent showJob = new Intent(MainActivity.this, ShowJob.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("fromID", extras.getString("userID"));
+                            showJob.putExtra("toID", job.getCreatorID());
+                            showJob.putExtra("to", job.getName());
                             startActivity(showJob);
                         }
                     });
@@ -341,15 +362,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        gps = new GPSTracker(MainActivity.this);
-        if (gps.canGetLocation()){
-            latitude = gps.getLatitude();
-            longitude = gps.getLongitude();
-            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
-            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
-        }
-        else
-            gps.showSettingsAlert();
+
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -358,6 +371,28 @@ public class MainActivity extends AppCompatActivity
     public void callDiscoveryPreferences () {
         Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferences.class);
         discoPref.putExtra("userID", extras.getString("userID"));
-        startActivity(discoPref);
+        startActivityForResult(discoPref, 1);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == 1){
+
+            latitude = data.getDoubleExtra("latitude", latitude);
+            longitude = data.getDoubleExtra("longitude", longitude);
+            swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            fetchJobs(latitude, longitude);
+
+                                        }
+                                    }
+            );
+        }
+
+
+    }
+
 }

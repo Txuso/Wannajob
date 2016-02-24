@@ -37,11 +37,6 @@ public class LoginActivity extends Activity {
 
     Intent intent;
 
-    GPSTracker gps;
-    double latitude;
-    double longitude;
-
-
     boolean isLoged = false;
     /**
      * Boolean attribute that is on when the app is resumed
@@ -189,22 +184,9 @@ public class LoginActivity extends Activity {
                             intent.putExtra("userID", user.getId());
 
                         }
-                        //we get data from the Facebook account
-                        gps = new GPSTracker(LoginActivity.this);
-                        if (gps.canGetLocation()){
-
-                            latitude = gps.getLatitude();
-                            mFirebaseRef.child(user.getId()).child("latitude").setValue(latitude);
-                            longitude = gps.getLongitude();
-                            mFirebaseRef.child(user.getId()).child("longitude").setValue(longitude);
-                        }
-                        else
-                            gps.showSettingsAlert();
 
                         intent.putExtra("userID", user.getId());
                         intent.putExtra("name", user.getName());
-                        intent.putExtra("latitude", latitude);
-                        intent.putExtra("longitude", longitude);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
                         finish();
