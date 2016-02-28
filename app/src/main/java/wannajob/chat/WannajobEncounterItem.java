@@ -5,26 +5,26 @@ package wannajob.chat;
  */
 import android.graphics.drawable.Drawable;
 
-import java.sql.Date;
-
 /**
  * Created by josurubio on 15/04/15.
  */
-public class WannajobEncounter {
+public class WannajobEncounterItem {
 
+    private String encounterID;
     private String author;
     private String receptor;
     private String date;
     private String receptorName;
-    private boolean created;
+    private Drawable imageId;
 
 
-    public WannajobEncounter(String author, String receptor, String receptorName, String date, boolean created) {
+    public WannajobEncounterItem(String author, String receptor, String receptorName, String date, Drawable imageId, String encounterID) {
         this.author = author;
         this.receptor = receptor;
         this.receptorName = receptorName;
         this.date = date;
-        this.created = created;
+        this.imageId = imageId;
+        this.encounterID = encounterID;
     }
 
     public String getReceptor() {
@@ -51,14 +51,6 @@ public class WannajobEncounter {
         return author;
     }
 
-    public void setCreated(boolean created) {
-        this.created = created;
-    }
-
-    public boolean getCreated() {
-        return created;
-    }
-
     public void setReceptorName(String receptorName) {
         this.receptorName = receptorName;
     }
@@ -67,4 +59,19 @@ public class WannajobEncounter {
         return receptorName;
     }
 
+    public void setImageId(Drawable imageId) {
+        this.imageId = imageId;
+    }
+
+    public Drawable getImageId() {
+        return imageId;
+    }
+
+    public String getEncounterID() {
+        return encounterID;
+    }
+
+    public void setEncounterID(String encounterID) {
+        this.encounterID = encounterID;
+    }
 }

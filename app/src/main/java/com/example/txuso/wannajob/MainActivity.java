@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent userProf = new Intent(MainActivity.this, UserProfile.class);
+                userProf.putExtra("userID", extras.getString("userID"));
                 startActivity(userProf);
             }
         });
@@ -317,6 +318,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_messages) {
+            Intent messages = new Intent(MainActivity.this,UserMessages.class);
+            messages.putExtra("userID", extras.getString("userID"));
+            startActivity(messages);
 
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();

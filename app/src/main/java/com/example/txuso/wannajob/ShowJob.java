@@ -24,6 +24,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -112,44 +113,23 @@ public class ShowJob extends AppCompatActivity {
         });
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-        setPalette();
 
-        mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+        mFirebaseRef.child("wannaJobs").child(jobID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                collapsingToolbarLayout.setTitle(job.get("name").toString());
+                Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+                BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                setPalette(ob);
 
-                if (jobID.equals(dataSnapshot.getKey())) {
-                    jobShow = dataSnapshot.getValue(Job.class);
-                    collapsingToolbarLayout.setTitle(jobShow.getName());
-                    Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
-                    BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                image.setImageDrawable(ob);
 
-                    image.setImageDrawable(ob);
-
-                    jobName.getEditText().setText(jobShow.getName());
-                    jobDescription.getEditText().setText(jobShow.getDescription());
-                    jobSalary.getEditText().setText(jobShow.getSalary()+" €");
-                    jobDuration.getEditText().setText(jobShow.getJobDuration());
-                    jobCategory.getEditText().setText(jobShow.getCategory());
-
-                }
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+                jobName.getEditText().setText(job.get("name").toString());
+                jobDescription.getEditText().setText(job.get("description").toString());
+                jobSalary.getEditText().setText(job.get("salary").toString());
+                jobDuration.getEditText().setText(job.get("jobDuration").toString());
+                jobCategory.getEditText().setText(job.get("category").toString());
             }
 
             @Override
@@ -158,13 +138,10 @@ public class ShowJob extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
-    private void setPalette() {
-        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+    private void setPalette(BitmapDrawable bd) {
+        Bitmap bitmap = bd.getBitmap();
         Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {

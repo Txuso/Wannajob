@@ -39,8 +39,9 @@
         <activity android:name=".DiscoveryPreferences" />
         <activity
             android:name=".ShowJob"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".ChatActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".UserMessages"></activity>
     </application>
 
 </manifest>
