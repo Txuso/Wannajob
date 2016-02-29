@@ -4,7 +4,9 @@ import android.app.ActionBar;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +27,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -119,11 +122,16 @@ public class ShowJob extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
-                Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
-                BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-                setPalette(ob);
+               // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
-                image.setImageDrawable(ob);
+                //  Picasso.with(getApplicationContext()).load()
+               // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+                Drawable d = new BitmapDrawable(getResources(), pic);
+
+                setPalette(pic);
+
+                image.setBackground(d);
 
                 jobName.getEditText().setText(job.get("name").toString());
                 jobDescription.getEditText().setText(job.get("description").toString());
@@ -140,9 +148,9 @@ public class ShowJob extends AppCompatActivity {
 
     }
 
-    private void setPalette(BitmapDrawable bd) {
-        Bitmap bitmap = bd.getBitmap();
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+    private void setPalette(Bitmap bd) {
+
+        Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
                 int primaryDark = getResources().getColor(R.color.colorPrimaryDark);

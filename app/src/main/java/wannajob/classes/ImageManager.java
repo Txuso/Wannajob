@@ -20,7 +20,7 @@ public  class ImageManager {
     {
         Bitmap immagex=image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        immagex.compress(Bitmap.CompressFormat.JPEG,80, baos);
+        immagex.compress(Bitmap.CompressFormat.JPEG,75, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
 
@@ -29,7 +29,7 @@ public  class ImageManager {
 
     public static Bitmap decodeBase64(String input)
     {
-        byte[] decodedByte = Base64.decode(input, 0);
+        byte[] decodedByte = Base64.decode(input.getBytes(), Base64.DEFAULT);
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {

@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.getbase.floatingactionbutton.AddFloatingActionButton;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     RVUserAdapter adapter;
     JobListItem item;
     GPSTracker gps;
-
+    Bitmap pic;
     double latitude;
     double longitude;
 
@@ -174,9 +177,10 @@ public class MainActivity extends AppCompatActivity
 
                 if (distance <= 50) {
 
-                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
-                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
-                    BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
+
+                    pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
+                    Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
                     item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
                     adapter = new RVUserAdapter(jobs);
@@ -187,11 +191,17 @@ public class MainActivity extends AppCompatActivity
                     adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
+
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                            byte[] byteArray = stream.toByteArray();
+
                             Intent showJob = new Intent(MainActivity.this, ShowJob.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
                             showJob.putExtra("fromID", extras.getString("userID"));
                             showJob.putExtra("toID", job.getCreatorID());
                             showJob.putExtra("to", job.getName());
+                            //showJob.putExtra("image", byteArray);
                             startActivity(showJob);
                         }
                     });
