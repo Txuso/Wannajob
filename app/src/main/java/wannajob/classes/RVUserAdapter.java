@@ -28,9 +28,9 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
     OnItemClickListener mItemClickListener;
 
     public RVUserAdapter(List<JobListItem> jobs){
-
         this.jobs = jobs;
     }
+
 
     @Override
     public JobViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,6 +67,59 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
         }
     }
 
+    public boolean findJob(String id){
+        boolean found = false;
+        int i = 0;
+        while (i <= getItemCount() || !found) {
+            if (jobs.get(i).getJobID().equals(id))
+                found = true;
+            else i++;
+        }
+
+        return found;
+    }
+
+    public List sortListBySalary () {
+        for (int i = 0; i < getItemCount() - 1; i++) {
+          int index = i;
+            for (int j = i + 1; j < getItemCount(); j++)
+                if (jobs.get(j).getSalary() < jobs.get(index).getSalary())
+                    index = j;
+
+            JobListItem smallerSalaryJob = jobs.get(index);
+            jobs.set(index, jobs.get(i));
+            jobs.set(i, smallerSalaryJob);
+        }
+        return jobs;
+    }
+
+    public List sortListByDistance () {
+        for (int i = 0; i < getItemCount() - 1; i++) {
+            int index = i;
+            for (int j = i + 1; j < getItemCount(); j++)
+                if (jobs.get(j).getDistance() < jobs.get(index).getDistance())
+                    index = j;
+
+            JobListItem smallerDistanceJob = jobs.get(index);
+            jobs.set(index, jobs.get(i));
+            jobs.set(i, smallerDistanceJob);
+        }
+        return jobs;
+    }
+
+    //TODO
+    public void removeJob (String id) {
+        int i = 0;
+        boolean found = false;
+
+        while (i <  getItemCount() -1|| !found) {
+            if (jobs.get(i).getJobID().equals(id)) {
+                jobs.remove(i);
+                found = true;
+            }
+            else i++;
+        }
+    }
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);

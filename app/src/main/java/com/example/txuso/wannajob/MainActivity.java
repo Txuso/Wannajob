@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -181,10 +182,11 @@ public class MainActivity extends AppCompatActivity
                     Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
                     item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
+                    item.setDistance(distance);
+
                     adapter = new RVUserAdapter(jobs);
 
                     jobs.add(item);
-                    rv.setAdapter(adapter);
 
                     adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                         @Override
@@ -206,6 +208,9 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
+                jobs = adapter.sortListByDistance();
+                adapter = new RVUserAdapter(jobs);
+                rv.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
 
 
@@ -221,7 +226,7 @@ public class MainActivity extends AppCompatActivity
                 double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
 
 
-                if (distance <= 50) {
+                if (distance <= 50 && !adapter.findJob(dataSnapshot.getKey())) {
 
                     Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
@@ -247,15 +252,16 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-
-
                 swipeRefreshLayout.setRefreshing(false);
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //TODO
 
+//                adapter.removeJob(dataSnapshot.getKey());
+  //              rv.setAdapter(adapter);
             }
 
             @Override
@@ -292,7 +298,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
+        menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
+
         return true;
     }
 
@@ -301,14 +309,31 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home: {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+                return true;
+            }
+            case 0:{
+                jobs = adapter.sortListBySalary();
+                adapter = new RVUserAdapter(jobs);
+                rv.setAdapter(adapter);
 
-        return super.onOptionsItemSelected(item);
+                return true;
+            }
+            case 1:{
+                jobs = adapter.sortListByDistance();
+                adapter = new RVUserAdapter(jobs);
+                rv.setAdapter(adapter);
+            }
+
+
+            }
+
+
+
+
+            return super.onOptionsItemSelected(item);
     }
 
     /**

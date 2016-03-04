@@ -13,12 +13,14 @@ public class JobListItem{
     private int salary;
     private String jobID;
     private Drawable imageId;
+    private double distance;
 
     public JobListItem (String jobID, String name, int salary, Drawable imageId) {
         this.name = name;
         this.salary = salary;
         this.jobID = jobID;
         this.imageId = imageId;
+        this.distance = 0;
     }
 
     public void setSalary(int salary) {
@@ -52,4 +54,13 @@ public class JobListItem{
     public void setName(String name) {
         this.name = name;
     }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
 }

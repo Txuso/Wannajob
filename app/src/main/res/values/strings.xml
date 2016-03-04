@@ -25,6 +25,8 @@
     <string name="output_category">Category</string>
     <string name="modify_discovery_pref_message">There are not jobs around you. Change your discovery preferences and try again.</string>
     <string name="request_job_text_button">IT\'S MINE</string>
+    <string name="sort_by_distance">Sort By Distance</string>
+    <string name="sort_by_salary">Sort By Salary</string>
 
 
     <string name="save_changes">Save Changes</string>
