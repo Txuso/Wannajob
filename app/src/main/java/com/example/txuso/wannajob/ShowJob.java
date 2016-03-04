@@ -21,14 +21,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.Toolbar;
-
-import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.squareup.picasso.Picasso;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -50,7 +46,6 @@ public class ShowJob extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbar;
     Bundle extras;
     Firebase mFirebaseRef;
-    Job jobShow;
     String jobID;
 
     @Override

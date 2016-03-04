@@ -8,6 +8,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.View;
+
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -91,8 +93,30 @@ public class LoginActivity extends Activity {
          * Data that will be gathered from the user's Facebook account is set here
          */
         mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "user_birthday"));
+        android.support.v7.widget.AppCompatButton testB =  (android.support.v7.widget.AppCompatButton) findViewById(R.id.testUserButton);
+
 
         intent = new Intent(LoginActivity.this, MainActivity.class);
+
+        testB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.job);
+                String im = ImageManager.encodeTobase64(bm);
+
+                WannajobUser newU = new WannajobUser("Rodolfo", "40",im);
+                Firebase newTandRef = mFirebaseRef.push();
+                newTandRef.setValue(newU);
+                String logedUserID = newTandRef.getKey();
+                intent.putExtra("userID", logedUserID);
+                intent.putExtra("name", "Rodolfo");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+
+            }
+        });
 
     }
     /**

@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity
             gps.showSettingsAlert();
 
 
-
-
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {

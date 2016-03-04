@@ -9,6 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.txuso.wannajob.LoginActivity">
 
+    <android.support.v7.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test User"
+        android:id="@+id/testUserButton"
+        android:layout_above="@+id/login_with_facebook"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="20dp" />
+
     <com.facebook.widget.LoginButton
         android:id="@+id/login_with_facebook"
         android:layout_width="match_parent"

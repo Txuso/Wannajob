@@ -101,7 +101,9 @@ public class UserMessages extends AppCompatActivity implements AdapterView.OnIte
                             Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
 
                             Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(user.get("image").toString()), 80, 80);
-                            BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+                            Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
+
+                            BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
                             item = new WannajobEncounterItem(from, to, wEncounter.get("receptorName").toString(), wEncounter.get("date").toString(), ima, dataSnapshot1.getKey());
                             messages.add(item);
                             listView.invalidateViews();
