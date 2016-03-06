@@ -27,6 +27,7 @@
     <string name="request_job_text_button">IT\'S MINE</string>
     <string name="sort_by_distance">Sort By Distance</string>
     <string name="sort_by_salary">Sort By Salary</string>
+    <string name="search_key_word">Search Key Words</string>
 
 
     <string name="save_changes">Save Changes</string>

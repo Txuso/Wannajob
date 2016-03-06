@@ -1,5 +1,6 @@
 package com.example.txuso.wannajob;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,10 +8,14 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,6 +25,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,8 +59,11 @@ public class MainActivity extends AppCompatActivity
     Bitmap pic;
     double latitude;
     double longitude;
-
+    private MenuItem mSearchAction;
+    private boolean isSearchOpened = false;
+    private EditText    edtSeach;
     private SwipeRefreshLayout swipeRefreshLayout;
+    Toolbar toolbar;
 
     /**
      * Extra data from the login containing the ID of the loged user
@@ -65,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         extras = getIntent().getExtras();
         Firebase.setAndroidContext(this);
@@ -176,40 +187,36 @@ public class MainActivity extends AppCompatActivity
 
                 if (distance <= 50) {
 
-
                     pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
                     Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID());
                     item.setDistance(distance);
-
                     adapter = new RVUserAdapter(jobs);
-
                     jobs.add(item);
-
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                            byte[] byteArray = stream.toByteArray();
-
-                            Intent showJob = new Intent(MainActivity.this, ShowJob.class);
-                            showJob.putExtra("jobID", jobs.get(position).getJobID());
-                            showJob.putExtra("fromID", extras.getString("userID"));
-                            showJob.putExtra("toID", job.getCreatorID());
-                            showJob.putExtra("to", job.getName());
-                            //showJob.putExtra("image", byteArray);
-                            startActivity(showJob);
-                        }
-                    });
 
                 }
 
                 jobs = adapter.sortListByDistance();
                 adapter = new RVUserAdapter(jobs);
+                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                        byte[] byteArray = stream.toByteArray();
+
+                        Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                        showJob.putExtra("jobID", jobs.get(position).getJobID());
+                        showJob.putExtra("fromID", extras.getString("userID"));
+                        showJob.putExtra("toID", job.getCreatorID());
+                        showJob.putExtra("to", job.getName());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
                 rv.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
 
@@ -232,7 +239,7 @@ public class MainActivity extends AppCompatActivity
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
                     BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima);
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID());
                     adapter = new RVUserAdapter(jobs);
 
                     jobs.add(item);
@@ -292,17 +299,40 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        searchView.setQueryHint(getString(R.string.search_key_word));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                onSearchRequested();
+                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        });
         menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
         menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
+
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -314,9 +344,27 @@ public class MainActivity extends AppCompatActivity
 
                 return true;
             }
+
             case 0:{
                 jobs = adapter.sortListBySalary();
                 adapter = new RVUserAdapter(jobs);
+                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                        byte[] byteArray = stream.toByteArray();
+
+                        Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                        showJob.putExtra("jobID", jobs.get(position).getJobID());
+                        showJob.putExtra("fromID", extras.getString("userID"));
+                        showJob.putExtra("toID", jobs.get(position).getCreatorID());
+                        showJob.putExtra("to", jobs.get(position).getName());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
                 rv.setAdapter(adapter);
 
                 return true;
@@ -324,6 +372,23 @@ public class MainActivity extends AppCompatActivity
             case 1:{
                 jobs = adapter.sortListByDistance();
                 adapter = new RVUserAdapter(jobs);
+                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                        byte[] byteArray = stream.toByteArray();
+
+                        Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                        showJob.putExtra("jobID", jobs.get(position).getJobID());
+                        showJob.putExtra("fromID", extras.getString("userID"));
+                        showJob.putExtra("toID", jobs.get(position).getCreatorID());
+                        showJob.putExtra("to", jobs.get(position).getName());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
                 rv.setAdapter(adapter);
             }
 
@@ -405,6 +470,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchAction = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     public void callDiscoveryPreferences () {
         Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferences.class);
         discoPref.putExtra("userID", extras.getString("userID"));
@@ -430,6 +501,9 @@ public class MainActivity extends AppCompatActivity
         }
 
 
+    }
+    private void doSearch() {
+//
     }
 
 }
