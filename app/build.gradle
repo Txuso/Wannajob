@@ -9,7 +9,8 @@ android {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'    }
+        exclude 'META-INF/NOTICE.txt'
+    }
 
     defaultConfig {
         applicationId "com.example.txuso.wannajob"
@@ -31,10 +32,10 @@ repositories {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.firebase:firebase-client-android:2.5.0+'
     compile 'com.facebook.android:facebook-android-sdk:3.21.1'
+    compile 'com.firebase:firebase-client-android:2.5.2'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
@@ -42,5 +43,5 @@ dependencies {
     compile 'com.android.support:palette-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.mcxiaoke.volley:library-aar:1.0.0'
-
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
 }

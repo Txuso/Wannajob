@@ -12,17 +12,19 @@ public class JobListItem{
     private String name;
     private int salary;
     private String jobID;
+    private String jobDescription;
     private Drawable imageId;
     private String creatorID;
     private double distance;
 
-    public JobListItem (String jobID, String name, int salary, Drawable imageId, String creatorID) {
+    public JobListItem (String jobID, String name, int salary, Drawable imageId, String creatorID, String jobDescription) {
         this.name = name;
         this.salary = salary;
         this.jobID = jobID;
         this.imageId = imageId;
         this.distance = 0;
         this.creatorID = creatorID;
+        this.jobDescription = jobDescription;
     }
 
     public void setSalary(int salary) {
@@ -71,5 +73,13 @@ public class JobListItem{
 
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
+    }
+
+    public String getJobDescription() {
+        return jobDescription;
+    }
+
+    public void setJobDescription(String jobDescription) {
+        this.jobDescription = jobDescription;
     }
 }

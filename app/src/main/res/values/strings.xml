@@ -28,6 +28,8 @@
     <string name="sort_by_distance">Sort By Distance</string>
     <string name="sort_by_salary">Sort By Salary</string>
     <string name="search_key_word">Search Key Words</string>
+    <string name="reset_filters">Reset Filters</string>
+    <string name="view_on_map">View Job Map</string>
 
 
     <string name="save_changes">Save Changes</string>
@@ -43,4 +45,5 @@
     <string name="create_job">Create Job</string>
     <string name="share_wannajob_message">\n Download this application and discover jobs around you!!\n\n</string>
     <string name="choose_app_share_wannajob_message">Choose an application to share Wannajob</string>
+    <string name="title_activity_show_job_map">Map</string>
 </resources>

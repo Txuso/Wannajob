@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
     Firebase mFirebaseRef;
     private List<JobListItem> jobs;
+    private List<JobListItem> wordJobs;
     private RecyclerView rv;
     RVUserAdapter adapter;
     JobListItem item;
@@ -179,10 +180,9 @@ public class MainActivity extends AppCompatActivity
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                 final Job job = dataSnapshot.getValue(Job.class);
 
-
                 double latitude2 = job.getLatitude();
                 double longitude2 = job.getLongitude();
-                double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
+                double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
 
                 if (distance <= 50) {
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
                     Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID());
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
                     item.setDistance(distance);
                     adapter = new RVUserAdapter(jobs);
                     jobs.add(item);
@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
 
                 double latitude2 = job.getLatitude();
                 double longitude2 = job.getLongitude();
-                double distance = distance(latitude, longitude, latitude2, longitude2, 'K');
+                double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
 
                 if (distance <= 50 && !adapter.findJob(dataSnapshot.getKey())) {
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
                     BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID());
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
                     adapter = new RVUserAdapter(jobs);
 
                     jobs.add(item);
@@ -266,7 +266,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 //TODO
-
 //                adapter.removeJob(dataSnapshot.getKey());
   //              rv.setAdapter(adapter);
             }
@@ -314,8 +313,22 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 onSearchRequested();
-                Toast.makeText(getApplicationContext(), query, Toast.LENGTH_LONG).show();
+                wordJobs = adapter.findJobsByWord(query);
+                adapter = new RVUserAdapter(wordJobs);
+                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
 
+                        Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                        showJob.putExtra("jobID", jobs.get(position).getJobID());
+                        showJob.putExtra("fromID", extras.getString("userID"));
+                        showJob.putExtra("toID", jobs.get(position).getCreatorID());
+                        showJob.putExtra("to", jobs.get(position).getName());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
+                rv.setAdapter(adapter);
                 return false;
             }
 
@@ -327,6 +340,9 @@ public class MainActivity extends AppCompatActivity
         });
         menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
         menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
+        menu.add(2, 2, 2, getString(R.string.reset_filters)).setShortcut('3', 'c');
+        menu.add(3, 3, 3, getString(R.string.view_on_map)).setShortcut('3', 'c');
+
 
         return super.onCreateOptionsMenu(menu);
 
@@ -346,8 +362,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             case 0:{
-                jobs = adapter.sortListBySalary();
-                adapter = new RVUserAdapter(jobs);
+                wordJobs = adapter.sortListBySalary();
+                adapter = new RVUserAdapter(wordJobs);
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -370,7 +386,30 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
             case 1:{
-                jobs = adapter.sortListByDistance();
+                wordJobs = adapter.sortListByDistance();
+                adapter = new RVUserAdapter(wordJobs);
+                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                        byte[] byteArray = stream.toByteArray();
+
+                        Intent showJob = new Intent(MainActivity.this, ShowJob.class);
+                        showJob.putExtra("jobID", jobs.get(position).getJobID());
+                        showJob.putExtra("fromID", extras.getString("userID"));
+                        showJob.putExtra("toID", jobs.get(position).getCreatorID());
+                        showJob.putExtra("to", jobs.get(position).getName());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
+                rv.setAdapter(adapter);
+                return true;
+
+            }
+            case 2:
                 adapter = new RVUserAdapter(jobs);
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
@@ -390,15 +429,18 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 rv.setAdapter(adapter);
-            }
+                return true;
+
+            case 3:
+                Intent showJobMap = new Intent(MainActivity.this, ShowJobMap.class);
+                showJobMap.putExtra("longitude", longitude);
+                showJobMap.putExtra("latitude", latitude);
+                startActivity(showJobMap);
+                return true;
+        }
 
 
-            }
-
-
-
-
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -433,38 +475,10 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    //This method calculates the exact distance between two points and it returns the number depending on the unit
-    private double distance(double lat1, double lon1, double lat2, double lon2, char unit) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist = dist * 60 * 1.1515;
-        if (unit == 'K') {
-            dist = dist * 1.609344;
-        } else if (unit == 'N') {
-            dist = dist * 0.8684;
-        }
-        return (dist);
-    }
 
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    /*::  This function converts decimal degrees to radians             :*/
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    private double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
-    }
-
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    /*::  This function converts radians to decimal degrees             :*/
-    /*:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::*/
-    private double rad2deg(double rad) {
-        return (rad * 180.0 / Math.PI);
-    }
 
     @Override
     public void onRefresh() {
-
 
         swipeRefreshLayout.setRefreshing(false);
 
@@ -501,9 +515,6 @@ public class MainActivity extends AppCompatActivity
         }
 
 
-    }
-    private void doSearch() {
-//
     }
 
 }

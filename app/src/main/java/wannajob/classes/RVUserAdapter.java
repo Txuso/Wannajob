@@ -16,6 +16,7 @@ import com.example.txuso.wannajob.JobListItem;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.ShowJob;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -70,14 +71,24 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
     public boolean findJob(String id){
         boolean found = false;
         int i = 0;
-        while (i <= getItemCount() || !found) {
-            if (jobs.get(i).getJobID().equals(id))
-                found = true;
-            else i++;
-        }
-
+            while (i <= getItemCount() || !found) {
+                if (jobs.get(i).getJobID().equals(id))
+                    found = true;
+                else i++;
+            }
         return found;
     }
+
+    public List findJobsByWord(String word){
+        List<JobListItem> newJobs = new ArrayList<>();
+       for (JobListItem item : jobs) {
+           if (item.getJobDescription().toLowerCase().contains(word.toLowerCase()) || item.getName().toLowerCase().contains(word.toLowerCase()))
+               newJobs.add(item);
+       }
+
+        return newJobs;
+    }
+
 
     public List sortListBySalary () {
         for (int i = 0; i < getItemCount() - 1; i++) {
