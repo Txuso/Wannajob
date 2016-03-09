@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wannajob</string>
+    <string name="action_settings">ajustes</string>
+    <string name="and_around">y alrededor</string>
+    <string name="choose_app_share_wannajob_message">Elige una aplicación para compartir Wannajob</string>
+    <string name="create_job">Crear Trabajo</string>
+    <string name="data_wrong_dialog">Hay datos incorrectos. Compruébalos de nuevo</string>
+    <string name="enter_location">Introduce una ubicación</string>
+    <string name="from_you">de ti.</string>
+    <string name="job_category">ELIGE CATEGORÍA</string>
+    <string name="job_created_dialog">Tu trabajo ha sido creado</string>
+    <string name="job_description">Descripción del trabajo</string>
+    <string name="job_distance">Distancia del trabajo</string>
+    <string name="job_duration">Duración</string>
+    <string name="job_location">Localización del trabajo</string>
+    <string name="job_location_button">Cambiar localización del trabajo</string>
+    <string name="job_name">Nombre del trabajo</string>
+    <string name="job_salary">Salario</string>
+    <string name="modify_discovery_pref_message">No hay trabajos alrededor de ti. Modifica tus preferencias de búsqueda e inténtalo de nuevo</string>
+    <string name="nav_discovery_preferences_option">Preferencias de búsqueda</string>
+    <string name="nav_messages_option">Mensajes</string>
+    <string name="nav_share_option">Compartir Wannajob</string>
+    <string name="output_category">Categoría</string>
+    <string name="published_jobs">Trabajos Publicados</string>
+    <string name="request_job_text_button">LO QUIERO HACER</string>
+    <string name="reset_filters">Resetear filtros</string>
+    <string name="save_changes">Guardar Cambios</string>
+    <string name="search_key_word">Buscar Palabras Clave</string>
+    <string name="send_message_button">PREGÚNTAME</string>
+    <string name="share_wannajob_message">\n Descárgate esta aplicación y descubre trabajillos alrededor de ti!!\n\n</string>
+    <string name="sort_by_distance">Ordenar Por Distancia</string>
+    <string name="sort_by_salary">Ordenar Por Salario</string>
+    <string name="title_activity_show_job_map">Mapa</string>
+    <string name="use_my_location">Usar mi localización actual</string>
+    <string name="view_on_map">Ver el mapa de los trabajos</string>
+    <string name="you_find_encounters">Encontrarás trabajos en</string>
+    <string name="you_find_jobs_own_location">Encontrarás trabajos en tu propia localización y alrededor de </string>
+</resources>

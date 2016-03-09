@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wannajob</string>
+    <string name="action_settings">Ezarpenak</string>
+    <string name="and_around">Inguruan</string>
+    <string name="choose_app_share_wannajob_message">Wannajob partekatzeko aplikazio bat aukeratu</string>
+    <string name="create_job">Lana Sortu</string>
+    <string name="data_wrong_dialog">Jarritako datu batzuk txarto daude. Berriz ere ikuskatu.</string>
+    <string name="enter_location">Jarri Kokapena</string>
+    <string name="from_you">zugandik</string>
+    <string name="job_category">AUKERATU KATEGORIA BAT</string>
+    <string name="job_created_dialog">Zeure lana sortu egin da</string>
+    <string name="job_description">Lanaren deskribapena</string>
+    <string name="job_distance">Laneko distantzia</string>
+    <string name="job_duration">Iraupena</string>
+    <string name="job_location">Lanaren kokapena</string>
+    <string name="job_location_button">Lanaren Kokapena Aldatu</string>
+    <string name="job_name">Lanaren Izena</string>
+    <string name="job_salary">Dirua</string>
+    <string name="modify_discovery_pref_message">Ez daude lanik zeure inguruan. Ezarpenak aldatu eta berriz ere saiatu.</string>
+    <string name="nav_discovery_preferences_option">Bilatzeko Lehentasunak</string>
+    <string name="nav_messages_option">Mezuak</string>
+    <string name="nav_share_option">Wannajob Partekatu</string>
+    <string name="output_category">Kategoria</string>
+    <string name="published_jobs">Sortutako Lanak</string>
+    <string name="request_job_text_button">EGIN NAHI DUT</string>
+    <string name="reset_filters">Filtroak Berrezarri</string>
+    <string name="save_changes">Aldaketak Gorde</string>
+    <string name="search_key_word">Sartu Hitz Zehatzak</string>
+    <string name="send_message_button">GALDETU</string>
+    <string name="share_wannajob_message">\n Aplikazio hay deskargati eta zeure inguruan dauden lanak aurkitu!!\n\n</string>
+    <string name="sort_by_distance">Distantziagatik Sailkatu</string>
+    <string name="sort_by_salary">Diruagatik Sailkatu</string>
+    <string name="title_activity_show_job_map">Mapa</string>
+    <string name="use_my_location">Nire kokapena erabili</string>
+    <string name="view_on_map">Lanak Mapan Ikusi</string>
+    <string name="you_find_encounters">Lanak aurkituko dituzu</string>
+    <string name="you_find_jobs_own_location">Lanak zeure kokapenean aurkituko dituzu eta zugandik</string>
+</resources>
