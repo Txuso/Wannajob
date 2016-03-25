@@ -8,6 +8,12 @@
     <string name="nav_messages_option">Messages</string>
     <string name="nav_discovery_preferences_option">Discovery preferences</string>
     <string name="nav_share_option">Share Wannajob</string>
+    <string name="nav_see_my_jobs">See My Jobs</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="want_to_cancel_job_dialog">Do you want to cancel this job?</string>
+    <string name="want_to_save_changes_dialog">Do you want to save the changes?</string>
+
+
 
     <string name="job_description">Job description</string>
     <string name="job_name">Job name</string>

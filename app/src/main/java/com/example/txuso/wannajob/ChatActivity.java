@@ -3,9 +3,12 @@ package com.example.txuso.wannajob;
 import android.app.ListActivity;
         import android.database.DataSetObserver;
         import android.os.Bundle;
-        import android.view.KeyEvent;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatButton;
+import android.view.KeyEvent;
         import android.view.Menu;
-        import android.view.MenuItem;
+import android.view.MenuInflater;
+import android.view.MenuItem;
         import android.view.View;
         import android.view.inputmethod.EditorInfo;
         import android.widget.EditText;
@@ -25,7 +28,7 @@ import wannajob.chat.ChatListAdapter;
 import wannajob.chat.IndividualChat;
 
 
-public class ChatActivity extends ListActivity {
+public class ChatActivity extends AppCompatActivity {
     private Firebase mFirebaseRef;
     private Firebase tFirebaseRef;
 
@@ -35,15 +38,16 @@ public class ChatActivity extends ListActivity {
     String toID = "";
     String encounterID = "";
     private static final String FIREBASE_URL = "https://wannajob.firebaseio.com/IndividualChat";
-    private static final String TANDEM_URL = "https://wannajob.firebaseio.com/wannajobUsers";
+    private static final String WANNAJOBUSER_URL = "https://wannajob.firebaseio.com/wannajobUsers";
 
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
-
+    ListView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //we get extra data from the previous activity
         Bundle extra = getIntent().getExtras();
@@ -52,10 +56,9 @@ public class ChatActivity extends ListActivity {
         toID = extra.getString("toID");
         encounterID = extra.getString("encounterID");
 
-
         //we set the the firebase root to the encounter between the users
         mFirebaseRef = new Firebase(FIREBASE_URL).child(encounterID);
-        tFirebaseRef = new Firebase(TANDEM_URL).child(toID);
+        tFirebaseRef = new Firebase(WANNAJOBUSER_URL).child(toID);
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         inputText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -80,8 +83,9 @@ public class ChatActivity extends ListActivity {
     public void onStart() {
         super.onStart();
         // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
-        final ListView listView = getListView();
         // Tell our list adapter that we only want 50 messages at a time
+        listView = (ListView)findViewById(R.id.list);
+
         mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(100), this, R.layout.chat_message, fromID, toID);
         listView.setAdapter(mChatListAdapter);
 
@@ -117,7 +121,7 @@ public class ChatActivity extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_chat, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -132,14 +136,16 @@ public class ChatActivity extends ListActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // Method to send a message and store the message in Firebase
@@ -171,5 +177,6 @@ public class ChatActivity extends ListActivity {
 
         return localTime;
     }
+
 
 }

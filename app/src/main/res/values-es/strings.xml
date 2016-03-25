@@ -36,4 +36,6 @@
     <string name="view_on_map">Ver el mapa de los trabajos</string>
     <string name="you_find_encounters">Encontrarás trabajos en</string>
     <string name="you_find_jobs_own_location">Encontrarás trabajos en tu propia localización y alrededor de </string>
+    <string name="cancel_job">Cancelar Curro</string>
+
 </resources>

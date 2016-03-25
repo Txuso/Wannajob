@@ -1,8 +1,14 @@
 package com.example.txuso.wannajob;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.provider.CalendarContract;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.NavUtils;
@@ -17,7 +23,10 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.Map;
+import java.util.TimeZone;
 
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
@@ -70,7 +79,7 @@ public class UserProfile extends AppCompatActivity {
                 image.setBackground(d);
 
                 userName.getEditText().setText(user.get("name").toString());
-                 userAge.getEditText().setText(user.get("age").toString());
+                userAge.getEditText().setText(user.get("age").toString());
 
             }
 
@@ -79,6 +88,8 @@ public class UserProfile extends AppCompatActivity {
 
             }
         });
+
+        createEvent();
 
 
 
@@ -111,5 +122,38 @@ public class UserProfile extends AppCompatActivity {
         }
     }
 
+    public void createEvent () {
+        long calID = 3;
+        long startMillis = 0;
+        long endMillis = 0;
+        Calendar beginTime = Calendar.getInstance();
+        beginTime.set(2016, 3, 12, 7, 30);// set(int year, int month, int day, int hourOfDay, int minute)
+        startMillis = beginTime.getTimeInMillis();
+        Calendar endTime = Calendar.getInstance();
+        endTime.set(2016, 3, 12, 8, 30);
+        endMillis = endTime.getTimeInMillis();
+
+        TimeZone tz = TimeZone.getDefault();
+
+        ContentResolver cr = getContentResolver();
+        ContentValues values = new ContentValues();
+        values.put(CalendarContract.Events.DTSTART, startMillis);
+        values.put(CalendarContract.Events.DTEND, endMillis);
+        values.put(CalendarContract.Events.TITLE, "Jazzercise");
+        values.put(CalendarContract.Events.DESCRIPTION, "Group workout");
+        values.put(CalendarContract.Events.CALENDAR_ID, calID);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE,  tz.getID());
+        Uri uri = cr.insert(CalendarContract.Events.CONTENT_URI, values);
+
+        // get the event ID that is the last element in the Uri
+        long eventID = Long.parseLong(uri.getLastPathSegment());
+
+
+        Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+        builder.appendPath("time");
+        ContentUris.appendId(builder, startMillis);
+        Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+        startActivity(intent);
+    }
 
 }

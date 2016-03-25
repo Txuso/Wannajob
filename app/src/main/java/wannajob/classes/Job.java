@@ -1,5 +1,6 @@
 package wannajob.classes;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -17,6 +18,7 @@ public class Job {
     private String jobImage;
     private double latitude;
     private double longitude;
+    private ArrayList<String> wannajobers;
 
     public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude){
         this.name = name;
@@ -29,6 +31,7 @@ public class Job {
         this.jobDuration = jobDuration;
         this.latitude = latitude;
         this.longitude = longitude;
+        wannajobers = new ArrayList<>();
     }
 
     public Job (String name, int salary, String jobImage){
@@ -125,4 +128,11 @@ public class Job {
         this.salary = salary;
     }
 
+    public ArrayList<String> getWannajobers() {
+        return wannajobers;
+    }
+
+    public void setWannajobers(ArrayList<String> wannajobers) {
+        this.wannajobers = wannajobers;
+    }
 }

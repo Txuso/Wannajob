@@ -36,4 +36,6 @@
     <string name="view_on_map">Lanak Mapan Ikusi</string>
     <string name="you_find_encounters">Lanak aurkituko dituzu</string>
     <string name="you_find_jobs_own_location">Lanak zeure kokapenean aurkituko dituzu eta zugandik</string>
+    <string name="cancel_job">Lana Kendu</string>
+
 </resources>

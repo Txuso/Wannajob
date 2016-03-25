@@ -58,8 +58,6 @@ public class UserMessages extends AppCompatActivity implements AdapterView.OnIte
         myFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
         messages = new ArrayList<>();
-        progress = ProgressDialog.show(this, "Displaying your conversations",
-                "Wait a moment please", true);
 
         myFirebaseRef.child("wannajobEncounter").addChildEventListener(new ChildEventListener() {
             @Override
@@ -115,7 +113,6 @@ public class UserMessages extends AppCompatActivity implements AdapterView.OnIte
                         }
                     });
                 }
-                progress.dismiss();
 
 
 

@@ -106,7 +106,7 @@ public class DiscoveryPreferences extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: {
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(DiscoveryPreferences.this);
-                builder2.setMessage("Do you want to save the changes?");
+                builder2.setMessage(getString(R.string.want_to_save_changes_dialog));
                 builder2.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 
                     @Override

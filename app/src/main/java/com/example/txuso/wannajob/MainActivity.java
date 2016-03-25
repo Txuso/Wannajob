@@ -65,7 +65,9 @@ public class MainActivity extends AppCompatActivity
     private EditText    edtSeach;
     private SwipeRefreshLayout swipeRefreshLayout;
     Toolbar toolbar;
-
+    LinearLayoutManager llm;
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
     /**
      * Extra data from the login containing the ID of the loged user
      */
@@ -76,12 +78,15 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         extras = getIntent().getExtras();
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
+
+        Intent service = new Intent(this, NotificationHandler.class);
+        service.putExtra("userID", extras.getString("userID"));
+        this.startService(service);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
@@ -160,10 +165,9 @@ public class MainActivity extends AppCompatActivity
         });
 
         rv = (RecyclerView)findViewById(R.id.rv);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        llm = new LinearLayoutManager(getApplicationContext());
         rv.setLayoutManager(llm);
         rv.setHasFixedSize(true);
-
     }
 
     private void fetchJobs(final double latitude, final double longitude) {
@@ -392,16 +396,11 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                        byte[] byteArray = stream.toByteArray();
-
                         Intent showJob = new Intent(MainActivity.this, ShowJob.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
                         showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", jobs.get(position).getCreatorID());
                         showJob.putExtra("to", jobs.get(position).getName());
-                        //showJob.putExtra("image", byteArray);
                         startActivity(showJob);
                     }
                 });
@@ -461,12 +460,15 @@ public class MainActivity extends AppCompatActivity
             Intent messages = new Intent(MainActivity.this,UserMessages.class);
             messages.putExtra("userID", extras.getString("userID"));
             startActivity(messages);
-
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();
         } else if (id == R.id.nav_share) {
             Intent shareW = new Intent(MainActivity.this, ShareWannajob.class);
             startActivity(shareW);
+        } else if (id == R.id.nav_jobs) {
+            Intent showMyJob = new Intent(MainActivity.this, ShowMyJobs.class);
+            showMyJob.putExtra("userID", extras.getString("userID"));
+            startActivity(showMyJob);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
