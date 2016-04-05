@@ -72,11 +72,11 @@ public class CreateJobActivity extends AppCompatActivity {
         jobCategoryB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = {" Education ", " Hard ", " Easy ", " Others"};
+                final CharSequence[] items = getResources().getStringArray(R.array.categories_list);
 
                 // Creating and Building the Dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(CreateJobActivity.this);
-                builder.setTitle("Choose the Category");
+                builder.setTitle(getString(R.string.job_category));
                 builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
 

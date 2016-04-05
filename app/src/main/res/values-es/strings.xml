@@ -38,4 +38,14 @@
     <string name="you_find_jobs_own_location">Encontrarás trabajos en tu propia localización y alrededor de </string>
     <string name="cancel_job">Cancelar Curro</string>
 
+
+    <string-array name="categories_list">
+        <item>Servicios de casa</item>
+        <item>Transportes</item>
+        <item>Manitas</item>
+        <item>Educación</item>
+        <item>Deportes</item>
+        <item>Otros</item>
+    </string-array>
+
 </resources>

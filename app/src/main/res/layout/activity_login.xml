@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:text="Test User"
         android:id="@+id/testUserButton"
-        android:layout_above="@+id/login_with_facebook"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp" />
@@ -25,8 +24,18 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:paddingBottom="10dp"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/testUserButton"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="15dp" />
+        android:layout_alignParentEnd="true" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_with_facebook"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="48dp"
+        android:layout_alignRight="@+id/login_with_facebook"
+        android:layout_alignEnd="@+id/login_with_facebook" />
 </RelativeLayout>

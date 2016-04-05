@@ -12,7 +12,14 @@
     <string name="cancel_job">Cancel Job</string>
     <string name="want_to_cancel_job_dialog">Do you want to cancel this job?</string>
     <string name="want_to_save_changes_dialog">Do you want to save the changes?</string>
-
+    <string-array name="categories_list">
+        <item>Home Services</item>
+        <item>Transports</item>
+        <item>Handyman</item>
+        <item>Education</item>
+        <item>Sports</item>
+        <item>Others</item>
+    </string-array>
 
 
     <string name="job_description">Job description</string>

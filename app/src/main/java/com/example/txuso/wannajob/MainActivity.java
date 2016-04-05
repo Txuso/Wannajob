@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         /**
          * The floating button that allows the creation of jobs
          */
-        AddFloatingActionButton createJob = (AddFloatingActionButton) findViewById(R.id.createJobButton);
+        FloatingActionButton createJob = (FloatingActionButton) findViewById(R.id.createJobButton);
         createJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
