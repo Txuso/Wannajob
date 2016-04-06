@@ -44,16 +44,13 @@ public class UserProfile extends AppCompatActivity {
     android.support.v7.widget.Toolbar toolbar;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
         extras = getIntent().getExtras();
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar3);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+            /*
         userID = extras.getString("userID");
         firebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_user);
@@ -108,19 +105,7 @@ public class UserProfile extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                onBackPressed();
-                //NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
 
-        }
-    }
 
     public void createEvent () {
         long calID = 3;
@@ -154,6 +139,24 @@ public class UserProfile extends AppCompatActivity {
         ContentUris.appendId(builder, startMillis);
         Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
         startActivity(intent);
+    }
+
+*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
     }
 
 }
