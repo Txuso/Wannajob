@@ -45,7 +45,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.txuso.wannajob.LoginActivity" />
         </activity>
-        <activity android:name=".UserProfile"/>
+        <activity
+            android:name=".UserProfile"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".CreateJobActivity" />
         <activity android:name=".ShareWannajob" />
         <activity android:name=".DiscoveryPreferences" />

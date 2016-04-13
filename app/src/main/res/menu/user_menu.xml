@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_find"
+        android:orderInCategory="200"
+        android:title="@string/search_key_word"
+        android:icon="@android:drawable/ic_dialog_info"
+        app:showAsAction="always"/>
+</menu>

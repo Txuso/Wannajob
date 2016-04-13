@@ -9,7 +9,10 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.facebook.Request;
 import com.facebook.Response;
@@ -38,12 +41,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import wannajob.classes.GPSTracker;
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
+
+    @Bind(R.id.login_view_flipper)
+    ViewFlipper fliper;
 
     Intent intent;
 
@@ -86,11 +94,23 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     };
 
+    Animation fadeIn;
+    Animation fadeOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        ButterKnife.bind(this);
+
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        fliper.setInAnimation(fadeIn);
+        fliper.setOutAnimation(fadeOut);
+        fliper.setFlipInterval(5000);
+        fliper.startFlipping();
 
         /**
          * We set the the uihelper and the firebase context.
@@ -130,6 +150,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
          * Data that will be gathered from the user's Facebook account is set here
          */
         mFacebookLoginButton.setReadPermissions(Arrays.asList("public_profile", "user_birthday"));
+        /*
         android.support.v7.widget.AppCompatButton testB =  (android.support.v7.widget.AppCompatButton) findViewById(R.id.testUserButton);
 
         intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -153,6 +174,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
             }
         });
+        */
 
     }
     /**
@@ -202,9 +224,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             String fbAge = "22";
 
                             //String fbAge = user.getBirthday().toString();
-                            //String fbAge = "22";
+                            //String fbAgez= "22";
                             //we create the instance of the MainMenu
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            intent = new Intent(LoginActivity.this, MainActivity.class);
                             //we put the user's name as an extra data to the next activity
 
                             //We set the default image and we encode it to base64

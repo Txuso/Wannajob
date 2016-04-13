@@ -14,6 +14,7 @@ public class WannajobUser {
     private String name;
     private String age;
     private String image;
+    private String description;
     private double longitude;
     private double latitude;
     private int distance;
@@ -23,9 +24,8 @@ public class WannajobUser {
         this.name = name;
         this.image = image;
         this.age = age;
-        this.latitude = 0;
-        this.longitude = 0;
         this.distance = 50;
+        this.description = "";
         this.registeredDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
     }
 
@@ -84,6 +84,14 @@ public class WannajobUser {
 
     public int getDistance() {
         return distance;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 
