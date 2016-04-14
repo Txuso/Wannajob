@@ -89,20 +89,23 @@ public class MainActivity extends AppCompatActivity
         service.putExtra("userID", extras.getString("userID"));
         this.startService(service);
 
+        latitude = extras.getDouble("latitude");
+        longitude = extras.getDouble("longitude");
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         //we get data from the Facebook account
-        gps = new GPSTracker(MainActivity.this);
-        if (gps.canGetLocation()){
+        if (latitude == 0 || longitude == 0) {
+            gps = new GPSTracker(MainActivity.this);
+            if (gps.canGetLocation()) {
 
-            latitude = gps.getLatitude();
-            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
-            longitude = gps.getLongitude();
-            mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+                latitude = gps.getLatitude();
+                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
+                longitude = gps.getLongitude();
+                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+            } else
+                gps.showSettingsAlert();
         }
-        else
-            gps.showSettingsAlert();
 
 
         swipeRefreshLayout.post(new Runnable() {
@@ -246,6 +249,7 @@ public class MainActivity extends AppCompatActivity
 
                     item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
                     adapter = new RVUserAdapter(jobs);
+
 
                     jobs.add(item);
                     rv.setAdapter(adapter);

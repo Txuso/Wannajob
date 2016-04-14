@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -25,25 +25,25 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import wannajob.classes.GPSTracker;
 import wannajob.classes.ImageManager;
 import wannajob.classes.WannajobUser;
 
@@ -67,7 +67,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     //Signin constant to check the activity result
     private int RC_SIGN_IN = 100;
 
-    boolean isLoged = false;
     /**
      * Boolean attribute that is on when the app is resumed
      */
@@ -188,90 +187,74 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 Request.executeMeRequestAsync(session, new Request.GraphUserCallback() {
                     @Override
                     public void onCompleted(final GraphUser user, Response response) {
+                        mFirebaseRef.child(user.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot snapshot) {
+                                if (snapshot.getValue() != null) {
+                                    Map<String, Object> wannaUser = (Map<String, Object>) snapshot.getValue();
+                                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("userID", user.getId());
+                                    intent.putExtra("name", user.getName());
+                                    intent.putExtra("latitude", (Double)wannaUser.get("latitude"));
+                                    intent.putExtra("longitude", (Double)wannaUser.get("longitude"));
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    String fbName = user.getName();
+                                    String fbAge = "22";
 
-                    mFirebaseRef.addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                            Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
+                                    //String fbAge = user.getBirthday().toString();
+                                    //String fbAgez= "22";
+                                    //we create the instance of the MainMenu
+                                    intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    //we put the user's name as an extra data to the next activity
 
-                            if (dataSnapshot.getKey().equals(user.getId()))
-                                isLoged = true;
+                                    //We set the default image and we encode it to base64
+                                    //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
 
-                        }
-
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                        }
-
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                        }
-
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
-
-                        }
-                    });
-                        if (!isLoged){
-                            String fbName = user.getName();
-                            String fbAge = "22";
-
-                            //String fbAge = user.getBirthday().toString();
-                            //String fbAgez= "22";
-                            //we create the instance of the MainMenu
-                            intent = new Intent(LoginActivity.this, MainActivity.class);
-                            //we put the user's name as an extra data to the next activity
-
-                            //We set the default image and we encode it to base64
-                            //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
-
-                            //String im = ImageManager.encodeTobase64(bm);
-                            String im = "";
-                            try {
-                                StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
-                                        .permitAll().build();
-                                StrictMode.setThreadPolicy(policy);
-                                URL imgUrl = new URL("https://graph.facebook.com/"
-                                        + user.getId() + "/picture?type=large");
-                                Bitmap mIcon1 = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
-                                im = ImageManager.encodeTobase64(mIcon1);
+                                    //String im = ImageManager.encodeTobase64(bm);
+                                    String im = "";
+                                    try {
+                                        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                                                .permitAll().build();
+                                        StrictMode.setThreadPolicy(policy);
+                                        URL imgUrl = new URL("https://graph.facebook.com/"
+                                                + user.getId() + "/picture?type=large");
+                                        Bitmap mIcon1 = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
+                                        im = ImageManager.encodeTobase64(mIcon1);
 
 
+                                    }
+                                    catch (MalformedURLException e){
+                                        im = "lksnflksdnflsd";
+                                    }
+
+                                    catch (IOException e2) {
+
+                                        im = "odfnsdfisdjf";
+
+                                    }
+                                    //We create the tandem user with the needed data
+
+                                    // we create a new instance cause it will be useful to get the ID of the new user
+                                    WannajobUser newUser = new WannajobUser(fbName, fbAge, im);
+
+                                    //We store the user in the Firebase root
+                                    mFirebaseRef.child(user.getId()).setValue(newUser);
+
+                                    //we put it as an extra data in the next activity
+                                    intent.putExtra("userID", user.getId());
+                                    intent.putExtra("name", user.getName());
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
                             }
-                            catch (MalformedURLException e){
-                                im = "lksnflksdnflsd";
+                            @Override
+                            public void onCancelled(FirebaseError arg0) {
                             }
-
-                            catch (IOException e2) {
-
-                                im = "odfnsdfisdjf";
-
-                            }
-                            //We create the tandem user with the needed data
-
-                            // we create a new instance cause it will be useful to get the ID of the new user
-                            WannajobUser newUser = new WannajobUser(fbName, fbAge, im);
-
-                            //We store the user in the Firebase root
-                            mFirebaseRef.child(user.getId()).setValue(newUser);
-
-                            //we put it as an extra data in the next activity
-                            intent.putExtra("userID", user.getId());
-
-                        }
-
-                        intent.putExtra("userID", user.getId());
-                        intent.putExtra("name", user.getName());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        finish();
+                        });
 
                     }
                 });
@@ -416,4 +399,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             signIn();
         }
     }
+
+
 }

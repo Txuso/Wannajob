@@ -151,6 +151,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
             itemView.setOnClickListener(this);
         }
 
+
         @Override
         public void onClick(View v) {
             if (mItemClickListener != null) {

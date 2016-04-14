@@ -32,6 +32,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileNotFoundException;
 import java.util.Calendar;
@@ -95,11 +96,15 @@ public class UserProfile extends AppCompatActivity {
                 // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
                 latitude = (double) user.get("latitude");
                 longitude = (double) user.get("longitude");
+
                 Bitmap pic = ImageManager.decodeBase64(user.get("image").toString());
                 userName.setText(user.get("name").toString() + " - " + user.get("age"));
                 userDescription.setText(user.get("description").toString());
                 BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
                 userPhoto.setImageDrawable(ob);
+
+
+
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
 
