@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
@@ -18,6 +20,18 @@
     android:layout_weight="1"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.txuso.wannajob.CreateJobActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="100dp">
+        <android.support.v7.widget.AppCompatImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="@android:drawable/ic_menu_camera"
+            android:id="@+id/job_photo_button" />
+    </RelativeLayout>
+
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout
@@ -87,8 +101,6 @@
                 android:text="@string/job_category"
                 android:gravity="start" />
 
-
-
 </LinearLayout>
 
     <LinearLayout
@@ -105,7 +117,6 @@
             android:text="@string/create_job"
             android:layout_gravity="bottom"
             android:background="#cecfcf" />
-
 
     </LinearLayout>
 

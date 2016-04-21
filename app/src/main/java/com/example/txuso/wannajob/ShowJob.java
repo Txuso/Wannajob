@@ -1,34 +1,30 @@
 package com.example.txuso.wannajob;
 
-import android.app.ActionBar;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.AppCompatButton;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.lang.ref.SoftReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import wannajob.chat.WannajobEncounter;
 import wannajob.classes.ImageManager;
@@ -46,6 +42,9 @@ public class ShowJob extends AppCompatActivity {
     Bundle extras;
     Firebase mFirebaseRef;
     String jobID;
+
+    Set<SoftReference<Bitmap>> mReusableBitmaps;
+    private LruCache<String, BitmapDrawable> mMemoryCache;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,3 +177,4 @@ public class ShowJob extends AppCompatActivity {
         }
     }
 }
+

@@ -64,6 +64,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     //google api client
     private GoogleApiClient mGoogleApiClient;
 
+    /**
+     *The Facebook login button which a component within the GUI
+     */
+    LoginButton mFacebookLoginButton;
+
     //Signin constant to check the activity result
     private int RC_SIGN_IN = 100;
 
@@ -140,10 +145,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         signInButton.setOnClickListener(this);
 
 
-        /**
-         *The Facebook login button which a component within the GUI
-         */
-        LoginButton mFacebookLoginButton  = (LoginButton) findViewById(R.id.login_with_facebook);
+        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_with_facebook);
 
         /**
          * Data that will be gathered from the user's Facebook account is set here
@@ -159,9 +161,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void onClick(View v) {
 
                 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.job);
-                String im = ImageManager.encodeTobase64(bm);
+                String imageBase64 = ImageManager.encodeTobase64(bm);
 
-                WannajobUser newU = new WannajobUser("Rodolfo", "40",im);
+                WannajobUser newU = new WannajobUser("Rodolfo", "40",imageBase64);
                 Firebase newTandRef = mFirebaseRef.push();
                 newTandRef.setValue(newU);
                 String logedUserID = newTandRef.getKey();
@@ -213,7 +215,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     //We set the default image and we encode it to base64
                                     //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
 
-                                    //String im = ImageManager.encodeTobase64(bm);
+                                    //String imageBase64 = ImageManager.encodeTobase64(bm);
                                     String im = "";
                                     try {
                                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -316,6 +318,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         isResumed = true;
         Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed())) {
+            mFacebookLoginButton.setVisibility(View.GONE);
+            signInButton.setVisibility(View.GONE);
             onFacebookSessionStateChange(session, session.getState(), null);
         }
         uiHelper.onResume();
