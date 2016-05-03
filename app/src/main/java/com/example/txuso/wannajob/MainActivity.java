@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity
     private EditText    edtSeach;
     private SwipeRefreshLayout swipeRefreshLayout;
     Toolbar toolbar;
-    LinearLayoutManager llm;
+    StaggeredGridLayoutManager sGridLayout;
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
     /**
@@ -85,9 +86,9 @@ public class MainActivity extends AppCompatActivity
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
-        Intent service = new Intent(this, NotificationHandler.class);
-        service.putExtra("userID", extras.getString("userID"));
-        this.startService(service);
+       // Intent service = new Intent(this, NotificationHandler.class);
+        //service.putExtra("userID", extras.getString("userID"));
+        //this.startService(service);
 
         latitude = extras.getDouble("latitude");
         longitude = extras.getDouble("longitude");
@@ -169,9 +170,10 @@ public class MainActivity extends AppCompatActivity
         });
 
         rv = (RecyclerView)findViewById(R.id.rv);
-        llm = new LinearLayoutManager(getApplicationContext());
-        rv.setLayoutManager(llm);
-        rv.setHasFixedSize(true);
+        //llm = new LinearLayoutManager(getApplicationContext());
+
+       // rv.setLayoutManager(llm);
+      //  rv.setHasFixedSize(true);
     }
 
     private void fetchJobs(final double latitude, final double longitude) {
@@ -179,7 +181,6 @@ public class MainActivity extends AppCompatActivity
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs);
-        adapter.clearContent();
         rv.setAdapter(adapter);
 
 
@@ -196,8 +197,8 @@ public class MainActivity extends AppCompatActivity
                 if (distance <= 50) {
 
                     pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
-                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
-                    Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
+                  //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
+                    Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
 
                     item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
                     item.setDistance(distance);
@@ -274,9 +275,7 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //TODO
-//                adapter.removeJob(dataSnapshot.getKey());
-  //              rv.setAdapter(adapter);
+
             }
 
             @Override
@@ -291,7 +290,8 @@ public class MainActivity extends AppCompatActivity
 
 
         });
-
+        sGridLayout = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        rv.setLayoutManager(sGridLayout);
 
     }
 
@@ -343,7 +343,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                // TODO Auto-generated method stub
                 return false;
             }
         });
