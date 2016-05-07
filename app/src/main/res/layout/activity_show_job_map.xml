@@ -7,7 +7,7 @@
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="300dp" android:id="@+id/map"
-        tools:context="com.example.txuso.wannajob.ShowJobMap"
+        tools:context=".activities.ShowJobMapActivity"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"

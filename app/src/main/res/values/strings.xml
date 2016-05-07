@@ -59,4 +59,11 @@
     <string name="choose_app_share_wannajob_message">Choose an application to share Wannajob</string>
     <string name="title_activity_show_job_map">Map</string>
     <string name="request_job_text_button">WANNA DO IT</string>
+
+    <string name="edit_profile_text">EDIT PROFILE</string>
+    <string name="age_text">Age</string>
+    <string name="name_text">Name</string>
+    <string name="description_text">Description</string>
+
+
 </resources>

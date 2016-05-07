@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
 
 
-    tools:context="com.example.txuso.wannajob.LoginActivity">
+    tools:context=".activities.LoginActivity">
     
     <ViewFlipper
         android:layout_width="match_parent"
