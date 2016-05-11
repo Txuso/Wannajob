@@ -15,8 +15,8 @@ public class WannajobUser {
     private String age;
     private String image;
     private String description;
-    private double longitude;
-    private double latitude;
+    private long longitude;
+    private long latitude;
     private int distance;
     private String registeredDate;
 
@@ -62,11 +62,11 @@ public class WannajobUser {
         this.image = image;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(long latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(long longitude) {
         this.longitude = longitude;
     }
 
