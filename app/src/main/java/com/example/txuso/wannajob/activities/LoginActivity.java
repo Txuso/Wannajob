@@ -14,6 +14,7 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -191,16 +192,28 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                 if (snapshot.getValue() != null) {
                                     Map<String, Object> wannaUser = (Map<String, Object>) snapshot.getValue();
                                     intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    UserManager.setUserName(getApplicationContext(), wannaUser.get("name").toString());
+                                    UserManager.setUserAge(getApplicationContext(), wannaUser.get("age").toString());
+                                    UserManager.setUserPhoto(getApplicationContext(), wannaUser.get("image").toString());
+                                    UserManager.setUserDescription(getApplicationContext(),wannaUser.get("description").toString());
+                                    UserManager.setUserId(getApplicationContext(), user.getId());
+                                    UserManager.setUserLatitude(getApplicationContext(),(Double)wannaUser.get("latitude"));
+                                    UserManager.setUserLongitude(getApplicationContext(), (Double) wannaUser.get("longitude"));
+                                    UserManager.setUserRegisteredDate(getApplicationContext(), wannaUser.get("registeredDate").toString());
+                                    /*
                                     intent.putExtra("userID", user.getId());
                                     intent.putExtra("name", user.getName());
                                     intent.putExtra("latitude", (Double)wannaUser.get("latitude"));
                                     intent.putExtra("longitude", (Double)wannaUser.get("longitude"));
+                                    */
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
                                 } else {
                                     String fbName = user.getName();
                                     String fbAge = "22";
+                                    UserManager.setUserId(getApplicationContext(), user.getId());
+
 
                                     //String fbAge = user.getBirthday().toString();
                                     //String fbAgez= "22";

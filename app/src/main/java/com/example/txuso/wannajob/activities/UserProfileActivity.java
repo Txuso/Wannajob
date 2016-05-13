@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.RoundedImageView;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -40,7 +41,6 @@ import com.example.txuso.wannajob.misc.things.ImageManager;
 
 public class UserProfileActivity extends AppCompatActivity {
 
-    Bundle extras;
     String userID;
     Firebase firebaseRef;
     double latitude;
@@ -71,9 +71,8 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        extras = getIntent().getExtras();
         ButterKnife.bind(this);
-        userID = extras.getString("userID");
+        userID = UserManager.getUserId(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -82,89 +81,16 @@ public class UserProfileActivity extends AppCompatActivity {
                 .findFragmentById(R.id.user_map);
 
         firebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
-
-
-        firebaseRef.child(userID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-                latitude = (double) user.get("latitude");
-                longitude = (double) user.get("longitude");
-                Bitmap pic = ImageManager.decodeBase64(user.get("image").toString());
-                userName.setText(user.get("name").toString() + " - " + user.get("age"));
-                userDescription.setText(user.get("description").toString());
-                BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-                userPhoto.setImageDrawable(ob);
-
-                mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
-
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
+        latitude = UserManager.getUserLatitude(this);
+        longitude = UserManager.getUserLongitude(this);
+        Bitmap pic = ImageManager.decodeBase64(UserManager.getUserPhoto(this));
+        userName.setText(UserManager.getUserName(this) + " - " + UserManager.getUserAge(this));
+        userDescription.setText(UserManager.getUserDescription(this));
+        BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+        userPhoto.setImageDrawable(ob);
 
         setUpMapIfNeeded();
             /*
-        userID = extras.getString("userID");
-        firebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar_user);
-        image = (ImageView) findViewById(R.id.user_image);
-        userName = (TextInputLayout) findViewById(R.id.user_name);
-        userAge = (TextInputLayout) findViewById(R.id.user_age);
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-
-
-        firebaseRef.child(userID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-
-                collapsingToolbarLayout.setTitle(user.get("name").toString());
-                // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
-
-                //  Picasso.with(getApplicationContext()).load()
-                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-                Bitmap pic = ImageManager.decodeBase64(user.get("image").toString());
-                Drawable d = new BitmapDrawable(getResources(), pic);
-                setPalette(pic);
-                image.setBackground(d);
-
-                userName.getEditText().setText(user.get("name").toString());
-                userAge.getEditText().setText(user.get("age").toString());
-
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-
-        createEvent();
-
-
-
-    }
-
-    private void setPalette(Bitmap bd) {
-
-        Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-                int primaryDark = getResources().getColor(R.color.colorPrimaryDark);
-                collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkVibrantColor(primaryDark));
-                collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkVibrantColor(primaryDark));
-            }
-        });
-
-    }
-
-
 
     public void createEvent () {
         long calID = 3;
@@ -242,6 +168,9 @@ public class UserProfileActivity extends AppCompatActivity {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.user_map))
                     .getMap();
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+
             mMap.setMyLocationEnabled(true);
 
             // Check if we were successful in obtaining the map.

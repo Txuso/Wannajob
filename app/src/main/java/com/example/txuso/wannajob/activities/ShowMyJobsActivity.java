@@ -13,6 +13,7 @@ import android.view.View;
 
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -31,7 +32,6 @@ public class ShowMyJobsActivity extends AppCompatActivity {
     private List<JobListItem> jobs;
     Firebase mFirebaseRef;
     RVUserAdapter adapter;
-    Bundle extras;
     String userID;
     JobListItem item;
     private RecyclerView rv;
@@ -47,8 +47,7 @@ public class ShowMyJobsActivity extends AppCompatActivity {
 
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
-        extras = getIntent().getExtras();
-        userID = extras.getString("userID");
+        userID = UserManager.getUserId(this);
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs);
@@ -72,7 +71,7 @@ public class ShowMyJobsActivity extends AppCompatActivity {
 
                             Intent showJob = new Intent(ShowMyJobsActivity.this, ShowJobVacanciesActivity.class);
                             showJob.putExtra("jobID", dataSnapshot.getKey());
-                            showJob.putExtra("fromID", extras.getString("userID"));
+                            showJob.putExtra("fromID", userID);
                             showJob.putExtra("toID", job.get("creatorID").toString());
                             showJob.putExtra("to", job.get("name").toString());
                             startActivity(showJob);

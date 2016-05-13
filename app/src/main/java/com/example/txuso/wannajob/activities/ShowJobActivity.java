@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -57,7 +58,7 @@ public class ShowJobActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         jobID = extras.getString("jobID");
-        final String fromId = extras.getString("fromID");
+        final String fromId = UserManager.getUserId(this);
         final String toId = extras.getString("toID");
         final String to = extras.getString("to");
 

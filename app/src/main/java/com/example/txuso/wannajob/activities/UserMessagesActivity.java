@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -31,7 +32,6 @@ import com.example.txuso.wannajob.misc.things.RoundedImageView;
 
 public class UserMessagesActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
-    Bundle extras;
     String userID;
     Firebase myFirebaseRef;
     private RecyclerView rv;
@@ -53,8 +53,7 @@ public class UserMessagesActivity extends AppCompatActivity implements AdapterVi
         setContentView(R.layout.activity_user_messages);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        extras = getIntent().getExtras();
-        userID = extras.getString("userID");
+        userID = UserManager.getUserId(this);
 
         myFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 

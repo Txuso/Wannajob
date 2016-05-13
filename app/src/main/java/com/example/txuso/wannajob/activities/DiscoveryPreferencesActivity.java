@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.Firebase;
 
 import java.io.IOException;
@@ -32,6 +33,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
     GPSTracker gps;
     TextInputLayout search;
     Firebase tandemRef;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
         AppCompatButton myLocButton = (AppCompatButton) findViewById(R.id.myLocButton);
         search = (TextInputLayout) findViewById(R.id.input_loc_name);
         gc = new Geocoder(this.getApplicationContext());
+        userID = UserManager.getUserId(this);
 
         myLocButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +53,8 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                 gps = new GPSTracker(DiscoveryPreferencesActivity.this);
                 if (gps.canGetLocation()) {
 
-                    tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(gps.getLatitude());
-                    tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(gps.getLongitude());
+                    tandemRef.child(userID).child("latitude").setValue(gps.getLatitude());
+                    tandemRef.child(userID).child("longitude").setValue(gps.getLongitude());
                     Intent intent = getIntent();
                     intent.putExtra("latitude", gps.getLatitude());
                     intent.putExtra("longitude", gps.getLongitude());
@@ -120,9 +123,9 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                                 longitude = location.getLongitude();
                                 latitude = location.getLatitude();
 
-                                tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(latitude);
-                                tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(longitude);
-                                tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
+                                tandemRef.child(userID).child("latitude").setValue(latitude);
+                                tandemRef.child(userID).child("longitude").setValue(longitude);
+                                tandemRef.child(userID).child("distance").setValue(progressValue);
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                                 Intent intent = getIntent();
@@ -159,9 +162,9 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
 
-                        tandemRef.child(getIntent().getExtras().getString("userID")).child("latitude").setValue(latitude);
-                        tandemRef.child(getIntent().getExtras().getString("userID")).child("longitude").setValue(longitude);
-                        tandemRef.child(getIntent().getExtras().getString("userID")).child("distance").setValue(progressValue);
+                        tandemRef.child(userID).child("latitude").setValue(latitude);
+                        tandemRef.child(userID).child("longitude").setValue(longitude);
+                        tandemRef.child(userID).child("distance").setValue(progressValue);
 
                         Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         Intent intent = getIntent();

@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * Extra data from the login containing the ID of the loged user
      */
-    Bundle extras;
 
 
     @Override
@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        extras = getIntent().getExtras();
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
@@ -76,8 +75,8 @@ public class MainActivity extends AppCompatActivity
         //service.putExtra("userID", extras.getString("userID"));
         //this.startService(service);
 
-        latitude = extras.getDouble("latitude");
-        longitude = extras.getDouble("longitude");
+        latitude = UserManager.getUserLatitude(this);
+        longitude = UserManager.getUserLongitude(this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -86,10 +85,14 @@ public class MainActivity extends AppCompatActivity
             gps = new GPSTracker(MainActivity.this);
             if (gps.canGetLocation()) {
 
-                latitude = gps.getLatitude();
-                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("latitude").setValue(latitude);
-                longitude = gps.getLongitude();
-                mFirebaseRef.child("wannajobUsers").child(extras.getString("userID")).child("longitude").setValue(longitude);
+                latitude = (long)gps.getLatitude();
+                mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("latitude").setValue(latitude);
+                UserManager.setUserLatitude(this,latitude);
+
+                longitude = (long)gps.getLongitude();
+                mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("longitude").setValue(longitude);
+                UserManager.setUserLongitude(this,longitude);
+
             } else
                 gps.showSettingsAlert();
         }
@@ -112,9 +115,6 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
-                newJobIntent.putExtra("userID", extras.getString("userID"));
-                newJobIntent.putExtra("latitude", latitude);
-                newJobIntent.putExtra("longitude",longitude);
 
                 startActivity(newJobIntent);
             }
@@ -143,14 +143,13 @@ public class MainActivity extends AppCompatActivity
         LinearLayout header = (LinearLayout) headerview.findViewById(R.id.nav_profile);
         TextView headerName = (TextView) headerview.findViewById(R.id.user_drawer_text);
         TextView headerAge = (TextView) headerview.findViewById(R.id.published_jobs_text);
-        headerName.append(new StringBuffer(extras.getString("name")));
+        headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
 
          //   headerJobs.append(new StringBuffer(countJobs+""));
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent userProf = new Intent(MainActivity.this, UserProfileActivity.class);
-                userProf.putExtra("userID", extras.getString("userID"));
                 startActivity(userProf);
             }
         });
@@ -202,7 +201,6 @@ public class MainActivity extends AppCompatActivity
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", job.getCreatorID());
                         showJob.putExtra("to", job.getName());
                         //showJob.putExtra("image", byteArray);
@@ -243,7 +241,6 @@ public class MainActivity extends AppCompatActivity
                         public void onItemClick(View view, int position) {
                             Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
-                            showJob.putExtra("fromID", extras.getString("userID"));
                             showJob.putExtra("toID", job.getCreatorID());
                             showJob.putExtra("to", job.getName());
                             startActivity(showJob);
@@ -319,7 +316,6 @@ public class MainActivity extends AppCompatActivity
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", jobs.get(position).getCreatorID());
                         showJob.putExtra("to", jobs.get(position).getName());
                         //showJob.putExtra("image", byteArray);
@@ -371,7 +367,6 @@ public class MainActivity extends AppCompatActivity
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", jobs.get(position).getCreatorID());
                         showJob.putExtra("to", jobs.get(position).getName());
                         //showJob.putExtra("image", byteArray);
@@ -391,7 +386,6 @@ public class MainActivity extends AppCompatActivity
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", jobs.get(position).getCreatorID());
                         showJob.putExtra("to", jobs.get(position).getName());
                         startActivity(showJob);
@@ -413,7 +407,6 @@ public class MainActivity extends AppCompatActivity
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("fromID", extras.getString("userID"));
                         showJob.putExtra("toID", jobs.get(position).getCreatorID());
                         showJob.putExtra("to", jobs.get(position).getName());
                         //showJob.putExtra("image", byteArray);
@@ -451,7 +444,6 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_messages) {
             Intent messages = new Intent(MainActivity.this,UserMessagesActivity.class);
-            messages.putExtra("userID", extras.getString("userID"));
             startActivity(messages);
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();
@@ -460,7 +452,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(shareW);
         } else if (id == R.id.nav_jobs) {
             Intent showMyJob = new Intent(MainActivity.this, ShowMyJobsActivity.class);
-            showMyJob.putExtra("userID", extras.getString("userID"));
             startActivity(showMyJob);
         }
 
@@ -486,7 +477,6 @@ public class MainActivity extends AppCompatActivity
 
     public void callDiscoveryPreferences () {
         Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferencesActivity.class);
-        discoPref.putExtra("userID", extras.getString("userID"));
         startActivityForResult(discoPref, 1);
     }
 

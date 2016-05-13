@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.Firebase;
 
 import java.io.File;
@@ -33,10 +34,7 @@ public class CreateJobActivity extends AppCompatActivity {
 
     AlertDialog levelDialog;
     Firebase mFirebaseRef;
-    Bundle extra;
-
     private Uri mImageCaptureUri;
-
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
@@ -66,9 +64,8 @@ public class CreateJobActivity extends AppCompatActivity {
             }
         });
 
-        extra = getIntent().getExtras();
-        this.latitude = (double)extra.get("latitude");
-        this.longitude = (double)extra.get("longitude");
+        this.latitude = UserManager.getUserLatitude(this);
+        this.longitude = UserManager.getUserLongitude(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
         AppCompatButton createJobB = (AppCompatButton) findViewById(R.id.createJobButton);
@@ -111,7 +108,7 @@ public class CreateJobActivity extends AppCompatActivity {
                             jobDescription.getEditText().getText().toString(),
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
                             jobCategoryB.getText().toString(),
-                            extra.getString("userID"), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageBase64,
+                            UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageBase64,
                             jobDuration.getEditText().getText().toString(),latitude, longitude);
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     mFirebaseRef.child("wannaJobs").push().setValue(newJob);
