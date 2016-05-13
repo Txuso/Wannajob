@@ -52,6 +52,7 @@ android:layout_marginTop="10dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="20dp"
+                android:id="@+id/edit_profile_dialog_location_layout"
                 android:layout_marginBottom="30dp"
                 android:background="@color/colorWhite"
                 android:layout_marginLeft="10dp"
@@ -59,7 +60,6 @@ android:layout_marginTop="10dp"
                 >
 
                 <TextView
-                    android:id="@+id/titlet5"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -74,7 +74,6 @@ android:layout_marginTop="10dp"
 
 
                 <TextView
-                    android:id="@+id/titlet6"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -122,16 +121,15 @@ android:layout_marginTop="10dp"
                     android:textColor="@color/color_texmenutop"/>
 
                 <EditText
-                    android:id="@+id/titlet8"
+                    android:id="@+id/edit_profile_dialog_name"
+                    android:selectAllOnFocus="true"
+                    android:inputType="textCapWords"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-
                     android:paddingBottom="10dp"
-                    android:textSize="14dp"
-
-                    android:text="Eliza Mark"
+                    android:textSize="14sp"
                     android:textColor="@color/color_menufont"/>
 
             </LinearLayout>
@@ -168,16 +166,15 @@ android:layout_marginTop="10dp"
 
 
                 <EditText
-                    android:id="@+id/titlet19"
+                    android:id="@+id/edit_profile_dialog_age"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
+                    android:selectAllOnFocus="true"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
-
+                    android:inputType="number"
                     android:paddingBottom="10dp"
                     android:textSize="14dp"
-
-                    android:text="23"
                     android:textColor="@color/color_menufont"/>
 
             </LinearLayout>
@@ -213,14 +210,15 @@ android:layout_marginTop="10dp"
                     android:textColor="@color/color_texmenutop"/>
 
                 <EditText
-                    android:id="@+id/titl"
+                    android:id="@+id/edit_profile_dialog_description"
+                    android:selectAllOnFocus="true"
                     android:layout_width="match_parent"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:paddingLeft="5dp"
                     android:paddingBottom="10dp"
-                    android:textSize="14dp"
-                    android:text="VAMOS WANNAJOBERS!!!!!!"
+                    android:textSize="14sp"
+                    android:inputType="textMultiLine"
                     android:textColor="@color/color_menufont"/>
 
             </LinearLayout>
@@ -236,6 +234,7 @@ android:layout_marginTop="10dp"
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:id="@+id/edit_profile_dialog_save_changes_layout"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="20dp"
@@ -244,7 +243,6 @@ android:layout_marginTop="10dp"
             >
 
             <TextView
-                android:id="@+id/titlet7"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
                 android:padding="10dp"

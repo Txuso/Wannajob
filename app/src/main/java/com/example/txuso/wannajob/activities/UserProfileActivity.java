@@ -14,8 +14,11 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
@@ -136,8 +139,35 @@ public class UserProfileActivity extends AppCompatActivity {
         final Dialog myDialog = new Dialog(UserProfileActivity.this);
         myDialog.getWindow();
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        myDialog.setCancelable(false);
         myDialog.setContentView(R.layout.edit_profile_dialog);
+        final EditText nameE = (EditText) myDialog.findViewById(R.id.edit_profile_dialog_name);
+        final EditText descriptionE = (EditText) myDialog.findViewById(R.id.edit_profile_dialog_description);
+        final EditText ageE = (EditText) myDialog.findViewById(R.id.edit_profile_dialog_age);
+        LinearLayout saveChanges = (LinearLayout) myDialog.findViewById(R.id.edit_profile_dialog_save_changes_layout);
+
+        nameE.setText(UserManager.getUserName(getApplicationContext()));
+        descriptionE.setText(UserManager.getUserDescription(getApplicationContext()));
+        ageE.setText(UserManager.getUserAge(getApplicationContext()));
+
+        saveChanges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseRef.child(userID).child("name").setValue(nameE.getEditableText().toString());
+                firebaseRef.child(userID).child("description").setValue(descriptionE.getText().toString());
+                firebaseRef.child(userID).child("age").setValue(ageE.getEditableText().toString());
+
+                UserManager.setUserName(getApplicationContext(), nameE.getEditableText().toString());
+                UserManager.setUserAge(getApplicationContext(), ageE.getEditableText().toString());
+                UserManager.setUserDescription(getApplicationContext(),descriptionE.getEditableText().toString());
+
+                userName.setText(UserManager.getUserName(getApplicationContext()) + " - " + UserManager.getUserAge(getApplicationContext()));
+                userDescription.setText(UserManager.getUserDescription(getApplicationContext()));
+
+                myDialog.cancel();
+            }
+        });
+
+
         myDialog.setCancelable(true);
         myDialog.show();
     }

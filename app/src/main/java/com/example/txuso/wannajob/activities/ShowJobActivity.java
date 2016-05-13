@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.util.LruCache;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -43,6 +45,7 @@ public class ShowJobActivity extends AppCompatActivity {
     Bundle extras;
     Firebase mFirebaseRef;
     String jobID;
+    Bitmap pic;
 
     Set<SoftReference<Bitmap>> mReusableBitmaps;
     private LruCache<String, BitmapDrawable> mMemoryCache;
@@ -128,7 +131,7 @@ public class ShowJobActivity extends AppCompatActivity {
 
                 //  Picasso.with(getApplicationContext()).load()
                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-                Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+                pic = ImageManager.decodeBase64(job.get("jobImage").toString());
                 Drawable d = new BitmapDrawable(getResources(), pic);
 
                 setPalette(pic);
@@ -176,6 +179,14 @@ public class ShowJobActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onResume();
+        pic.recycle();
+        finish();
+
     }
 }
 

@@ -30,6 +30,8 @@ import com.example.txuso.wannajob.misc.things.CharacterCountErrorWatcher;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
 
+import butterknife.Bind;
+
 public class CreateJobActivity extends AppCompatActivity {
 
     AlertDialog levelDialog;
@@ -40,13 +42,30 @@ public class CreateJobActivity extends AppCompatActivity {
     private static final int PICK_FROM_FILE = 2;
 
     Bitmap bm;
+
     String imageBase64;
+
+    @Bind(R.id.input_job_name)
     TextInputLayout jobName;
+
+    @Bind(R.id.input_job_description)
     TextInputLayout jobDescription;
+
+    @Bind(R.id.input_job_salary)
     TextInputLayout jobSalary;
+
+    @Bind(R.id.input_job_duration)
     TextInputLayout jobDuration;
+
+    @Bind(R.id.btn_categories)
     AppCompatButton jobCategoryB;
+
+    @Bind(R.id.createJobButton)
+    AppCompatButton createJobB;
+
+    @Bind(R.id.job_photo_button)
     android.support.v7.widget.AppCompatImageButton imageP;
+
     double latitude;
     double longitude;
 
@@ -56,7 +75,6 @@ public class CreateJobActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_job);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         imageBase64 = "";
-        imageP = ((android.support.v7.widget.AppCompatImageButton) findViewById(R.id.job_photo_button));
         imageP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,14 +85,6 @@ public class CreateJobActivity extends AppCompatActivity {
         this.latitude = UserManager.getUserLatitude(this);
         this.longitude = UserManager.getUserLongitude(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
-
-        AppCompatButton createJobB = (AppCompatButton) findViewById(R.id.createJobButton);
-
-        jobName = (TextInputLayout) findViewById(R.id.input_job_name);
-        jobDescription = (TextInputLayout) findViewById(R.id.input_job_description);
-        jobSalary = (TextInputLayout) findViewById(R.id.input_job_salary);
-        jobDuration = (TextInputLayout) findViewById(R.id.input_job_duration);
-        jobCategoryB = (AppCompatButton) findViewById(R.id.btn_categories);
 
         jobDuration.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(jobDuration, 1,30));
         jobName.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(jobName, 1, 30));
