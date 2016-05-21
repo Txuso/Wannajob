@@ -1,12 +1,18 @@
 package com.example.txuso.wannajob.misc.things;
 
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.support.v4.util.LruCache;
 import android.util.Base64;
+
+import com.firebase.client.core.persistence.LRUCachePolicy;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 
@@ -15,12 +21,14 @@ import java.io.FileNotFoundException;
  */
 public  class ImageManager {
 
+
+
     //It provides methods to scale pictures and transform Bitmap --> String and from String --> Bitmap
     public static String encodeTobase64(Bitmap image)
     {
         Bitmap immagex=image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        immagex.compress(Bitmap.CompressFormat.JPEG,75, baos);
+        immagex.compress(Bitmap.CompressFormat.JPEG,100, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
 
@@ -30,7 +38,10 @@ public  class ImageManager {
     public static Bitmap decodeBase64(String input)
     {
         byte[] decodedByte = Base64.decode(input.getBytes(), Base64.DEFAULT);
-        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+        Bitmap image = BitmapFactory.decodeByteArray(decodedByte,0, decodedByte.length);//Decode image, "thumbnail" is the object of image file
+        return Bitmap.createScaledBitmap(image, 100 , 100 , true);
+
+
     }
     public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
         int width = bm.getWidth();

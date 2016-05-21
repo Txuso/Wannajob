@@ -1,7 +1,6 @@
 package com.example.txuso.wannajob.activities;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -23,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.things.UserManager;
@@ -31,23 +29,22 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
-import com.example.txuso.wannajob.misc.things.RoundedImageView;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
     Firebase mFirebaseRef;
     private List<JobListItem> jobs;
     private List<JobListItem> wordJobs;
-    private RecyclerView rv;
     RVUserAdapter adapter;
     JobListItem item;
     GPSTracker gps;
@@ -55,18 +52,35 @@ public class MainActivity extends AppCompatActivity
     double latitude;
     double longitude;
     private MenuItem mSearchAction;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    Toolbar toolbar;
     /**
      * Extra data from the login containing the ID of the loged user
      */
+    View headerView;
 
+    @Bind(R.id.content_main_recycler_view)
+    RecyclerView rv;
+
+    @Bind(R.id.app_bar_main_toolbar)
+    Toolbar toolbar;
+
+    @Bind(R.id.content_main_swiper_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @Bind(R.id.app_bar_main_create_job_floating_action_button)
+    FloatingActionButton createJob;
+
+    @Bind(R.id.activity_main_drawer_layout)
+    DrawerLayout drawer;
+
+    @Bind(R.id.activity_main_nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
@@ -77,7 +91,6 @@ public class MainActivity extends AppCompatActivity
 
         latitude = UserManager.getUserLatitude(this);
         longitude = UserManager.getUserLongitude(this);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
 
         swipeRefreshLayout.setOnRefreshListener(this);
         //we get data from the Facebook account
@@ -110,7 +123,6 @@ public class MainActivity extends AppCompatActivity
         /**
          * The floating button that allows the creation of jobs
          */
-        FloatingActionButton createJob = (FloatingActionButton) findViewById(R.id.createJobButton);
         createJob.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,7 +135,6 @@ public class MainActivity extends AppCompatActivity
         /**
          * The drawer layout settings
          */
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -132,17 +143,16 @@ public class MainActivity extends AppCompatActivity
         /**
          * We set the navigation drawer that will be displayed to the user
          */
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         /**
          * We get the header so that the user can click on it and
          * go to his/her profiles when it is clicked
          */
-        View headerview = navigationView.getHeaderView(0);
-        LinearLayout header = (LinearLayout) headerview.findViewById(R.id.nav_profile);
-        TextView headerName = (TextView) headerview.findViewById(R.id.user_drawer_text);
-        TextView headerAge = (TextView) headerview.findViewById(R.id.published_jobs_text);
+        headerView = navigationView.getHeaderView(0);
+        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.nav_header_profile);
+        TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
+        TextView headerAge = (TextView) headerView.findViewById(R.id.nav_header_main_published_jobs);
         headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
 
          //   headerJobs.append(new StringBuffer(countJobs+""));
@@ -153,9 +163,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(userProf);
             }
         });
-
-        rv = (RecyclerView)findViewById(R.id.rv);
-       // rv.setLayoutManager(llm);
+        // rv.setLayoutManager(llm);
       //  rv.setHasFixedSize(true);
     }
 
@@ -165,7 +173,7 @@ public class MainActivity extends AppCompatActivity
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs);
-        rv.setAdapter(adapter);
+        //rv.setAdapter(adapter);
 
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
@@ -208,13 +216,15 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 rv.setAdapter(adapter);
+                rv.setHasFixedSize(true);
                 swipeRefreshLayout.setRefreshing(false);
-
+                rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                /*
                 final Job job = dataSnapshot.getValue(Job.class);
 
 
@@ -251,6 +261,7 @@ public class MainActivity extends AppCompatActivity
 
                 rv.setAdapter(adapter);
                 swipeRefreshLayout.setRefreshing(false);
+                */
 
             }
 
@@ -272,12 +283,6 @@ public class MainActivity extends AppCompatActivity
 
         });
 
-        if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        }
-        else{
-            rv.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-        }
 
     }
 
@@ -287,7 +292,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         super.onResume();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -450,12 +454,12 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             Intent shareW = new Intent(MainActivity.this, ShareWannajobActivity.class);
             startActivity(shareW);
-        } else if (id == R.id.nav_jobs) {
-            Intent showMyJob = new Intent(MainActivity.this, ShowMyJobsActivity.class);
+        } else if (id == R.id.nav_categories) {
+            Intent showMyJob = new Intent(MainActivity.this, JobCategoryActivity.class);
             startActivity(showMyJob);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -465,6 +469,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
+        fetchJobs(latitude,longitude);
         swipeRefreshLayout.setRefreshing(false);
 
     }

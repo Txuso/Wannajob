@@ -2,6 +2,7 @@ package com.example.txuso.wannajob.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -47,14 +48,12 @@ public class ShowJobActivity extends AppCompatActivity {
     String jobID;
     Bitmap pic;
 
-    Set<SoftReference<Bitmap>> mReusableBitmaps;
-    private LruCache<String, BitmapDrawable> mMemoryCache;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_job);
         extras = getIntent().getExtras();
+
 
         toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar2);
         setSupportActionBar(toolbar);
@@ -132,11 +131,10 @@ public class ShowJobActivity extends AppCompatActivity {
                 //  Picasso.with(getApplicationContext()).load()
                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
                 pic = ImageManager.decodeBase64(job.get("jobImage").toString());
-                Drawable d = new BitmapDrawable(getResources(), pic);
 
                 setPalette(pic);
 
-                image.setBackground(d);
+                image.setImageBitmap(pic);
 
                 jobName.getEditText().setText(job.get("name").toString());
                 jobDescription.getEditText().setText(job.get("description").toString());
@@ -188,5 +186,6 @@ public class ShowJobActivity extends AppCompatActivity {
         finish();
 
     }
+
 }
 

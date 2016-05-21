@@ -33,7 +33,6 @@ public class ShareWannajobActivity extends AppCompatActivity {
 
         try{
 
-
             Bitmap adv = BitmapFactory.decodeResource(getResources(), R.drawable.job);
             Intent share = new Intent(Intent.ACTION_SEND);
             share.setType("image/jpeg");

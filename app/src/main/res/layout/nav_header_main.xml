@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:id="@+id/nav_profile">
+    android:id="@+id/nav_header_profile">
 
     <ImageView
         android:layout_width="wrap_content"
@@ -22,11 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:id="@+id/user_drawer_text"
+        android:id="@+id/nav_header_main_user_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
-        android:id="@+id/published_jobs_text"
+        android:id="@+id/nav_header_main_published_jobs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text= "@string/published_jobs" />

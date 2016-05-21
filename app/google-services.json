@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "705891677029",
+    "firebase_url": "https://wannajob.firebaseio.com",
+    "project_id": "project-6871569626797643888",
+    "storage_bucket": "project-6871569626797643888.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:705891677029:android:5e430682f08be049",
+        "android_client_info": {
+          "package_name": "com.example.txuso.wannajob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "705891677029-uss9rf4gvucgca45h6eu41ijg1rvp94d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-H4LC8glChcFTy6WEEXevQaoIhGRfDrA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -52,7 +54,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
-
 
     private GoogleMap mMap;
 
@@ -138,6 +139,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         final Dialog myDialog = new Dialog(UserProfileActivity.this);
         myDialog.getWindow();
+        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         myDialog.setContentView(R.layout.edit_profile_dialog);
         final EditText nameE = (EditText) myDialog.findViewById(R.id.edit_profile_dialog_name);

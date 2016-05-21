@@ -43,6 +43,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.WannajobUser;
+import com.google.firebase.storage.FirebaseStorage;
 
 
 public class LoginActivity extends Activity implements View.OnClickListener {
@@ -200,6 +201,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     UserManager.setUserLatitude(getApplicationContext(),(Double)wannaUser.get("latitude"));
                                     UserManager.setUserLongitude(getApplicationContext(), (Double) wannaUser.get("longitude"));
                                     UserManager.setUserRegisteredDate(getApplicationContext(), wannaUser.get("registeredDate").toString());
+                                    FirebaseStorage storage = FirebaseStorage.getInstance();
+
                                     /*
                                     intent.putExtra("userID", user.getId());
                                     intent.putExtra("name", user.getName());
@@ -213,6 +216,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     String fbName = user.getName();
                                     String fbAge = "22";
                                     UserManager.setUserId(getApplicationContext(), user.getId());
+                                    UserManager.setUserName(getApplicationContext(), fbName);
+                                    UserManager.setUserAge(getApplicationContext(), fbAge);
 
 
                                     //String fbAge = user.getBirthday().toString();
@@ -234,6 +239,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                                 + user.getId() + "/picture?type=large");
                                         Bitmap mIcon1 = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
                                         im = ImageManager.encodeTobase64(mIcon1);
+                                        UserManager.setUserPhoto(getApplicationContext(), im);
 
 
                                     }

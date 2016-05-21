@@ -31,6 +31,7 @@ import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class CreateJobActivity extends AppCompatActivity {
 
@@ -60,7 +61,7 @@ public class CreateJobActivity extends AppCompatActivity {
     @Bind(R.id.btn_categories)
     AppCompatButton jobCategoryB;
 
-    @Bind(R.id.createJobButton)
+    @Bind(R.id.app_bar_main_create_job_floating_action_button)
     AppCompatButton createJobB;
 
     @Bind(R.id.job_photo_button)
@@ -74,6 +75,7 @@ public class CreateJobActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_job);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ButterKnife.bind(this);
         imageBase64 = "";
         imageP.setOnClickListener(new View.OnClickListener() {
             @Override
