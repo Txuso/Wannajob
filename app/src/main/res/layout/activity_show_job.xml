@@ -183,21 +183,6 @@
             android:alpha=".75"
             android:background="#4148b4" />
 
-        <Button
-            android:layout_weight="1"
-            android:id="@+id/send_message_button"
-            android:layout_width="0dp"
-            android:textColor="@color/com_facebook_likebutton_text_color"
-            android:layout_marginRight="-4dp"
-            android:layout_marginEnd="-4dp"
-            android:layout_marginBottom="-4dp"
-            android:layout_height="wrap_content"
-            android:text="@string/send_message_button"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:alpha=".75"
-            android:background="#db5387" />
-
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

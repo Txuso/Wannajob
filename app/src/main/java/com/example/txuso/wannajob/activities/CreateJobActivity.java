@@ -24,6 +24,7 @@ import com.firebase.client.Firebase;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import com.example.txuso.wannajob.misc.things.CharacterCountErrorWatcher;
@@ -43,6 +44,7 @@ public class CreateJobActivity extends AppCompatActivity {
     private static final int PICK_FROM_FILE = 2;
 
     Bitmap bm;
+    String category = "";
 
     String imageBase64;
 
@@ -95,15 +97,15 @@ public class CreateJobActivity extends AppCompatActivity {
         jobCategoryB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = getResources().getStringArray(R.array.categories_list);
+                final String[] items = getResources().getStringArray(R.array.categories_list);
 
                 // Creating and Building the Dialog
                 AlertDialog.Builder builder = new AlertDialog.Builder(CreateJobActivity.this);
                 builder.setTitle(getString(R.string.job_category));
                 builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-
-                        jobCategoryB.setText(items[item]);
+                        jobCategoryB.setText(items[item].substring(1,items[item].length()));
+                        category = items[item];
                         levelDialog.dismiss();
                     }
                 });
@@ -119,7 +121,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     Job newJob = new Job(jobName.getEditText().getText().toString(),
                             jobDescription.getEditText().getText().toString(),
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
-                            jobCategoryB.getText().toString(),
+                            category,
                             UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageBase64,
                             jobDuration.getEditText().getText().toString(),latitude, longitude);
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
@@ -130,8 +132,6 @@ public class CreateJobActivity extends AppCompatActivity {
                 else Toast.makeText(getApplicationContext(), R.string.data_wrong_dialog , Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     public boolean checkConditions () {

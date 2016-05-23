@@ -1,9 +1,12 @@
 package com.example.txuso.wannajob.activities;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
@@ -15,8 +18,11 @@ import android.os.Bundle;
 import android.support.v7.graphics.Palette;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.things.UserManager;
@@ -68,7 +74,7 @@ public class ShowJobActivity extends AppCompatActivity {
 
 
 
-        Button messageB = (Button) findViewById(R.id.send_message_button);
+        //Button messageB = (Button) findViewById(R.id.send_message_button);
         Button itIsMineB = (Button) findViewById(R.id.request_button);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
         image = (ImageView) findViewById(R.id.image);
@@ -83,7 +89,7 @@ public class ShowJobActivity extends AppCompatActivity {
         //collapsingToolbarLayout.setTitle(extras.getString("jobName"));
         final Firebase mFirebaseRef2 = new Firebase("https://wannajob.firebaseio.com/wannajobEncounter");
 
-
+/*
         messageB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,12 +116,31 @@ public class ShowJobActivity extends AppCompatActivity {
 
             }
         });
-
+*/
         itIsMineB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               
+                final Dialog myDialog = new Dialog(ShowJobActivity.this);
+                myDialog.getWindow();
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                myDialog.setContentView(R.layout.bid_dialog);
+                final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
 
+                myDialog.findViewById(R.id.bit_plus).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bidNumberText.setText(Integer.parseInt(bidNumberText.getText().toString()) + 1);
+                    }
+                });
+
+                myDialog.findViewById(R.id.bit_minus).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        bidNumberText.setText(Integer.parseInt(bidNumberText.getText().toString()) - 1);
+                    }
+                });
+                myDialog.show();
             }
         });
 
@@ -137,7 +162,7 @@ public class ShowJobActivity extends AppCompatActivity {
                 image.setImageBitmap(pic);
 
                 jobName.getEditText().setText(job.get("name").toString());
-                jobDescription.getEditText().setText(job.get("description").toString());
+                jobDescription.getEditText().setText(job.get("description").toString().substring(1,job.get("description").toString().length()));
                 jobSalary.getEditText().setText(job.get("salary").toString());
                 jobDuration.getEditText().setText(job.get("jobDuration").toString());
                 jobCategory.getEditText().setText(job.get("category").toString());

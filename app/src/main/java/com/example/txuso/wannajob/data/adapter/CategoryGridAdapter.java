@@ -17,20 +17,21 @@ import java.util.List;
  * Created by Txuso on 21/05/16.
  */
 public class CategoryGridAdapter extends BaseAdapter {
-    private final List<Item> mItems = new ArrayList<Item>();
+    List<Item> mItems;
     private final LayoutInflater mInflater;
 
-    public CategoryGridAdapter(Context context) {
+    public CategoryGridAdapter(Context context, ArrayList<Item> mItems) {
+        this.mItems = mItems;
         mInflater = LayoutInflater.from(context);
 
-        mItems.add(new Item("Manitas, Reparaciones y Obras",       R.drawable.electricista));
-        mItems.add(new Item("Transportes/envíos",   R.drawable.paquetes));
-        mItems.add(new Item("Tecnología", R.drawable.taking_out_the_trash));
-        mItems.add(new Item("Clases",      R.drawable.clases));
-        mItems.add(new Item("Servicisos Domésticos",     R.drawable.fregar_platos));
-        mItems.add(new Item("Cocina",      R.drawable.limpieza));
-        mItems.add(new Item("Ayuda en General",      R.drawable.hacer_cola));
-        mItems.add(new Item("Otros",      R.drawable.paseo_perro));
+        mItems.add(new Item("Manitas, Reparaciones y Obras",       R.drawable.electricista, 0));
+        mItems.add(new Item("Transportes/envíos",   R.drawable.paquetes, 1));
+        mItems.add(new Item("Tecnología", R.drawable.taking_out_the_trash, 2));
+        mItems.add(new Item("Clases",      R.drawable.clases, 3));
+        mItems.add(new Item("Servicisos Domésticos",     R.drawable.fregar_platos, 4));
+        mItems.add(new Item("Cocina",      R.drawable.limpieza, 5));
+        mItems.add(new Item("Ayuda en General",      R.drawable.hacer_cola, 6));
+        mItems.add(new Item("Otros",      R.drawable.paseo_perro, 7));
     }
 
 
@@ -73,13 +74,16 @@ public class CategoryGridAdapter extends BaseAdapter {
     }
 
 
-    private static class Item {
+    public static class Item {
         public final String name;
         public final int drawableId;
+        public final int categoryId;
 
-        Item(String name, int drawableId) {
+
+        Item(String name, int drawableId, int categoryId) {
             this.name = name;
             this.drawableId = drawableId;
+            this.categoryId = categoryId;
         }
     }
 }

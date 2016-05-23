@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.things.UserManager;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     Bitmap pic;
     double latitude;
     double longitude;
+    int categoryID;
     private MenuItem mSearchAction;
     /**
      * Extra data from the login containing the ID of the loged user
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        fetchJobs(latitude, longitude);
+                                        fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
 
                                     }
                                 }
@@ -168,62 +171,63 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void fetchJobs(final double latitude, final double longitude) {
+    private void fetchJobs(final double latitude, final double longitude, final int categoryID) {
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs);
         //rv.setAdapter(adapter);
 
-        mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                final Job job = dataSnapshot.getValue(Job.class);
+        if (categoryID == UserManager.NOT_CATEGORY_FILTER) {
+            mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                    final Job job = dataSnapshot.getValue(Job.class);
 
-                double latitude2 = job.getLatitude();
-                double longitude2 = job.getLongitude();
-                double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
+                    double latitude2 = job.getLatitude();
+                    double longitude2 = job.getLongitude();
+                    double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
-                if (distance <= 25) {
+                    if (distance <= 25) {
 
-                    pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
-                  //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
-                    Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+                        pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                        //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
+                        Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
-                    item.setDistance(distance);
+                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
+                        item.setDistance(distance);
+                        adapter = new RVUserAdapter(jobs);
+                        jobs.add(item);
+
+                    }
+
+                    jobs = adapter.sortListByDistance();
                     adapter = new RVUserAdapter(jobs);
-                    jobs.add(item);
+                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                            byte[] byteArray = stream.toByteArray();
+
+                            Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("toID", job.getCreatorID());
+                            showJob.putExtra("to", job.getName());
+                            //showJob.putExtra("image", byteArray);
+                            startActivity(showJob);
+                        }
+                    });
+                    rv.setAdapter(adapter);
+                    rv.setHasFixedSize(true);
+                    swipeRefreshLayout.setRefreshing(false);
+                    rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
                 }
 
-                jobs = adapter.sortListByDistance();
-                adapter = new RVUserAdapter(jobs);
-                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                        byte[] byteArray = stream.toByteArray();
-
-                        Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
-                        showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("toID", job.getCreatorID());
-                        showJob.putExtra("to", job.getName());
-                        //showJob.putExtra("image", byteArray);
-                        startActivity(showJob);
-                    }
-                });
-                rv.setAdapter(adapter);
-                rv.setHasFixedSize(true);
-                swipeRefreshLayout.setRefreshing(false);
-                rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 /*
                 final Job job = dataSnapshot.getValue(Job.class);
 
@@ -263,25 +267,137 @@ public class MainActivity extends AppCompatActivity
                 swipeRefreshLayout.setRefreshing(false);
                 */
 
-            }
+                }
 
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-            }
+                }
 
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-            }
+                }
 
 
-        });
+            });
+        } else {
+            mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                    final Job job = dataSnapshot.getValue(Job.class);
+
+                    double latitude2 = job.getLatitude();
+                    double longitude2 = job.getLongitude();
+                    double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
+
+                    if (distance <= 25 && Character.getNumericValue(job.getCategory().charAt(0)) == categoryID) {
+                        pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                        //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
+                        Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+
+                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
+                        item.setDistance(distance);
+                        adapter = new RVUserAdapter(jobs);
+                        jobs.add(item);
+
+                    }
+
+                    jobs = adapter.sortListByDistance();
+                    adapter = new RVUserAdapter(jobs);
+                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
+                            byte[] byteArray = stream.toByteArray();
+
+                            Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("toID", job.getCreatorID());
+                            showJob.putExtra("to", job.getName());
+                            //showJob.putExtra("image", byteArray);
+                            startActivity(showJob);
+                        }
+                    });
+                    rv.setAdapter(adapter);
+                    rv.setHasFixedSize(true);
+                    swipeRefreshLayout.setRefreshing(false);
+                    rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                /*
+                final Job job = dataSnapshot.getValue(Job.class);
+
+
+                double latitude2 = job.getLatitude();
+                double longitude2 = job.getLongitude();
+                double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
+
+
+                if (distance <= 25 && !adapter.findJob(dataSnapshot.getKey())) {
+
+                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
+                    BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
+
+                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
+                    adapter = new RVUserAdapter(jobs);
+
+
+                    jobs.add(item);
+                    rv.setAdapter(adapter);
+
+                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
+                            Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("toID", job.getCreatorID());
+                            showJob.putExtra("to", job.getName());
+                            startActivity(showJob);
+                        }
+                    });
+
+                }
+
+                rv.setAdapter(adapter);
+                swipeRefreshLayout.setRefreshing(false);
+                */
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+
+
+            });
+
+        }
+
+
+
 
 
     }
@@ -455,8 +571,9 @@ public class MainActivity extends AppCompatActivity
             Intent shareW = new Intent(MainActivity.this, ShareWannajobActivity.class);
             startActivity(shareW);
         } else if (id == R.id.nav_categories) {
-            Intent showMyJob = new Intent(MainActivity.this, JobCategoryActivity.class);
-            startActivity(showMyJob);
+            Intent showCategories = new Intent(MainActivity.this, JobCategoryActivity.class);
+            startActivityForResult(showCategories, 2);
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);
@@ -469,7 +586,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        fetchJobs(latitude,longitude);
+        fetchJobs(latitude,longitude, UserManager.NOT_CATEGORY_FILTER);
         swipeRefreshLayout.setRefreshing(false);
 
     }
@@ -486,7 +603,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK && requestCode == 1){
@@ -496,7 +613,17 @@ public class MainActivity extends AppCompatActivity
             swipeRefreshLayout.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            fetchJobs(latitude, longitude);
+                                            fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
+
+                                        }
+                                    }
+            );
+        } else if (resultCode == RESULT_OK && requestCode == 2){
+            swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+            categoryID = data.getIntExtra("categoryId", categoryID);
+                                            fetchJobs(UserManager.getUserLatitude(getApplicationContext()), UserManager.getUserLongitude(getApplicationContext()), categoryID);
 
                                         }
                                     }

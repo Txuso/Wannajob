@@ -23,7 +23,7 @@
     <string name="nav_share_option">Compartir Wannajob</string>
     <string name="output_category">Categoría</string>
     <string name="published_jobs">Trabajos Publicados</string>
-    <string name="request_job_text_button">LO QUIERO HACER</string>
+    <string name="request_job_text_button">BET FOR THIS JOB</string>
     <string name="reset_filters">Resetear filtros</string>
     <string name="save_changes">Guardar Cambios</string>
     <string name="search_key_word">Buscar Palabras Clave</string>
@@ -38,14 +38,15 @@
     <string name="you_find_jobs_own_location">Encontrarás trabajos en tu propia localización y alrededor de </string>
     <string name="cancel_job">Cancelar Curro</string>
 
-
     <string-array name="categories_list">
-        <item>Servicios de casa</item>
-        <item>Transportes</item>
-        <item>Manitas</item>
-        <item>Educación</item>
-        <item>Deportes</item>
-        <item>Otros</item>
+        <item>0Manitas, Reparaciones y Obras</item>
+        <item>1Transportes/envíos</item>
+        <item>2Tecnología</item>
+        <item>3Clases</item>
+        <item>4Servicisos Domésticos</item>
+        <item>5Cocina</item>
+        <item>6Ayuda en General</item>
+        <item>7Otros</item>
     </string-array>
 
 </resources>

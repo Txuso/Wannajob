@@ -16,7 +16,9 @@ public class UserManager {
 
     //User data
 
+
     private static final String USER_ID = "userId";
+    public static final int NOT_CATEGORY_FILTER = -1;
 
     public static String getUserId(@NonNull Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);

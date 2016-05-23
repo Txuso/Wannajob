@@ -23,7 +23,7 @@
     <string name="nav_share_option">Wannajob Partekatu</string>
     <string name="output_category">Kategoria</string>
     <string name="published_jobs">Sortutako Lanak</string>
-    <string name="request_job_text_button">EGIN NAHI DUT</string>
+    <string name="request_job_text_button">BET FOR THIS JOB</string>
     <string name="reset_filters">Filtroak Berrezarri</string>
     <string name="save_changes">Aldaketak Gorde</string>
     <string name="search_key_word">Sartu Hitz Zehatzak</string>
@@ -39,12 +39,14 @@
     <string name="cancel_job">Lana Kendu</string>
 
     <string-array name="categories_list">
-        <item>Etxeko Zerbitsuak</item>
-        <item>Garraioak</item>
-        <item>Eskulangilea</item>
-        <item>Hezkuntza</item>
-        <item>Kirolak</item>
-        <item>Bestelakoak</item>
+        <item>0Manitas, Reparaciones y Obras</item>
+        <item>1Transportes/envíos</item>
+        <item>2Tecnología</item>
+        <item>3Clases</item>
+        <item>4Servicisos Domésticos</item>
+        <item>5Cocina</item>
+        <item>6Ayuda en General</item>
+        <item>7Otros</item>
     </string-array>
 
 </resources>
