@@ -3,16 +3,10 @@ package com.example.txuso.wannajob.activities;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.util.LruCache;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
@@ -20,32 +14,28 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.data.model.classes.Bid;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.lang.ref.SoftReference;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Map;
-import java.util.Set;
 
-import com.example.txuso.wannajob.data.model.classes.WannajobEncounter;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 
 public class ShowJobActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
     ImageView image;
-    TextInputLayout jobName;
+    TextView jobName;
     TextInputLayout jobDescription;
-    TextInputLayout jobSalary;
+    TextView jobSalary;
     TextInputLayout jobDuration;
     TextInputLayout jobCategory;
     android.support.v7.widget.Toolbar toolbar;
@@ -53,6 +43,9 @@ public class ShowJobActivity extends AppCompatActivity {
     Firebase mFirebaseRef;
     String jobID;
     Bitmap pic;
+    int val;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +54,7 @@ public class ShowJobActivity extends AppCompatActivity {
         extras = getIntent().getExtras();
 
 
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar2);
+        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_show_job_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -71,52 +64,24 @@ public class ShowJobActivity extends AppCompatActivity {
         final String to = extras.getString("to");
 
         final Intent chat = new Intent(this, ChatActivity.class);
-
+        /*
 
 
         //Button messageB = (Button) findViewById(R.id.send_message_button);
-        Button itIsMineB = (Button) findViewById(R.id.request_button);
+        Button itIsMineB = (Button) findViewById(R.id.activity_show_job_bet_button);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
-        image = (ImageView) findViewById(R.id.image);
+        image = (ImageView) findViewById(R.id.activity_show_job_image);
 //       image.setBackground(getDrawable(R.drawable.job));
-        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar2));
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        jobName = (TextInputLayout) findViewById(R.id.output_job_name);
+        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.activity_show_job_toolbar));
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.activity_show_job_collapsing_toolbar);
+        jobName = (TextView) findViewById(R.id.output_job_name);
         jobDescription = (TextInputLayout) findViewById(R.id.output_job_description);
-        jobSalary = (TextInputLayout) findViewById(R.id.output_job_salary);
+        jobSalary = (TextView) findViewById(R.id.output_job_salary);
         jobDuration = (TextInputLayout) findViewById(R.id.output_job_duration);
         jobCategory = (TextInputLayout) findViewById(R.id.output_job_category);
         //collapsingToolbarLayout.setTitle(extras.getString("jobName"));
-        final Firebase mFirebaseRef2 = new Firebase("https://wannajob.firebaseio.com/wannajobEncounter");
+        final Firebase mFirebaseRef2 = new Firebase("https://wannajob.firebaseio.com/bid");
 
-/*
-        messageB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //we put some extra data on the next activity
-                chat.putExtra("from", to);
-                chat.putExtra("to", to);
-                chat.putExtra("fromID", fromId);
-                chat.putExtra("toID", toId);
-                //we get the current time
-                String timeStamp = new SimpleDateFormat("yyyy/MM/dd").format(Calendar.getInstance().getTime());
-                //we create the TandemEncounter instance
-                WannajobEncounter enc = new WannajobEncounter(fromId, toId, to, timeStamp, false);
-                //we create a new instance of TandemEncounter to get later the ID
-                Firebase newTandRef = mFirebaseRef2.push();
-                //we store the new TandemEncounter on the Firebase root
-                newTandRef.setValue(enc);
-                //we get the created TandemEncounter's ID
-                String encounterID = newTandRef.getKey();
-                //we put the extra data on the chat activity that is about to be launched
-                chat.putExtra("encounterID", encounterID);
-                //we start the new activity
-                startActivity(chat);
-
-            }
-        });
-*/
         itIsMineB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,20 +91,30 @@ public class ShowJobActivity extends AppCompatActivity {
                 myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 myDialog.setContentView(R.layout.bid_dialog);
                 final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
-
-                myDialog.findViewById(R.id.bit_plus).setOnClickListener(new View.OnClickListener() {
+                NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
+                int maxValue = Integer.parseInt(jobSalary.getText().toString());
+                numberPicker.setMaxValue(maxValue);
+                bidNumberText.setText("Tu Puja: " + maxValue + " €");
+                numberPicker.setMinValue(1);
+                numberPicker.setValue(maxValue);
+                val = maxValue;
+                numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
-                    public void onClick(View v) {
-                        bidNumberText.setText(Integer.parseInt(bidNumberText.getText().toString()) + 1);
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        bidNumberText.setText("Tu Puja: " + newVal+" €");
+                        val = newVal;
                     }
                 });
 
-                myDialog.findViewById(R.id.bit_minus).setOnClickListener(new View.OnClickListener() {
+                myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        bidNumberText.setText(Integer.parseInt(bidNumberText.getText().toString()) - 1);
+                        Bid newBid = new Bid(val, jobID, fromId);
+                        mFirebaseRef.child("bid").push().setValue(newBid);
+                        myDialog.cancel();
                     }
                 });
+
                 myDialog.show();
             }
         });
@@ -161,9 +136,13 @@ public class ShowJobActivity extends AppCompatActivity {
 
                 image.setImageBitmap(pic);
 
-                jobName.getEditText().setText(job.get("name").toString());
+                jobName.setText(job.get("name").toString());
                 jobDescription.getEditText().setText(job.get("description").toString().substring(1,job.get("description").toString().length()));
-                jobSalary.getEditText().setText(job.get("salary").toString());
+                jobSalary.setText(job.get("salary").toString() + "" +
+                        "" +
+                        "" +
+                        "" +
+                        " €/ 20€");
                 jobDuration.getEditText().setText(job.get("jobDuration").toString());
                 jobCategory.getEditText().setText(job.get("category").toString());
             }
@@ -173,6 +152,7 @@ public class ShowJobActivity extends AppCompatActivity {
 
             }
         });
+        */
 
     }
 
@@ -207,7 +187,6 @@ public class ShowJobActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onResume();
-        pic.recycle();
         finish();
 
     }

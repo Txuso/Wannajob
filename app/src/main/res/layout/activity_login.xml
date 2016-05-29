@@ -16,19 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/guitar_teaching"
+            android:src="@drawable/wannajob_login_image"
             />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/taking_out_the_trash"
+            android:src="@drawable/txuso"
             />
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/paseo_perro"
+            android:src="@drawable/neska"
             />
         <ImageView
             android:layout_width="match_parent"

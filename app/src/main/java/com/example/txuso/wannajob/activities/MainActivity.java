@@ -555,7 +555,7 @@ public class MainActivity extends AppCompatActivity
      * Here we open the following activities:
      *  - Messages activity
      *  - Discovery preferences activity
-     *  - Share Wannajob activity
+     *  - Share wannajob_login_image activity
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

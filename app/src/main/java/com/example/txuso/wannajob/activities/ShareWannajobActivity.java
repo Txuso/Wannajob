@@ -69,7 +69,7 @@ public class ShareWannajobActivity extends AppCompatActivity {
 
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             b.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(getContentResolver(), b, "Wannajob lo otroooo", null);
+            String path = MediaStore.Images.Media.insertImage(getContentResolver(), b, "wannajob_login_image lo otroooo", null);
             Uri imageUri = Uri.parse(path);
             i.putExtra(Intent.EXTRA_STREAM, imageUri);
             String sAux = getString(R.string.share_wannajob_message);
@@ -77,13 +77,13 @@ public class ShareWannajobActivity extends AppCompatActivity {
             i.setPackage("com.whatsapp");
             i.setType("image/jpeg");
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(i, "Choose an application to share Wannajob"));
+            startActivity(Intent.createChooser(i, "Choose an application to share wannajob_login_image"));
 
             String sAux = getString(R.string.share_wannajob_message);
             sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
             i.setPackage("com.facebook.katana");
-            startActivity(Intent.createChooser(i, "Choose an application to share Wannajob"));
+            startActivity(Intent.createChooser(i, "Choose an application to share wannajob_login_image"));
             */
             finish();
         }
