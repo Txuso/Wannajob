@@ -64,6 +64,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/activity_show_job_like_button"
                     android:layout_marginTop="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,7 +72,6 @@
                     android:layout_gravity="center">
                     <com.example.txuso.wannajob.misc.RoundedImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/user_menu_photo"
                         android:layout_height="24dp"
                         android:layout_width="24dp"
                         android:background="@drawable/ic_favorite_white_24dp"
@@ -94,7 +94,7 @@
                     android:layout_marginLeft="6sp"
                     android:layout_marginStart="6sp"
                     android:textSize="24sp"
-                    android:id="@+id/output_job_name"/>
+                    android:id="@+id/activity_show_job_job_name"/>
 
                 <View
                     android:layout_width="325dp"
@@ -105,6 +105,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/activity_show_job_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -112,6 +113,7 @@
                     android:layout_marginBottom="10dp">
 
                     <LinearLayout
+                        android:id="@+id/activity_show_job_money_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -120,6 +122,7 @@
                         >
 
                     <TextView
+                        android:id="@+id/activity_show_job_money"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorWhite"
@@ -135,7 +138,7 @@
 
 
                     <LinearLayout
-
+                        android:id="@+id/activity_show_job_views_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -146,6 +149,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:id="@+id/activity_show_job_views"
                             android:text="7"
                             android:textSize="20dp"
                             android:textColor="@color/colorWhite"/>
@@ -157,6 +161,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/activity_show_job_bid_layout"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -164,6 +169,7 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/activity_show_job_bids"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="23"
@@ -203,6 +209,7 @@
                         android:textColor="@color/colorGray"/>
 
                     <TextView
+                        android:id="@+id/activity_show_job_description"
                         android:layout_marginTop="8dp"
                         android:paddingLeft="24dp"
                         android:paddingRight="24dp"
@@ -223,7 +230,7 @@
                     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                         android:layout_marginTop="20dp"
                         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                        android:layout_height="200dp" android:id="@+id/user_map"
+                        android:layout_height="200dp" android:id="@+id/activity_show_job_user_map"
                         tools:context="com.example.txuso.wannajob.activities.ShowJobActivity"
                         android:name="com.google.android.gms.maps.SupportMapFragment"/>
 
@@ -235,7 +242,7 @@
 
                         <com.example.txuso.wannajob.misc.RoundedImageView
                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/user_menu_photo_jobber"
+                            android:id="@+id/activity_show_job_user_photo"
                             app:riv_corner_radius="30dip"
                             app:riv_border_width="5dip"
                             android:layout_height="100dp"
@@ -249,7 +256,7 @@
                             android:layout_marginTop="150dp"
                             />
                         <RatingBar
-                            android:id="@+id/ratingBar"
+                            android:id="@+id/activity_show_job_user_rating"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:numStars="5"
@@ -262,7 +269,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:id="@+id/user_name"
+                            android:id="@+id/activity_show_job_user_name"
                             android:text="Ane la de Alex"
                             android:gravity="center"
                             android:layout_marginTop="4dp"

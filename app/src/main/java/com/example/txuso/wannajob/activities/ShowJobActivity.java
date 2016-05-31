@@ -1,10 +1,13 @@
 package com.example.txuso.wannajob.activities;
 
 import android.app.Dialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +18,9 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
@@ -29,41 +34,186 @@ import com.firebase.client.ValueEventListener;
 import java.util.Map;
 
 import com.example.txuso.wannajob.misc.things.ImageManager;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class ShowJobActivity extends AppCompatActivity {
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    ImageView image;
-    TextView jobName;
-    TextInputLayout jobDescription;
-    TextView jobSalary;
-    TextInputLayout jobDuration;
-    TextInputLayout jobCategory;
-    android.support.v7.widget.Toolbar toolbar;
     Bundle extras;
     Firebase mFirebaseRef;
     String jobID;
     Bitmap pic;
     int val;
 
+    private GoogleMap mMap;
 
+    @Bind(R.id.activity_show_job_app_bar_layout)
+    android.support.design.widget.AppBarLayout appBarLayout;
+
+    @Bind(R.id.activity_show_job_collapsing_toolbar)
+    android.support.design.widget.CollapsingToolbarLayout collapsingToolbarLayout;
+
+    @Bind(R.id.activity_show_job_image)
+    ImageView jobImage;
+
+    @Bind(R.id.activity_show_job_toolbar)
+    android.support.v7.widget.Toolbar toolbar;
+
+    @Bind(R.id.activity_show_job_scroll)
+    android.support.v4.widget.NestedScrollView nestedScrollView;
+
+    @Bind(R.id.activity_show_job_like_button)
+    LinearLayout likeButton;
+
+    @Bind(R.id.activity_show_job_job_name)
+    TextView jobName;
+
+    @Bind(R.id.activity_show_job_money_layout)
+    LinearLayout jobMoneyLayout;
+
+    @Bind(R.id.activity_show_job_money)
+    TextView jobMoney;
+
+    @Bind(R.id.activity_show_job_views_layout)
+    LinearLayout jobViewsLayout;
+
+    @Bind(R.id.activity_show_job_views)
+    TextView jobViews;
+
+    @Bind(R.id.activity_show_job_bid_layout)
+    LinearLayout jobBidsLayout;
+
+    @Bind(R.id.activity_show_job_bids)
+    TextView jobBids;
+
+    @Bind(R.id.activity_show_job_description)
+    TextView jobDescription;
+
+    @Bind(R.id.activity_show_job_user_photo)
+    com.example.txuso.wannajob.misc.RoundedImageView userPhoto;
+
+    @Bind(R.id.activity_show_job_user_rating)
+    RatingBar userRating;
+
+    @Bind(R.id.activity_show_job_user_name)
+    TextView userName;
+
+    @Bind(R.id.activity_show_job_bet_button)
+    Button betButton;
+
+    String fromId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_job);
+        ButterKnife.bind(this);
         extras = getIntent().getExtras();
 
-
-        toolbar = (android.support.v7.widget.Toolbar) findViewById(R.id.activity_show_job_toolbar);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.activity_show_job_user_map);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        jobID = extras.getString("jobID");
-        final String fromId = UserManager.getUserId(this);
-        final String toId = extras.getString("toID");
-        final String to = extras.getString("to");
 
-        final Intent chat = new Intent(this, ChatActivity.class);
+        jobID = extras.getString("jobID");
+        mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
+
+        fromId = UserManager.getUserId(this);
+
+
+        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+
+        mFirebaseRef.child("wannaJobs").child(jobID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                collapsingToolbarLayout.setTitle(job.get("name").toString());
+                // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
+
+                //  Picasso.with(getApplicationContext()).load()
+                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+
+                setPalette(pic);
+                jobImage.setImageBitmap(pic);
+
+                jobName.setText(job.get("name").toString());
+                jobDescription.setText(job.get("description").toString());
+                jobBids.setText(0+"");
+                jobViews.setText(0+"");
+                jobMoney.setText(job.get("salary").toString() + "€");
+                setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
+
+                //jobDuration.getEditText().setText(job.get("jobDuration").toString());
+                //jobCategory.getEditText().setText(job.get("category").toString());
+                mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
+                        userName.setText(user.get("name").toString());
+                        pic = ImageManager.decodeBase64(user.get("image").toString());
+                        userPhoto.setImageBitmap(pic);
+
+                    }
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        betButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog myDialog = new Dialog(ShowJobActivity.this);
+                myDialog.getWindow();
+                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                myDialog.setContentView(R.layout.bid_dialog);
+                final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
+                NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
+                int maxValue = Integer.parseInt(jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
+                numberPicker.setMaxValue(maxValue);
+                bidNumberText.setText("Tu Puja: " + maxValue + " €");
+                numberPicker.setMinValue(1);
+                numberPicker.setValue(maxValue);
+                val = maxValue;
+                numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                    @Override
+                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                        bidNumberText.setText("Tu Puja: " + newVal+" €");
+                        val = newVal;
+                    }
+                });
+
+                myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bid newBid = new Bid(val, jobID, fromId);
+                        mFirebaseRef.child("bid").push().setValue(newBid);
+                        myDialog.cancel();
+                    }
+                });
+
+                myDialog.show();
+            }
+        });
+
+
         /*
 
 
@@ -170,6 +320,7 @@ public class ShowJobActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -189,6 +340,33 @@ public class ShowJobActivity extends AppCompatActivity {
         super.onResume();
         finish();
 
+    }
+    private void setUpMapIfNeeded(double latitude, double longitude) {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+            // Try to obtain the map from the SupportMapFragment.
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.activity_show_job_user_map))
+                    .getMap();
+            mMap.setMyLocationEnabled(true);
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+
+
+                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+
+                    @Override
+                    public void onMyLocationChange(Location location) {
+                        //We draw a marker in our current position
+
+
+
+                    }
+                });
+
+            }
+        }
     }
 
 }
