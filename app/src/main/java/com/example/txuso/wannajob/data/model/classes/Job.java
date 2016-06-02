@@ -17,6 +17,8 @@ public class Job {
     private String jobImage;
     private double latitude;
     private double longitude;
+    private long bidNumber;
+    private long viewNumber;
     private ArrayList<String> wannajobers;
 
     public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude){
@@ -31,6 +33,8 @@ public class Job {
         this.latitude = latitude;
         this.longitude = longitude;
         wannajobers = new ArrayList<>();
+        bidNumber = 0;
+        viewNumber = 0;
     }
 
     public Job (String name, int salary, String jobImage){
@@ -134,4 +138,21 @@ public class Job {
     public void setWannajobers(ArrayList<String> wannajobers) {
         this.wannajobers = wannajobers;
     }
+
+    public long getBidNumber() {
+        return bidNumber;
+    }
+
+    public void setBidNumber(long bidNumber) {
+        this.bidNumber = bidNumber;
+    }
+
+    public long getViewNumber() {
+        return viewNumber;
+    }
+
+    public void setViewNumber(long viewNumber) {
+        this.viewNumber = viewNumber;
+    }
 }
+

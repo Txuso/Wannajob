@@ -49,7 +49,8 @@ public class ShowJobActivity extends AppCompatActivity {
     String jobID;
     Bitmap pic;
     int val;
-
+    long bidNumber = 0;
+    long viewNumber = 0;
     private GoogleMap mMap;
 
     @Bind(R.id.activity_show_job_app_bar_layout)
@@ -134,19 +135,28 @@ public class ShowJobActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
+
                 // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
                 //  Picasso.with(getApplicationContext()).load()
                 // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
                 pic = ImageManager.decodeBase64(job.get("jobImage").toString());
-
+                if (job.get("bidNumber")  != null)
+                    bidNumber = (long) job.get("bidNumber");
+                else
+                    bidNumber = 0;
+                if (job.get("viewNumber") != null)
+                    viewNumber = (long) job.get("viewNumber");
+                else
+                    viewNumber = 0;
                 setPalette(pic);
                 jobImage.setImageBitmap(pic);
 
                 jobName.setText(job.get("name").toString());
                 jobDescription.setText(job.get("description").toString());
-                jobBids.setText(0+"");
-                jobViews.setText(0+"");
+                jobBids.setText(bidNumber + "");
+
+                jobViews.setText(viewNumber + "");
                 jobMoney.setText(job.get("salary").toString() + "€");
                 setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
 
@@ -205,6 +215,8 @@ public class ShowJobActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Bid newBid = new Bid(val, jobID, fromId);
                         mFirebaseRef.child("bid").push().setValue(newBid);
+                        bidNumber++;
+                        mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
                         myDialog.cancel();
                     }
                 });
@@ -339,8 +351,32 @@ public class ShowJobActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onResume();
         finish();
-
+        updateViews();
     }
+
+
+    public void updateViews() {
+        mFirebaseRef.child("wannaJobs").child(jobID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                long viewN = 0;
+                if (job.get("viewNumber") != null)
+                    viewN = (long) job.get("viewNumber");
+                else
+                    viewN = 0;
+                viewN++;
+                mFirebaseRef.child("wannaJobs").child(jobID).child("viewNumber").setValue(viewN);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }
+
     private void setUpMapIfNeeded(double latitude, double longitude) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
