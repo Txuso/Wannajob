@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,31 +23,40 @@ import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.Firebase;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.example.txuso.wannajob.misc.things.CharacterCountErrorWatcher;
-import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CreateJobActivity extends AppCompatActivity {
 
+
+    String jobId;
     AlertDialog levelDialog;
     Firebase mFirebaseRef;
+    Firebase newTandRef;
     private Uri mImageCaptureUri;
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
 
     Bitmap bm;
     String category = "";
 
-    String imageBase64;
+    String imageURL = "";
 
     @Bind(R.id.input_job_name)
     TextInputLayout jobName;
@@ -78,7 +88,7 @@ public class CreateJobActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_job);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         ButterKnife.bind(this);
-        imageBase64 = "";
+        imageURL = "";
         imageP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +98,11 @@ public class CreateJobActivity extends AppCompatActivity {
 
         this.latitude = UserManager.getUserLatitude(this);
         this.longitude = UserManager.getUserLongitude(this);
-        mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
+        mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannaJobs/");
+        newTandRef = mFirebaseRef.push();
+        jobId = newTandRef.getKey();
+
+
 
         jobDuration.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(jobDuration, 1,30));
         jobName.getEditText().addTextChangedListener(new CharacterCountErrorWatcher(jobName, 1, 30));
@@ -122,10 +136,11 @@ public class CreateJobActivity extends AppCompatActivity {
                             jobDescription.getEditText().getText().toString(),
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
                             category,
-                            UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageBase64,
+                            UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
                             jobDuration.getEditText().getText().toString(),latitude, longitude);
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
-                    mFirebaseRef.child("wannaJobs").push().setValue(newJob);
+                    newTandRef.setValue(newJob);
+
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -135,7 +150,7 @@ public class CreateJobActivity extends AppCompatActivity {
     }
 
     public boolean checkConditions () {
-        return (imageBase64.equals("") ||
+        return (imageURL.equals("") ||
                 jobName.getEditText().getText().toString().trim().equals("") ||
                 jobDescription.getEditText().getText().toString().trim().equals("") ||
                 jobSalary.getEditText().getText().toString().trim().equals("") ||
@@ -234,7 +249,34 @@ public class CreateJobActivity extends AppCompatActivity {
             path    = mImageCaptureUri.getPath();
             bitmap  = BitmapFactory.decodeFile(path);
         }
-        imageBase64 = ImageManager.encodeTobase64(bitmap);
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
+
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data2 = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                if (downloadUrl.toString() != null) {
+                    imageURL = downloadUrl.toString();
+                }
+            }
+        });
+
+        //imageURL = ImageManager.encodeTobase64(bitmap);
         imageP.setBackground(null);
         imageP.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100, 100, false));
     }

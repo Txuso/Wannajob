@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -13,6 +14,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -39,11 +41,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ShowJobActivity extends AppCompatActivity {
+public class ShowJobActivity extends AppCompatActivity  {
     Bundle extras;
     Firebase mFirebaseRef;
     String jobID;
@@ -109,12 +115,18 @@ public class ShowJobActivity extends AppCompatActivity {
 
     String fromId;
 
+    StorageReference storageRef;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_job);
         ButterKnife.bind(this);
         extras = getIntent().getExtras();
+
+        storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com/images");
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.activity_show_job_user_map);
@@ -126,7 +138,6 @@ public class ShowJobActivity extends AppCompatActivity {
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
 
         fromId = UserManager.getUserId(this);
-
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -140,7 +151,7 @@ public class ShowJobActivity extends AppCompatActivity {
 
                 //  Picasso.with(getApplicationContext()).load()
                 // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-                pic = ImageManager.decodeBase64(job.get("jobImage").toString());
+
                 if (job.get("bidNumber")  != null)
                     bidNumber = (long) job.get("bidNumber");
                 else
@@ -149,8 +160,12 @@ public class ShowJobActivity extends AppCompatActivity {
                     viewNumber = (long) job.get("viewNumber");
                 else
                     viewNumber = 0;
-                setPalette(pic);
-                jobImage.setImageBitmap(pic);
+
+               // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
+//                setPalette(image);
+                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.job).into(jobImage);
+                int color = getResources().getColor(R.color.colorGray);
+                collapsingToolbarLayout.setStatusBarScrimColor(color);
 
                 jobName.setText(job.get("name").toString());
                 jobDescription.setText(job.get("description").toString());
@@ -167,9 +182,7 @@ public class ShowJobActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
                         userName.setText(user.get("name").toString());
-                        pic = ImageManager.decodeBase64(user.get("image").toString());
-                        userPhoto.setImageBitmap(pic);
-
+                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).placeholder(R.drawable.worker).fit().into(userPhoto);
                     }
 
                     @Override
@@ -323,9 +336,7 @@ public class ShowJobActivity extends AppCompatActivity {
         Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
             @Override
             public void onGenerated(Palette palette) {
-                int primaryDark = getResources().getColor(R.color.colorPrimaryDark);
-                collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkVibrantColor(primaryDark));
-                collapsingToolbarLayout.setStatusBarScrimColor(palette.getDarkVibrantColor(primaryDark));
+
             }
         });
 

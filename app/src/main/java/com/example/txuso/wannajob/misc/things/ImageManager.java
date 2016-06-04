@@ -7,11 +7,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.util.Base64;
 
 import com.firebase.client.core.persistence.LRUCachePolicy;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -21,8 +30,9 @@ import java.io.FileNotFoundException;
  */
 public  class ImageManager {
 
-
-
+    static Bitmap bitmapToReturn;
+    static FirebaseStorage storage = FirebaseStorage.getInstance();
+    static String imageURL;
     //It provides methods to scale pictures and transform Bitmap --> String and from String --> Bitmap
     public static String encodeTobase64(Bitmap image)
     {
@@ -77,5 +87,55 @@ public  class ImageManager {
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
         return BitmapFactory.decodeStream(c.getContentResolver().openInputStream(uri), null, o2);
+    }
+
+    public static Bitmap fromURLToBitmap (Context context, String url) {
+        Picasso.with(context).load(url).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                bitmapToReturn = bitmap;
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                //Here you should place a loading gif in the ImageView to
+                //while image is being obtained.
+            }
+        });
+        return bitmapToReturn;
+    }
+
+    public static String getImageUrl(String jobId, Bitmap bitmap) {
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
+
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/" + jobId + ".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data2 = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                if (downloadUrl.toString() != null) {
+                    imageURL = downloadUrl.toString();
+                }
+            }
+        });
+     return imageURL;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.txuso.wannajob.data.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,11 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
 
     List<JobListItem> jobs;
     OnItemClickListener mItemClickListener;
+    Context context;
 
-    public RVUserAdapter(List<JobListItem> jobs){
+    public RVUserAdapter(List<JobListItem> jobs, Context context){
         this.jobs = jobs;
+        this.context = context;
     }
 
 
@@ -42,7 +46,8 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
         holder.jobName.setText(jobs.get(position).getName());
         holder.jobSalary.setText(jobs.get(position).getSalary() + " €");
         //holder.jobPhoto.setImageResource(jobs.get(position).photoId);
-        holder.jobPhoto.setBackground(jobs.get(position).getImageId());
+        Picasso.with(context).load(jobs.get(position).getImageUrl()).fit().placeholder(R.drawable.job).into(holder.jobPhoto);
+       // holder.jobPhoto.setBackground(jobs.get(position).getImageId());
 
     }
 

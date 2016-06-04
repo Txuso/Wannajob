@@ -112,6 +112,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/activity_user_profile_show_jobs_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -126,14 +127,12 @@
                         android:layout_gravity="center"/>
 
                     <LinearLayout
-
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:gravity="center"
                         >
-
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -146,6 +145,7 @@
                             android:layout_height="wrap_content"
                             android:text="Jobs"
                             android:textColor="@color/colorpara"/>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -167,9 +167,29 @@
                             android:text="Opinions"
                             android:textColor="@color/colorpara"/>
                     </LinearLayout>
+
+
                 </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:background="#c6cbcf"
+                    android:layout_marginTop="20dp"/>
+
+                <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/activity_user_profile_swiper_refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/activity_user_profile_recycler_view"
+                        />
+                </android.support.v4.widget.SwipeRefreshLayout>
 
             </LinearLayout>
+
         </RelativeLayout>
 
     </ScrollView>

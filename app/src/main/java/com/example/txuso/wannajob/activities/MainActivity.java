@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
@@ -38,6 +37,8 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity
 
     @Bind(R.id.activity_main_nav_view)
     NavigationView navigationView;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +179,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs);
+        adapter = new RVUserAdapter(jobs, getApplicationContext());
         //rv.setAdapter(adapter);
 
         if (categoryID == UserManager.NOT_CATEGORY_FILTER) {
@@ -190,26 +194,22 @@ public class MainActivity extends AppCompatActivity
 
                     if (distance <= 25) {
 
-                        pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                        //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
-                        Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
-
-                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
+                       // Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
+                        item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
-                        adapter = new RVUserAdapter(jobs);
+                        adapter = new RVUserAdapter(jobs, getApplicationContext());
                         jobs.add(item);
 
                     }
 
                     jobs = adapter.sortListByDistance();
-                    adapter = new RVUserAdapter(jobs);
+                    adapter = new RVUserAdapter(jobs, getApplicationContext());
                     adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                            byte[] byteArray = stream.toByteArray();
 
                             Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
@@ -297,26 +297,23 @@ public class MainActivity extends AppCompatActivity
                     double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
                     if (distance <= 25 && Character.getNumericValue(job.getCategory().charAt(0)) == categoryID) {
-                        pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
+                        //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
-                        Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+                        //Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
 
-                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
+                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
+                        item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
-                        adapter = new RVUserAdapter(jobs);
+                        adapter = new RVUserAdapter(jobs, getApplicationContext());
                         jobs.add(item);
 
                     }
 
                     jobs = adapter.sortListByDistance();
-                    adapter = new RVUserAdapter(jobs);
+                    adapter = new RVUserAdapter(jobs, getApplicationContext());
                     adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
-
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                            byte[] byteArray = stream.toByteArray();
 
                             Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
@@ -429,7 +426,7 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 onSearchRequested();
                 wordJobs = adapter.findJobsByWord(query);
-                adapter = new RVUserAdapter(wordJobs);
+                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -476,7 +473,7 @@ public class MainActivity extends AppCompatActivity
 
             case 0:{
                 wordJobs = adapter.sortListBySalary();
-                adapter = new RVUserAdapter(wordJobs);
+                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -499,7 +496,7 @@ public class MainActivity extends AppCompatActivity
             }
             case 1:{
                 wordJobs = adapter.sortListByDistance();
-                adapter = new RVUserAdapter(wordJobs);
+                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -516,7 +513,7 @@ public class MainActivity extends AppCompatActivity
 
             }
             case 2:
-                adapter = new RVUserAdapter(jobs);
+                adapter = new RVUserAdapter(jobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -562,9 +559,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_messages) {
-            Intent messages = new Intent(MainActivity.this,UserMessagesActivity.class);
-            startActivity(messages);
+        if (id == R.id.nav_favorites) {
+            Intent favorites = new Intent(MainActivity.this,UserMessagesActivity.class);
+            startActivity(favorites);
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();
         } else if (id == R.id.nav_share) {
@@ -573,7 +570,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_categories) {
             Intent showCategories = new Intent(MainActivity.this, JobCategoryActivity.class);
             startActivityForResult(showCategories, 2);
-
+        } else if (id == R.id.nav_create_job) {
+            Intent createNewJob = new Intent(MainActivity.this, CreateJobActivity.class);
+            startActivity(createNewJob);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.activity_main_drawer_layout);

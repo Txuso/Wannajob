@@ -159,9 +159,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             public void onClick(View v) {
 
                 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.job);
-                String imageBase64 = ImageManager.encodeTobase64(bm);
+                String imageURL = ImageManager.encodeTobase64(bm);
 
-                WannajobUser newU = new WannajobUser("Rodolfo", "40",imageBase64);
+                WannajobUser newU = new WannajobUser("Rodolfo", "40",imageURL);
                 Firebase newTandRef = mFirebaseRef.push();
                 newTandRef.setValue(newU);
                 String logedUserID = newTandRef.getKey();
@@ -201,7 +201,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     UserManager.setUserLatitude(getApplicationContext(),(Double)wannaUser.get("latitude"));
                                     UserManager.setUserLongitude(getApplicationContext(), (Double) wannaUser.get("longitude"));
                                     UserManager.setUserRegisteredDate(getApplicationContext(), wannaUser.get("registeredDate").toString());
-                                    FirebaseStorage storage = FirebaseStorage.getInstance();
 
                                     /*
                                     intent.putExtra("userID", user.getId());
@@ -229,7 +228,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     //We set the default image and we encode it to base64
                                     //Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profileimage);
 
-                                    //String imageBase64 = ImageManager.encodeTobase64(bm);
+                                    //String imageURL = ImageManager.encodeTobase64(bm);
                                     String im = "";
                                     try {
                                         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -237,9 +236,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                         StrictMode.setThreadPolicy(policy);
                                         URL imgUrl = new URL("https://graph.facebook.com/"
                                                 + user.getId() + "/picture?type=large");
-                                        Bitmap mIcon1 = BitmapFactory.decodeStream(imgUrl.openConnection().getInputStream());
-                                        im = ImageManager.encodeTobase64(mIcon1);
-                                        UserManager.setUserPhoto(getApplicationContext(), im);
+
+                                        UserManager.setUserPhoto(getApplicationContext(), imgUrl.toString());
 
 
                                     }
@@ -247,11 +245,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                         im = "lksnflksdnflsd";
                                     }
 
-                                    catch (IOException e2) {
-
-                                        im = "odfnsdfisdjf";
-
-                                    }
                                     //We create the tandem user with the needed data
 
                                     // we create a new instance cause it will be useful to get the ID of the new user

@@ -50,7 +50,7 @@ public class ShowMyJobsActivity extends AppCompatActivity {
         userID = UserManager.getUserId(this);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs);
+        adapter = new RVUserAdapter(jobs, getApplicationContext());
 
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
@@ -62,9 +62,9 @@ public class ShowMyJobsActivity extends AppCompatActivity {
                     Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
                     Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
 
-                    item = new JobListItem(dataSnapshot.getKey(), job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), ima, job.get("creatorID").toString(), job.get("description").toString());
+                    item = new JobListItem(dataSnapshot.getKey(), job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), job.get("creatorID").toString(), job.get("description").toString());
                     jobs.add(item);
-                    adapter = new RVUserAdapter(jobs);
+                    adapter = new RVUserAdapter(jobs, getApplicationContext());
                     adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {

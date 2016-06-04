@@ -3,9 +3,13 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_messages"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/nav_messages_option"/>
+            android:id="@+id/nav_create_job"
+            android:icon="@drawable/ic_create_job_black_24dp"
+            android:title="@string/nav_create_job"/>
+        <item
+            android:id="@+id/nav_favorites"
+            android:icon="@drawable/ic_favorite_white_24dp"
+            android:title="@string/nav_favorites_option"/>
         <item
             android:id="@+id/nav_categories"
             android:icon="@drawable/ic_view_category_24dp"
