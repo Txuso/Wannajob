@@ -5,6 +5,8 @@ import android.media.Image;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Txuso on 01/02/16.
@@ -19,6 +21,8 @@ public class WannajobUser {
     private double latitude;
     private int distance;
     private String registeredDate;
+    public Map<String, Boolean> likes = new HashMap<>();
+
 
     public WannajobUser(String name, String age, String image) {
         this.name = name;
@@ -94,5 +98,11 @@ public class WannajobUser {
         this.description = description;
     }
 
+    public Map<String, Boolean> getLikes() {
+        return likes;
+    }
 
+    public void setLikes(Map<String, Boolean> likes) {
+        this.likes = likes;
+    }
 }

@@ -2,8 +2,6 @@ package com.example.txuso.wannajob.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
@@ -34,11 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.txuso.wannajob.misc.things.GPSTracker;
-import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.app_bar_main_toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.content_main_swiper_refresh_layout)
+    @Bind(R.id.activity_user_favorite_jobs_swiper_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Bind(R.id.app_bar_main_create_job_floating_action_button)
@@ -78,9 +73,6 @@ public class MainActivity extends AppCompatActivity
 
     @Bind(R.id.activity_main_nav_view)
     NavigationView navigationView;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -390,13 +382,7 @@ public class MainActivity extends AppCompatActivity
 
 
             });
-
         }
-
-
-
-
-
     }
 
     /**
@@ -560,7 +546,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favorites) {
-            Intent favorites = new Intent(MainActivity.this,UserMessagesActivity.class);
+            Intent favorites = new Intent(MainActivity.this,UserFavoriteJobsActivity.class);
             startActivity(favorites);
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();
@@ -632,4 +618,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
 }

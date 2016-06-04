@@ -9,9 +9,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".activities.UserMessagesActivity">
 
-    <ListView
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/activity_user_favorite_jobs_swiper_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/JobEncounters"
-        />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/activity_user_favorite_swiper_refresh_layout_recycler_view"
+            />
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

@@ -50,7 +50,7 @@ public class UserMessagesActivity extends AppCompatActivity implements AdapterVi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_messages);
+        setContentView(R.layout.activity_user_favorite_jobs);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         userID = UserManager.getUserId(this);
@@ -140,6 +140,7 @@ public class UserMessagesActivity extends AppCompatActivity implements AdapterVi
             }
 
         });
+        /*
 
         listView = (ListView) findViewById(R.id.JobEncounters);
         adapter = new CustomJobListViewAdapter(this,
@@ -147,6 +148,7 @@ public class UserMessagesActivity extends AppCompatActivity implements AdapterVi
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
         listView.setOnItemClickListener(this);
+        */
     }
 
     @Override

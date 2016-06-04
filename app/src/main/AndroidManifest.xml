@@ -58,7 +58,7 @@
             android:name=".activities.ShowJobVacanciesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ChatActivity" />
-        <activity android:name=".activities.UserMessagesActivity" />
+        <activity android:name=".activities.UserFavoriteJobsActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

@@ -33,9 +33,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import com.example.txuso.wannajob.misc.things.ImageManager;
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -48,6 +51,7 @@ import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ShowJobActivity extends AppCompatActivity  {
     Bundle extras;
@@ -182,7 +186,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
                         userName.setText(user.get("name").toString());
-                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).placeholder(R.drawable.worker).fit().into(userPhoto);
+                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).centerCrop().placeholder(R.drawable.worker).fit().into(userPhoto);
                     }
 
                     @Override
@@ -365,6 +369,12 @@ public class ShowJobActivity extends AppCompatActivity  {
         updateViews();
     }
 
+    @OnClick(R.id.activity_show_job_like_button)
+    public void onLikePressed() {
+        Map<String, Object> likes = new HashMap<>();
+        likes.put(jobID, true);
+        mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").updateChildren(likes);
+    }
 
     public void updateViews() {
         mFirebaseRef.child("wannaJobs").child(jobID).addListenerForSingleValueEvent(new ValueEventListener() {
