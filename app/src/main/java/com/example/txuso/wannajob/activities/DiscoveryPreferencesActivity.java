@@ -127,6 +127,9 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                                 tandemRef.child(userID).child("longitude").setValue(longitude);
                                 tandemRef.child(userID).child("distance").setValue(progressValue);
 
+                                UserManager.setUserLatitude(getApplicationContext(), latitude);
+                                UserManager.setUserLongitude(getApplicationContext(), longitude);
+
                                 Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                                 Intent intent = getIntent();
                                 intent.putExtra("latitude", latitude);
@@ -165,6 +168,9 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                         tandemRef.child(userID).child("latitude").setValue(latitude);
                         tandemRef.child(userID).child("longitude").setValue(longitude);
                         tandemRef.child(userID).child("distance").setValue(progressValue);
+
+                        UserManager.setUserLatitude(getApplicationContext(), latitude);
+                        UserManager.setUserLongitude(getApplicationContext(), longitude);
 
                         Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         Intent intent = getIntent();

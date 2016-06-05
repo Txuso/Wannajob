@@ -167,7 +167,7 @@ public class ShowJobActivity extends AppCompatActivity  {
 
                // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
-                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.job).into(jobImage);
+                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
                 int color = getResources().getColor(R.color.colorGray);
                 collapsingToolbarLayout.setStatusBarScrimColor(color);
 
@@ -186,7 +186,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
                         userName.setText(user.get("name").toString());
-                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).centerCrop().placeholder(R.drawable.worker).fit().into(userPhoto);
+                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).centerCrop().placeholder(R.drawable.photo_placeholder).fit().into(userPhoto);
                     }
 
                     @Override

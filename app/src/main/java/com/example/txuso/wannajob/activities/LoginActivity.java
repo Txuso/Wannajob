@@ -370,7 +370,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
             //Getting google account
             GoogleSignInAccount acct = result.getSignInAccount();
 
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.job);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.person_placeholder  );
             String im = ImageManager.encodeTobase64(bm);
             WannajobUser newU = new WannajobUser(acct.getDisplayName(), "22",im);
             Firebase newTandRef = mFirebaseRef.push();

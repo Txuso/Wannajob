@@ -134,7 +134,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         userDescription.setText(UserManager.getUserDescription(this));
 
-        Picasso.with(getApplicationContext()).load(UserManager.getUserPhoto(getApplicationContext())).placeholder(R.drawable.worker).fit().into(userPhoto);
+        Picasso.with(getApplicationContext()).load(UserManager.getUserPhoto(getApplicationContext())).placeholder(R.drawable.photo_placeholder).fit().into(userPhoto);
 
         setUpMapIfNeeded();
             /*
@@ -318,7 +318,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         StorageReference mountainImagesRef = storageRef.child("images/"+userID+".jpg");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
         byte[] data2 = baos.toByteArray();
 
         UploadTask uploadTask = mountainImagesRef.putBytes(data2);

@@ -256,7 +256,7 @@ public class CreateJobActivity extends AppCompatActivity {
         StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
         byte[] data2 = baos.toByteArray();
 
         UploadTask uploadTask = mountainImagesRef.putBytes(data2);

@@ -46,7 +46,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
         holder.jobName.setText(jobs.get(position).getName());
         holder.jobSalary.setText(jobs.get(position).getSalary() + " €");
         //holder.jobPhoto.setImageResource(jobs.get(position).photoId);
-        Picasso.with(context).load(jobs.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.job).into(holder.jobPhoto);
+        Picasso.with(context).load(jobs.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.person_placeholder).into(holder.jobPhoto);
        // holder.jobPhoto.setBackground(jobs.get(position).getImageId());
 
     }
