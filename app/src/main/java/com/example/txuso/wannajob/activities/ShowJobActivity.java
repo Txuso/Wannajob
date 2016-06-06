@@ -27,7 +27,9 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Bid;
+import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.misc.things.UserManager;
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -56,12 +58,19 @@ import butterknife.OnClick;
 public class ShowJobActivity extends AppCompatActivity  {
     Bundle extras;
     Firebase mFirebaseRef;
+    Firebase mFirebaseRefBids;
     String jobID;
     Bitmap pic;
     int val;
     long bidNumber = 0;
     long viewNumber = 0;
     private GoogleMap mMap;
+
+    @Bind(R.id.activity_show_job_my_bid)
+    LinearLayout bidLayout;
+
+    @Bind(R.id.activity_show_job_my_bid_text)
+    TextView bidText;
 
     @Bind(R.id.activity_show_job_app_bar_layout)
     android.support.design.widget.AppBarLayout appBarLayout;
@@ -136,12 +145,12 @@ public class ShowJobActivity extends AppCompatActivity  {
                 .findFragmentById(R.id.activity_show_job_user_map);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        fromId = UserManager.getUserId(this);
 
         jobID = extras.getString("jobID");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
-
-        fromId = UserManager.getUserId(this);
+        mFirebaseRefBids = new Firebase("https://wannajob.firebaseio.com/");
+        checkIfBid();
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
 
@@ -218,6 +227,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                 bidNumberText.setText("Tu Puja: " + maxValue + " €");
                 numberPicker.setMinValue(1);
                 numberPicker.setValue(maxValue);
+
                 val = maxValue;
                 numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
@@ -234,6 +244,8 @@ public class ShowJobActivity extends AppCompatActivity  {
                         mFirebaseRef.child("bid").push().setValue(newBid);
                         bidNumber++;
                         mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
+                        bidLayout.setVisibility(View.VISIBLE);
+                        bidText.setText("Tu Puja: " + val + " €");
                         myDialog.cancel();
                     }
                 });
@@ -424,6 +436,40 @@ public class ShowJobActivity extends AppCompatActivity  {
 
             }
         }
+    }
+
+    public void checkIfBid() {
+
+        mFirebaseRefBids.child("bid").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Map<String, Object> bid = (Map<String, Object>) dataSnapshot.getValue();
+                if (bid.get("userId").toString().equals(fromId) && bid.get("jobId").toString().equals(jobID)) {
+                    bidLayout.setVisibility(View.VISIBLE);
+                    bidText.setText("Tu Puja: " + bid.get("number").toString() + " €");
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 }

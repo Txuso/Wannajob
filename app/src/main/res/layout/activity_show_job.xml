@@ -109,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp">
 
@@ -190,6 +191,27 @@
                     android:background="@color/colorWhite"
                     android:layout_marginBottom="25dp"
                     />
+
+            <LinearLayout
+                android:id="@+id/activity_show_job_my_bid"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:background="@color/colorGreen"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <TextView
+                    android:id="@+id/activity_show_job_my_bid_text"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="32sp"
+                    android:text="Tu Puja: "
+                    android:textStyle="bold"
+                    android:textColor="@color/colorWhite"/>
+                </LinearLayout>
 
                 <LinearLayout
                     android:background="@color/colorWhite"
