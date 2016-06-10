@@ -25,6 +25,7 @@ import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Bid;
 import com.example.txuso.wannajob.data.model.classes.Job;
@@ -176,7 +177,13 @@ public class ShowJobActivity extends AppCompatActivity  {
 
                // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
-                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
+                Glide
+                        .with(getApplicationContext())
+                        .load(job.get("jobImage").toString())
+                        .placeholder(R.drawable.photo_placeholder)
+                        .crossFade()
+                        .into(jobImage);
+//                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
                 int color = getResources().getColor(R.color.colorGray);
                 collapsingToolbarLayout.setStatusBarScrimColor(color);
 
