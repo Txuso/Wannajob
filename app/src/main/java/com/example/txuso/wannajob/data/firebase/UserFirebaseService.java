@@ -24,6 +24,19 @@ public class UserFirebaseService {
         UserManager.setUserName(context, name);
         UserManager.setUserAge(context, age);
         UserManager.setUserDescription(context,description);
+    }
+
+    public void updateLatitudeLongitude (String userID, Double latitude, Double longitude) {
+        mFirebaseRef.child(userID).child("latitude").setValue(latitude);
+        mFirebaseRef.child(userID).child("longitude").setValue(longitude);
+
+    }
+
+    public void updateLatitudeLongitudeDistance (String userID, Double latitude, Double longitude, int distance, Context context) {
+        updateLatitudeLongitude(userID, latitude, longitude);
+        mFirebaseRef.child(userID).child("distance").setValue(distance);
+        UserManager.setUserLatitude(context, latitude);
+        UserManager.setUserLongitude(context, longitude);
 
     }
 

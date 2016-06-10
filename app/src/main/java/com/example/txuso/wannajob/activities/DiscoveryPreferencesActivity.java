@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.data.firebase.UserFirebaseService;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.Firebase;
 
@@ -27,12 +28,12 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 
 public class DiscoveryPreferencesActivity extends AppCompatActivity {
     int progressValue = 25;
+    UserFirebaseService uService = new UserFirebaseService();
     Double longitude;
     Double latitude;
     Geocoder gc;
     GPSTracker gps;
     TextInputLayout search;
-    Firebase tandemRef;
     String userID;
 
     @Override
@@ -41,7 +42,6 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_discovery_preferences);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        tandemRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         AppCompatButton myLocButton = (AppCompatButton) findViewById(R.id.myLocButton);
         search = (TextInputLayout) findViewById(R.id.input_loc_name);
         gc = new Geocoder(this.getApplicationContext());
@@ -53,8 +53,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                 gps = new GPSTracker(DiscoveryPreferencesActivity.this);
                 if (gps.canGetLocation()) {
 
-                    tandemRef.child(userID).child("latitude").setValue(gps.getLatitude());
-                    tandemRef.child(userID).child("longitude").setValue(gps.getLongitude());
+                    uService.updateLatitudeLongitude(userID, gps.getLatitude(), gps.getLongitude());
                     Intent intent = getIntent();
                     intent.putExtra("latitude", gps.getLatitude());
                     intent.putExtra("longitude", gps.getLongitude());
@@ -95,7 +94,6 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
         });
 
 
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -123,12 +121,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                                 longitude = location.getLongitude();
                                 latitude = location.getLatitude();
 
-                                tandemRef.child(userID).child("latitude").setValue(latitude);
-                                tandemRef.child(userID).child("longitude").setValue(longitude);
-                                tandemRef.child(userID).child("distance").setValue(progressValue);
-
-                                UserManager.setUserLatitude(getApplicationContext(), latitude);
-                                UserManager.setUserLongitude(getApplicationContext(), longitude);
+                                uService.updateLatitudeLongitudeDistance(userID, latitude, longitude, progressValue, getApplicationContext());
 
                                 Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                                 Intent intent = getIntent();
@@ -165,12 +158,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
                         longitude = location.getLongitude();
                         latitude = location.getLatitude();
 
-                        tandemRef.child(userID).child("latitude").setValue(latitude);
-                        tandemRef.child(userID).child("longitude").setValue(longitude);
-                        tandemRef.child(userID).child("distance").setValue(progressValue);
-
-                        UserManager.setUserLatitude(getApplicationContext(), latitude);
-                        UserManager.setUserLongitude(getApplicationContext(), longitude);
+                        uService.updateLatitudeLongitudeDistance(userID, latitude, longitude, progressValue, getApplicationContext());
 
                         Toast.makeText(getApplicationContext(), getString(R.string.you_find_encounters) + " " + location.getLocality() + " " + getString(R.string.and_around) + " " + progressValue + " " + getString(R.string.from_you), Toast.LENGTH_LONG).show();
                         Intent intent = getIntent();

@@ -1,9 +1,11 @@
 package com.example.txuso.wannajob.activities;
 
+import android.content.Intent;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
 import com.firebase.client.ChildEventListener;
@@ -14,10 +16,13 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
+
+import java.util.HashMap;
 
 public class ShowJobMapActivity extends FragmentActivity {
 
@@ -27,6 +32,7 @@ public class ShowJobMapActivity extends FragmentActivity {
     Double longitude;
     Double latitude;
     Firebase mFirebaseRef;
+    HashMap<Marker, String> jobMarkerId = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +58,11 @@ public class ShowJobMapActivity extends FragmentActivity {
                 double longitude2 = job.getLongitude();
                 double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
+                if (distance <= 50) {
+                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(job.getLatitude(), job.getLongitude())).title(job.getName()));
+                    jobMarkerId.put(m, dataSnapshot.getKey());
 
-                if (distance <= 50)
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(job.getLatitude(), job.getLongitude())).title(job.getName()));
-
-
+                }
             }
 
             @Override
@@ -109,23 +115,27 @@ public class ShowJobMapActivity extends FragmentActivity {
                     .getMap();
             mMap.setMyLocationEnabled(true);
             // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker) {
+                    Intent showJob = new Intent(ShowJobMapActivity.this, ShowJobActivity.class);
+                    showJob.putExtra("jobID", jobMarkerId.get(marker));
+                    startActivity(showJob);
+                    return false;
+                }
+            });
 
-
-                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
 
                     @Override
                     public void onMyLocationChange(Location location) {
                         //We draw a marker in our current position
 
 
-
                     }
                 });
 
-            }
         }
     }
 

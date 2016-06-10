@@ -32,8 +32,6 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -462,8 +460,6 @@ public class MainActivity extends AppCompatActivity
         menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
         menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
         menu.add(2, 2, 2, getString(R.string.reset_filters)).setShortcut('3', 'c');
-        menu.add(3, 3, 3, getString(R.string.view_on_map)).setShortcut('3', 'c');
-
 
         return super.onCreateOptionsMenu(menu);
 
@@ -482,6 +478,13 @@ public class MainActivity extends AppCompatActivity
                 return true;
             }
 
+            case R.id.action_show_job_map: {
+                Intent showJobMap = new Intent(MainActivity.this, ShowJobMapActivity.class);
+                showJobMap.putExtra("longitude", longitude);
+                showJobMap.putExtra("latitude", latitude);
+                startActivity(showJobMap);
+            }
+
             case 0:{
                 wordJobs = adapter.sortListBySalary();
                 adapter = new RVUserAdapter(wordJobs, getApplicationContext());
@@ -489,9 +492,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                        byte[] byteArray = stream.toByteArray();
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
@@ -529,9 +529,6 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onItemClick(View view, int position) {
 
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        pic.compress(Bitmap.CompressFormat.JPEG, 10, stream);
-                        byte[] byteArray = stream.toByteArray();
 
                         Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                         showJob.putExtra("jobID", jobs.get(position).getJobID());
@@ -542,13 +539,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 rv.setAdapter(adapter);
-                return true;
-
-            case 3:
-                Intent showJobMap = new Intent(MainActivity.this, ShowJobMapActivity.class);
-                showJobMap.putExtra("longitude", longitude);
-                showJobMap.putExtra("latitude", latitude);
-                startActivity(showJobMap);
                 return true;
         }
 
