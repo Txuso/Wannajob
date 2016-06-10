@@ -8,20 +8,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -32,47 +27,38 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
-import com.example.txuso.wannajob.data.model.classes.Job;
+import com.example.txuso.wannajob.data.firebase.FirebaseStorageService;
+import com.example.txuso.wannajob.data.firebase.UserFirebaseService;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.misc.RoundedImageView;
-import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.misc.things.UserManager;
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.example.txuso.wannajob.misc.things.ImageManager;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
 
     String userID;
-    Firebase mFirebaseRef;
     double latitude;
     double longitude;
     private Uri mImageCaptureUri;
     private List<JobListItem> jobs;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+
+    UserFirebaseService uService = new UserFirebaseService();
+    FirebaseStorageService sService = new FirebaseStorageService();
 
 
     private static final int PICK_FROM_CAMERA = 1;
@@ -109,10 +95,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     RVUserAdapter adapter;
     JobListItem item;
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +108,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.user_map);
 
-        mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         latitude = UserManager.getUserLatitude(this);
         longitude = UserManager.getUserLongitude(this);
         //Bitmap pic = ImageManager.decodeBase64(UserManager.getUserPhoto(this));
@@ -197,17 +178,10 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFirebaseRef.child(userID).child("name").setValue(nameE.getEditableText().toString());
-                mFirebaseRef.child(userID).child("description").setValue(descriptionE.getText().toString());
-                mFirebaseRef.child(userID).child("age").setValue(ageE.getEditableText().toString());
 
-                UserManager.setUserName(getApplicationContext(), nameE.getEditableText().toString());
-                UserManager.setUserAge(getApplicationContext(), ageE.getEditableText().toString());
-                UserManager.setUserDescription(getApplicationContext(),descriptionE.getEditableText().toString());
-
+                uService.updateUserData(userID, nameE.getEditableText().toString(), descriptionE.getText().toString(), ageE.getEditableText().toString(), getApplicationContext());
                 userName.setText(UserManager.getUserName(getApplicationContext()) + " - " + UserManager.getUserAge(getApplicationContext()));
                 userDescription.setText(UserManager.getUserDescription(getApplicationContext()));
-
                 myDialog.cancel();
             }
         });
@@ -311,34 +285,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             path    = mImageCaptureUri.getPath();
             bitmap  = BitmapFactory.decodeFile(path);
         }
-        //String imageURL = ImageManager.getImageUrl(jobs)
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
-
-        // Create a reference to 'images/mountains.jpg'
-        StorageReference mountainImagesRef = storageRef.child("images/"+userID+".jpg");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-        byte[] data2 = baos.toByteArray();
-
-        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                if (downloadUrl.toString() != null) {
-                    imageURL = downloadUrl.toString();
-                    UserManager.setUserPhoto(getApplicationContext(), imageURL);
-                    mFirebaseRef.child(userID).child("image").setValue(UserManager.getUserPhoto(getApplicationContext()));
-                }
-            }
-        });
+        sService.uploadUserOrTaskImage(userID, bitmap, getApplicationContext());
         userPhoto.setImageBitmap(bitmap);
     }
 
@@ -359,11 +306,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onRefresh() {
-        fetchMyJobs(latitude,longitude);
+     //   fetchMyJobs(latitude,longitude);
         swipeRefreshLayout.setRefreshing(false);
 
     }
-
+    /*
     private void fetchMyJobs(final double latitude, final double longitude) {
         swipeRefreshLayout.setRefreshing(true);
 
@@ -433,10 +380,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
             });
     }
+    */
 
     @OnClick(R.id.activity_user_profile_show_jobs_layout)
     public void showMyJobs() {
-        fetchMyJobs(latitude, longitude);
+       // fetchMyJobs(latitude, longitude);
     }
 }
 

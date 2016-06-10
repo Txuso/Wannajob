@@ -23,19 +23,24 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -165,10 +170,15 @@ public class MainActivity extends AppCompatActivity
          */
         headerView = navigationView.getHeaderView(0);
         LinearLayout header = (LinearLayout) headerView.findViewById(R.id.nav_header_profile);
+        com.example.txuso.wannajob.misc.RoundedImageView userImage = (com.example.txuso.wannajob.misc.RoundedImageView) headerView.findViewById(R.id.nav_header_main_user_photo);
         TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
         TextView headerAge = (TextView) headerView.findViewById(R.id.nav_header_main_published_jobs);
         headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
-
+        Picasso
+                .with(getApplicationContext())
+                .load(UserManager.getUserPhoto(this))
+                .fit()
+                .into(userImage);
          //   headerJobs.append(new StringBuffer(countJobs+""));
         header.setOnClickListener(new View.OnClickListener() {
             @Override

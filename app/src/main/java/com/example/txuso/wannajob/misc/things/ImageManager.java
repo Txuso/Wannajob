@@ -1,6 +1,7 @@
 package com.example.txuso.wannajob.misc.things;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -9,6 +10,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.NonNull;
 import android.support.v4.util.LruCache;
 import android.util.Base64;
@@ -138,4 +143,5 @@ public  class ImageManager {
         });
      return imageURL;
     }
+
 }

@@ -6,15 +6,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -24,24 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Bid;
-import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-
-import com.example.txuso.wannajob.misc.things.ImageManager;
-import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -50,8 +37,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -177,12 +162,7 @@ public class ShowJobActivity extends AppCompatActivity  {
 
                // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
-                Glide
-                        .with(getApplicationContext())
-                        .load(job.get("jobImage").toString())
-                        .placeholder(R.drawable.photo_placeholder)
-                        .crossFade()
-                        .into(jobImage);
+
 //                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
                 int color = getResources().getColor(R.color.colorGray);
                 collapsingToolbarLayout.setStatusBarScrimColor(color);
@@ -194,6 +174,12 @@ public class ShowJobActivity extends AppCompatActivity  {
                 jobViews.setText(viewNumber + "");
                 jobMoney.setText(job.get("salary").toString() + "€");
                 setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
+                Picasso
+                        .with(getApplicationContext())
+                        .load(job.get("jobImage").toString())
+                        .placeholder(R.drawable.photo_placeholder)
+                        .fit()
+                        .into(jobImage);
 
                 //jobDuration.getEditText().setText(job.get("jobDuration").toString());
                 //jobCategory.getEditText().setText(job.get("category").toString());
@@ -353,19 +339,6 @@ public class ShowJobActivity extends AppCompatActivity  {
         */
 
     }
-
-    private void setPalette(Bitmap bd) {
-
-        Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-
-            }
-        });
-
-    }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

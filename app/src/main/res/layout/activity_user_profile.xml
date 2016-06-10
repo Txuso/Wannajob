@@ -44,7 +44,6 @@
                 >
 
                 <com.example.txuso.wannajob.misc.RoundedImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/user_menu_photo"
                     app:riv_corner_radius="30dip"
                     app:riv_border_width="5dip"
