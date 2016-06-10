@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View view) {
                 Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
 
-                startActivity(newJobIntent);
+                startActivityForResult(newJobIntent, 3);
             }
         });
 
@@ -170,7 +170,6 @@ public class MainActivity extends AppCompatActivity
         LinearLayout header = (LinearLayout) headerView.findViewById(R.id.nav_header_profile);
         com.example.txuso.wannajob.misc.RoundedImageView userImage = (com.example.txuso.wannajob.misc.RoundedImageView) headerView.findViewById(R.id.nav_header_main_user_photo);
         TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
-        TextView headerAge = (TextView) headerView.findViewById(R.id.nav_header_main_published_jobs);
         headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
         Picasso
                 .with(getApplicationContext())
@@ -628,6 +627,8 @@ public class MainActivity extends AppCompatActivity
                                         }
                                     }
             );
+        } else if (resultCode == RESULT_OK && requestCode == 3){
+            fetchJobs(latitude,longitude, UserManager.NOT_CATEGORY_FILTER);
         }
 
 

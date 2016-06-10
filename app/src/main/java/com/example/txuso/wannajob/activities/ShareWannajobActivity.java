@@ -32,36 +32,14 @@ public class ShareWannajobActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         try{
+            Intent i = new Intent(Intent.ACTION_SEND);
+            i.setType("text/plain");
+            i.putExtra(Intent.EXTRA_SUBJECT, "Wannajob");
+            String sAux = "\n Download this application and discover jobs around you!!\n\n";
+            sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+            i.putExtra(Intent.EXTRA_TEXT, sAux);
+            startActivity(Intent.createChooser(i, "Choose an application to share Wannajob"));
 
-            Bitmap adv = BitmapFactory.decodeResource(getResources(), R.drawable.person_placeholder);
-            Intent share = new Intent(Intent.ACTION_SEND);
-            share.setType("image/jpeg");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            adv.compress(Bitmap.CompressFormat.JPEG, 75, bytes);
-            File f = new File(Environment.getExternalStorageDirectory()
-                    + File.separator + "temporary_file.jpg");
-            try {
-                f.createNewFile();
-                new FileOutputStream(f).write(bytes.toByteArray());
-                FileOutputStream fo = new FileOutputStream(f);
-                fo.write(bytes.toByteArray());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            share.putExtra(Intent.EXTRA_TEXT, "Putuuuuuuuuuuuunnnn");
-
-            share.putExtra(Intent.EXTRA_STREAM, Uri.parse(Environment.getExternalStorageDirectory() + File.separator + "temporary_file.jpg"));
-
-             if(isPackageInstalled("com.whatsapp",this)){
-            share.setPackage("com.whatsapp");
-            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            startActivity(Intent.createChooser(share, "Share Image"));
-
-            }else{
-
-                 Toast.makeText(getApplicationContext(), "Please Install Whatsapp", Toast.LENGTH_LONG).show();
-            }
 
 /*
   Intent i = new Intent(Intent.ACTION_SEND);

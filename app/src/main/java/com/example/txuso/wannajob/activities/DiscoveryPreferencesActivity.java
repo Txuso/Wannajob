@@ -28,7 +28,7 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 
 public class DiscoveryPreferencesActivity extends AppCompatActivity {
     int progressValue = 25;
-    UserFirebaseService uService = new UserFirebaseService();
+    UserFirebaseService uService = new UserFirebaseService(getApplicationContext());
     Double longitude;
     Double latitude;
     Geocoder gc;

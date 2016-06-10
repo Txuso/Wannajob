@@ -47,9 +47,10 @@ public class CreateJobActivity extends AppCompatActivity {
     String jobId;
     AlertDialog levelDialog;
     private Uri mImageCaptureUri;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     JobFirebaseService jService = new JobFirebaseService();
-    FirebaseStorageService sService = new FirebaseStorageService();
+    FirebaseStorageService sService = new FirebaseStorageService(CreateJobActivity.this);
 
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
@@ -137,6 +138,8 @@ public class CreateJobActivity extends AppCompatActivity {
                             jobDuration.getEditText().getText().toString(),latitude, longitude);
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     jService.createJob(jobId, newJob);
+                    Intent intent = getIntent();
+                    setResult(RESULT_OK, intent);
 
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();
                     finish();
@@ -246,8 +249,34 @@ public class CreateJobActivity extends AppCompatActivity {
             path    = mImageCaptureUri.getPath();
             bitmap  = BitmapFactory.decodeFile(path);
         }
-        imageURL = sService.uploadUserOrTaskImage(jobId, bitmap, getApplicationContext());
+        //imageURL = sService.uploadTaskImage(jobId, bitmap);
         //imageURL = ImageManager.encodeTobase64(bitmap);
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
+
+        // Create a reference to 'images/mountains.jpg'
+        StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+        byte[] data2 = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                if (downloadUrl.toString() != null) {
+                    imageURL = downloadUrl.toString();
+                }
+            }
+        });
         imageP.setBackground(null);
         imageP.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100, 100, false));
     }

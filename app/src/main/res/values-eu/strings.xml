@@ -23,7 +23,7 @@
     <string name="nav_favorites_option">Favorites</string>
     <string name="nav_share_option">Wannajob Partekatu</string>
     <string name="output_category">Kategoria</string>
-    <string name="published_jobs">Sortutako Lanak</string>
+    <string name="edit_profile_here">Zeure profila aldatu</string>
     <string name="request_job_text_button">BET FOR THIS JOB</string>
     <string name="reset_filters">Filtroak Berrezarri</string>
     <string name="save_changes">Aldaketak Gorde</string>
@@ -49,5 +49,12 @@
         <item>6Ayuda en General</item>
         <item>7Otros</item>
     </string-array>
+    <string name="age_text">Adina</string>
+    <string name="description_text">Deskribapena</string>
+    <string name="edit_profile_text">PROFILE EDATATU</string>
+    <string name="name_text">Izena</string>
+    <string name="nav_categories">kategoriak</string>
+    <string name="want_to_cancel_job_dialog">Lan hau ezeztatu nahi al duzu?</string>
+    <string name="want_to_save_changes_dialog">Aldaketak gode nahi dituzu?</string>
 
 </resources>

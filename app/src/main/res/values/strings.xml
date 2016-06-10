@@ -54,7 +54,8 @@
     <string name="you_find_jobs_own_location">You will find jobs in your own location and around</string>
     <string name="you_find_encounters">You will find jobs in</string>
     <string name="and_around"> and around </string>
-    <string name="published_jobs"> Published Jobs</string>
+    <string name="edit_profile_here">Edit your profile</string>
+    <string name="show_job_activity_edit_job">Edit Job</string>
 
 
     <string name="create_job">Create Job</string>

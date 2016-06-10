@@ -26,7 +26,8 @@ public class FirebaseStorageService {
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
-    public FirebaseStorageService() {
+    public FirebaseStorageService(Context context) {
+        Firebase.setAndroidContext(context);
         storageRef =  storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
 
@@ -59,5 +60,33 @@ public class FirebaseStorageService {
         });
         return imageURL;
     }
+
+    public String uploadTaskImage(final String userID, Bitmap bitmap) {
+        StorageReference mountainImagesRef = storageRef.child("images/"+userID+".jpg");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+        byte[] data2 = baos.toByteArray();
+
+        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                if (downloadUrl.toString() != null) {
+                    imageURL = downloadUrl.toString();
+                }
+            }
+        });
+        return imageURL;
+    }
+
+
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wannajob</string>
-    <string name="action_settings">ajustes</string>
+    <string name="action_settings">Ajustes</string>
     <string name="and_around">y alrededor</string>
     <string name="choose_app_share_wannajob_message">Elige una aplicación para compartir Wannajob</string>
     <string name="create_job">Crear Trabajo</string>
@@ -23,7 +23,7 @@
     <string name="nav_favorites_option">Favorites</string>
     <string name="nav_share_option">Compartir Wannajob</string>
     <string name="output_category">Categoría</string>
-    <string name="published_jobs">Trabajos Publicados</string>
+    <string name="edit_profile_here">Edita tu perfil</string>
     <string name="request_job_text_button">BET FOR THIS JOB</string>
     <string name="reset_filters">Resetear filtros</string>
     <string name="save_changes">Guardar Cambios</string>
@@ -49,5 +49,12 @@
         <item>6Ayuda en General</item>
         <item>7Otros</item>
     </string-array>
+    <string name="age_text">Edad</string>
+    <string name="description_text">Descripción</string>
+    <string name="edit_profile_text">EDITAR PERFIL</string>
+    <string name="name_text">Nombre</string>
+    <string name="nav_categories">Categoría</string>
+    <string name="want_to_cancel_job_dialog">¿Quieres cancelar este trabajo?</string>
+    <string name="want_to_save_changes_dialog">¿Quieres guardar los cambios?</string>
 
 </resources>

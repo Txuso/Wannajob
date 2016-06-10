@@ -21,14 +21,20 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Bid;
+
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+
+import com.example.txuso.wannajob.misc.things.ImageManager;
+import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -37,6 +43,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,6 +59,7 @@ public class ShowJobActivity extends AppCompatActivity  {
     long bidNumber = 0;
     long viewNumber = 0;
     private GoogleMap mMap;
+    boolean isMine = false;
 
     @Bind(R.id.activity_show_job_my_bid)
     LinearLayout bidLayout;
@@ -145,7 +154,11 @@ public class ShowJobActivity extends AppCompatActivity  {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
-
+                if (job.get("creatorID").equals(fromId)) {
+                    isMine = true;
+                    betButton.setBackgroundResource(R.color.colorAccent);
+                    betButton.setText(R.string.show_job_activity_edit_job);
+                }
                 // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
                 //  Picasso.with(getApplicationContext()).load()
@@ -208,42 +221,48 @@ public class ShowJobActivity extends AppCompatActivity  {
         betButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog myDialog = new Dialog(ShowJobActivity.this);
-                myDialog.getWindow();
-                myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                myDialog.setContentView(R.layout.bid_dialog);
-                final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
-                NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
-                int maxValue = Integer.parseInt(jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
-                numberPicker.setMaxValue(maxValue);
-                bidNumberText.setText("Tu Puja: " + maxValue + " €");
-                numberPicker.setMinValue(1);
-                numberPicker.setValue(maxValue);
+                if (isMine) {
+                    Intent createJobActivity = new Intent(ShowJobActivity.this, CreateJobActivity.class);
+                    startActivity(createJobActivity);
+                } else {
+                    final Dialog myDialog = new Dialog(ShowJobActivity.this);
+                    myDialog.getWindow();
+                    myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    myDialog.setContentView(R.layout.bid_dialog);
+                    final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
+                    NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
+                    int maxValue = Integer.parseInt(jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
+                    numberPicker.setMaxValue(maxValue);
+                    bidNumberText.setText("Tu Puja: " + maxValue + " €");
+                    numberPicker.setMinValue(1);
+                    numberPicker.setValue(maxValue);
 
-                val = maxValue;
-                numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                    @Override
-                    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                        bidNumberText.setText("Tu Puja: " + newVal+" €");
-                        val = newVal;
-                    }
-                });
+                    val = maxValue;
+                    numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                        @Override
+                        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                            bidNumberText.setText("Tu Puja: " + newVal+" €");
+                            val = newVal;
+                        }
+                    });
 
-                myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Bid newBid = new Bid(val, jobID, fromId);
-                        mFirebaseRef.child("bid").push().setValue(newBid);
-                        bidNumber++;
-                        mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
-                        bidLayout.setVisibility(View.VISIBLE);
-                        bidText.setText("Tu Puja: " + val + " €");
-                        myDialog.cancel();
-                    }
-                });
+                    myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bid newBid = new Bid(val, jobID, fromId);
+                            mFirebaseRef.child("bid").push().setValue(newBid);
+                            bidNumber++;
+                            mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
+                            bidLayout.setVisibility(View.VISIBLE);
+                            bidText.setText("Tu Puja: " + val + " €");
+                            myDialog.cancel();
+                        }
+                    });
 
-                myDialog.show();
+                    myDialog.show();
+                }
+
             }
         });
 
@@ -339,6 +358,19 @@ public class ShowJobActivity extends AppCompatActivity  {
         */
 
     }
+
+    private void setPalette(Bitmap bd) {
+
+        Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
+            @Override
+            public void onGenerated(Palette palette) {
+
+            }
+        });
+
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -17,6 +17,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -29,9 +30,15 @@ import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
 import com.example.txuso.wannajob.data.firebase.FirebaseStorageService;
 import com.example.txuso.wannajob.data.firebase.UserFirebaseService;
+import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.misc.RoundedImageView;
+import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.misc.things.UserManager;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -39,6 +46,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -56,9 +64,12 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private Uri mImageCaptureUri;
     private List<JobListItem> jobs;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    Firebase mFirebaseRef;
+    Firebase mUserJobsRef;
 
-    UserFirebaseService uService = new UserFirebaseService();
-    FirebaseStorageService sService = new FirebaseStorageService();
+
+    UserFirebaseService uService;
+    FirebaseStorageService sService = new FirebaseStorageService(UserProfileActivity.this);
 
 
     private static final int PICK_FROM_CAMERA = 1;
@@ -76,9 +87,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     @Bind(R.id.user_menu_photo)
     RoundedImageView userPhoto;
-
-    @Bind(R.id.toolbar_user_profile)
-    android.support.v7.widget.Toolbar toolbar;
 
     @Bind(R.id.edit_profile_textview)
     TextView editProfileTextView;
@@ -98,12 +106,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        uService = new UserFirebaseService(UserProfileActivity.this);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
         userID = UserManager.getUserId(this);
-        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
+        mUserJobsRef = new Firebase("https://wannajob.firebaseio.com/");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.user_map);
@@ -310,14 +320,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         swipeRefreshLayout.setRefreshing(false);
 
     }
-    /*
+
     private void fetchMyJobs(final double latitude, final double longitude) {
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs, getApplicationContext());
         //rv.setAdapter(adapter);
-            mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+        mUserJobsRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
                     final Job job = dataSnapshot.getValue(Job.class);
@@ -329,6 +339,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     if (job.getCreatorID().equals(userID)) {
 
                         item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
+                        item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
                         adapter = new RVUserAdapter(jobs, getApplicationContext());
                         jobs.add(item);
@@ -380,11 +391,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
             });
     }
-    */
+
 
     @OnClick(R.id.activity_user_profile_show_jobs_layout)
     public void showMyJobs() {
-       // fetchMyJobs(latitude, longitude);
+       fetchMyJobs(latitude, longitude);
     }
 }
 

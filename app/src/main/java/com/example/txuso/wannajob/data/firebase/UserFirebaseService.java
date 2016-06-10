@@ -12,7 +12,8 @@ public class UserFirebaseService {
 
     Firebase mFirebaseRef;
 
-    public UserFirebaseService() {
+    public UserFirebaseService(Context context) {
+        Firebase.setAndroidContext(context);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
     }
 

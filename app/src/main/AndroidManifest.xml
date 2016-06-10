@@ -48,7 +48,7 @@
         </activity>
         <activity
             android:name=".activities.UserProfileActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            />
         <activity android:name=".activities.CreateJobActivity" />
         <activity android:name=".activities.ShareWannajobActivity" />
         <activity android:name=".activities.DiscoveryPreferencesActivity" />
