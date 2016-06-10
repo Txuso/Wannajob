@@ -127,7 +127,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         ButterKnife.bind(this);
         userID = getIntent().getExtras().getString(EXTRA_USER_ID);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        if (!userID.equals(UserManager.getUserId(this))) {
+            editProfileTextView.setVisibility(View.GONE);
+        }
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         mUserJobsRef = new Firebase("https://wannajob.firebaseio.com/");
 

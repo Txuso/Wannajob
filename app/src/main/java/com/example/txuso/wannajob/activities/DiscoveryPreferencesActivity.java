@@ -28,7 +28,7 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 
 public class DiscoveryPreferencesActivity extends AppCompatActivity {
     int progressValue = 25;
-    UserFirebaseService uService = new UserFirebaseService(getApplicationContext());
+    UserFirebaseService uService;
     Double longitude;
     Double latitude;
     Geocoder gc;
@@ -41,6 +41,7 @@ public class DiscoveryPreferencesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_discovery_preferences);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        uService = new UserFirebaseService(getApplicationContext());
 
         AppCompatButton myLocButton = (AppCompatButton) findViewById(R.id.myLocButton);
         search = (TextInputLayout) findViewById(R.id.input_loc_name);
