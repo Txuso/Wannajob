@@ -5,6 +5,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
@@ -24,7 +25,7 @@ import com.example.txuso.wannajob.data.model.classes.Job;
 
 import java.util.HashMap;
 
-public class ShowJobMapActivity extends FragmentActivity {
+public class ShowJobMapActivity extends AppCompatActivity {
 
     private GoogleMap mMap;
     Geocoder gc;
@@ -38,6 +39,8 @@ public class ShowJobMapActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_job_map);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
