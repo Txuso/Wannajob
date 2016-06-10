@@ -238,11 +238,11 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     }
 
     public AlertDialog pickImageChooser () {
-        final String [] items = new String [] {"From Camera", "From SD Card"};
+        final String [] items = new String [] {getString(R.string.from_camera), getString(R.string.from_sdcard)};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item,items);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Select Image");
+        builder.setTitle(getString(R.string.select_image));
         builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
             public void onClick( DialogInterface dialog, int item ) {
                 if (item == 0) {
@@ -267,7 +267,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
+                    startActivityForResult(Intent.createChooser(intent, getString(R.string.dialog_complete_action_using)), PICK_FROM_FILE);
                 }
             }
         } );

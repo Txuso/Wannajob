@@ -234,7 +234,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                     NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
                     int maxValue = Integer.parseInt(jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
                     numberPicker.setMaxValue(maxValue);
-                    bidNumberText.setText("Tu Puja: " + maxValue + " €");
+                    bidNumberText.setText(getString(R.string.your_bid) + maxValue + " €");
                     numberPicker.setMinValue(1);
                     numberPicker.setValue(maxValue);
 
@@ -242,7 +242,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                     numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                         @Override
                         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                            bidNumberText.setText("Tu Puja: " + newVal+" €");
+                            bidNumberText.setText(getString(R.string.your_bid) + newVal+" €");
                             val = newVal;
                         }
                     });
@@ -255,7 +255,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                             bidNumber++;
                             mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
                             bidLayout.setVisibility(View.VISIBLE);
-                            bidText.setText("Tu Puja: " + val + " €");
+                            bidText.setText(getString(R.string.your_bid) + val + " €");
                             myDialog.cancel();
                         }
                     });
@@ -458,7 +458,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                 final Map<String, Object> bid = (Map<String, Object>) dataSnapshot.getValue();
                 if (bid.get("userId").toString().equals(fromId) && bid.get("jobId").toString().equals(jobID)) {
                     bidLayout.setVisibility(View.VISIBLE);
-                    bidText.setText("Tu Puja: " + bid.get("number").toString() + " €");
+                    bidText.setText(getString(R.string.your_bid) + bid.get("number").toString() + " €");
                 }
             }
 

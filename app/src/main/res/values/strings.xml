@@ -56,7 +56,18 @@
     <string name="and_around"> and around </string>
     <string name="edit_profile_here">Edit your profile</string>
     <string name="show_job_activity_edit_job">Edit Job</string>
+    <string name="no_dialog">No</string>
+    <string name="yes_dialog">Yes</string>
+    <string name="exit_without_saving">Do you want to exit without saving the changes?</string>
+    <string name="from_camera">From camera</string>
+    <string name="from_sdcard">From SD card</string>
+    <string name="select_image">Select Image</string>
+    <string name="dialog_complete_action_using">Complete action using</string>
 
+    <string name="dialog_download_this_app">Download this application and discover jobs around you!!</string>
+    <string name="choose_option_share">Choose an application to share Wannajob</string>
+    <string name="your_bid">Your Bid: </string>
+    <string name="manitas_category">Manitas, Reparaciones y Obras</string>
 
     <string name="create_job">Create Job</string>
     <string name="share_wannajob_message">\n Download this application and discover jobs around you!!\n\n</string>

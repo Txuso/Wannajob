@@ -35,10 +35,10 @@ public class ShareWannajobActivity extends AppCompatActivity {
             Intent i = new Intent(Intent.ACTION_SEND);
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_SUBJECT, "Wannajob");
-            String sAux = "\n Download this application and discover jobs around you!!\n\n";
+            String sAux = "\n+"+ getString(R.string.dialog_download_this_app)+"\n\n";
             sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
             i.putExtra(Intent.EXTRA_TEXT, sAux);
-            startActivity(Intent.createChooser(i, "Choose an application to share Wannajob"));
+            startActivity(Intent.createChooser(i, getString(R.string.choose_option_share)));
 
 
 /*

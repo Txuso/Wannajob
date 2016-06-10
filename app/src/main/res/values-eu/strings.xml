@@ -19,8 +19,8 @@
     <string name="job_salary">Dirua</string>
     <string name="modify_discovery_pref_message">Ez daude lanik zeure inguruan. Ezarpenak aldatu eta berriz ere saiatu.</string>
     <string name="nav_discovery_preferences_option">Bilatzeko Lehentasunak</string>
-    <string name="nav_create_job">Create Job</string>
-    <string name="nav_favorites_option">Favorites</string>
+    <string name="nav_create_job">Lantxoa Sortu</string>
+    <string name="nav_favorites_option">Gogokoenak</string>
     <string name="nav_share_option">Wannajob Partekatu</string>
     <string name="output_category">Kategoria</string>
     <string name="edit_profile_here">Zeure profila aldatu</string>
@@ -56,5 +56,16 @@
     <string name="nav_categories">kategoriak</string>
     <string name="want_to_cancel_job_dialog">Lan hau ezeztatu nahi al duzu?</string>
     <string name="want_to_save_changes_dialog">Aldaketak gode nahi dituzu?</string>
+    <string name="manitas_category">Manitas, Reparaciones y Obras</string>
+    <string name="select_image">Argazkia Aukeratu</string>
+    <string name="show_job_activity_edit_job">Lantxoa Aldatu</string>
+    <string name="yes_dialog">Bai</string>
+    <string name="your_bid">Zure Apostua: </string>
+    <string name="choose_option_share">Aukeratu aukera bat Wannajob partekatzeko</string>
+    <string name="dialog_complete_action_using">Ekintza honekin amaitu</string>
+    <string name="dialog_download_this_app">Aplikazio hau deskargatu eta lantxoak zeure inguruan aurkitu!!</string>
+    <string name="exit_without_saving">Aldaketak gorde barik irten nahi duzu?</string>
+    <string name="from_camera">Kameratik</string>
+    <string name="from_sdcard">SD cardetik</string>
 
 </resources>

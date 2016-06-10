@@ -55,7 +55,6 @@ public class CreateJobActivity extends AppCompatActivity {
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
 
-    Bitmap bm;
     String category = "";
 
     String imageURL = "";
@@ -164,15 +163,15 @@ public class CreateJobActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home: {
                 android.support.v7.app.AlertDialog.Builder builder2 = new android.support.v7.app.AlertDialog.Builder(CreateJobActivity.this);
-                builder2.setMessage("Do you want to exit without saving the changes?");
-                builder2.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                builder2.setMessage(getString(R.string.exit_without_saving));
+                builder2.setPositiveButton(getString(R.string.yes_dialog),new DialogInterface.OnClickListener() {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         onBackPressed();
                     }
                 });
-                builder2.setNegativeButton("Exit", new DialogInterface.OnClickListener() {
+                builder2.setNegativeButton(getString(R.string.no_dialog), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -191,11 +190,11 @@ public class CreateJobActivity extends AppCompatActivity {
     }
 
     public AlertDialog pickImageChooser () {
-        final String [] items = new String [] {"From Camera", "From SD Card"};
+        final String [] items = new String [] {getString(R.string.from_camera), getString(R.string.from_sdcard)};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_item,items);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Select Image");
+        builder.setTitle(getString(R.string.select_image));
         builder.setAdapter( adapter, new DialogInterface.OnClickListener() {
             public void onClick( DialogInterface dialog, int item ) {
                 if (item == 0) {
@@ -220,7 +219,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                    startActivityForResult(Intent.createChooser(intent, "Complete action using"), PICK_FROM_FILE);
+                    startActivityForResult(Intent.createChooser(intent, getString(R.string.dialog_complete_action_using)), PICK_FROM_FILE);
                 }
             }
         } );

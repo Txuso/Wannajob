@@ -19,8 +19,8 @@
     <string name="job_salary">Salario</string>
     <string name="modify_discovery_pref_message">No hay trabajos alrededor de ti. Modifica tus preferencias de búsqueda e inténtalo de nuevo</string>
     <string name="nav_discovery_preferences_option">Preferencias de búsqueda</string>
-    <string name="nav_create_job">Create Job</string>
-    <string name="nav_favorites_option">Favorites</string>
+    <string name="nav_create_job">Crear Trabajillo</string>
+    <string name="nav_favorites_option">Favoritos</string>
     <string name="nav_share_option">Compartir Wannajob</string>
     <string name="output_category">Categoría</string>
     <string name="edit_profile_here">Edita tu perfil</string>
@@ -56,5 +56,16 @@
     <string name="nav_categories">Categoría</string>
     <string name="want_to_cancel_job_dialog">¿Quieres cancelar este trabajo?</string>
     <string name="want_to_save_changes_dialog">¿Quieres guardar los cambios?</string>
+    <string name="manitas_category">Manitas, Reparaciones y Obras</string>
+    <string name="select_image">Elige Imagen</string>
+    <string name="show_job_activity_edit_job">Editar Trabajillo</string>
+    <string name="yes_dialog">Sí</string>
+    <string name="your_bid">Tu Puja: </string>
+    <string name="choose_option_share">Elige una opción para compartir Wannajob</string>
+    <string name="dialog_complete_action_using">Completar acción usando</string>
+    <string name="dialog_download_this_app">Descarga esta aplicación y descrubre currillos al rederor de ti!!</string>
+    <string name="exit_without_saving">¿Quieres salir sin guardar los cambios?</string>
+    <string name="from_camera">De la cámara</string>
+    <string name="from_sdcard">De la SD card</string>
 
 </resources>

@@ -80,14 +80,14 @@ public class ShowJobVacanciesActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(ShowJobVacanciesActivity.this);
                 builder2.setMessage(getString(R.string.want_to_cancel_job_dialog));
-                builder2.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                builder2.setPositiveButton(getString(R.string.yes_dialog),new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mFirebaseRef2.child(jobID).removeValue();
                         finish();
                     }
                 });
-                builder2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                builder2.setNegativeButton(getString(R.string.no_dialog), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         onBackPressed();
