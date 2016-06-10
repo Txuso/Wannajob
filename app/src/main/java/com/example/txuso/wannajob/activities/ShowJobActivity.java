@@ -55,6 +55,7 @@ public class ShowJobActivity extends AppCompatActivity  {
     Firebase mFirebaseRefBids;
     String jobID;
     Bitmap pic;
+    String creatorID = "";
     int val;
     long bidNumber = 0;
     long viewNumber = 0;
@@ -154,7 +155,8 @@ public class ShowJobActivity extends AppCompatActivity  {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
-                if (job.get("creatorID").equals(fromId)) {
+                creatorID = job.get("creatorID").toString();
+                if (creatorID.equals(fromId)) {
                     isMine = true;
                     betButton.setBackgroundResource(R.color.colorAccent);
                     betButton.setText(R.string.show_job_activity_edit_job);
@@ -215,6 +217,15 @@ public class ShowJobActivity extends AppCompatActivity  {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
+            }
+
+        });
+
+        userPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent showUserProf = UserProfileActivity.showOtherUserProfileIntent(ShowJobActivity.this, creatorID);
+                startActivity(showUserProf);
             }
         });
 

@@ -2,6 +2,7 @@ package com.example.txuso.wannajob.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +13,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -103,13 +105,27 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     RVUserAdapter adapter;
     JobListItem item;
 
+    private static final String EXTRA_USER_ID = "EXTRA_USER_ID";
+
+    public static Intent showMyUserProfileIntent (@NonNull Context context) {
+        Intent myUserIntent = new Intent(context, UserProfileActivity.class);
+        myUserIntent.putExtra(EXTRA_USER_ID, UserManager.getUserId(context));
+        return  myUserIntent;
+    }
+
+    public static Intent showOtherUserProfileIntent (@NonNull Context context, String userId) {
+        Intent myUserIntent = new Intent(context, UserProfileActivity.class);
+        myUserIntent.putExtra(EXTRA_USER_ID, userId);
+        return  myUserIntent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uService = new UserFirebaseService(UserProfileActivity.this);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
-        userID = UserManager.getUserId(this);
+        userID = getIntent().getExtras().getString(EXTRA_USER_ID);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");

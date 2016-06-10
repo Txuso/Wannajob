@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent userProf = new Intent(MainActivity.this, UserProfileActivity.class);
+                Intent userProf = UserProfileActivity.showMyUserProfileIntent(MainActivity.this);
                 startActivity(userProf);
             }
         });
