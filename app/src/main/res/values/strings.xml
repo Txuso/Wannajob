@@ -14,7 +14,7 @@
     <string name="want_to_cancel_job_dialog">Do you want to cancel this job?</string>
     <string name="want_to_save_changes_dialog">Do you want to save the changes?</string>
     <string name="job_added_to_favorite">job has been added to your favorite list</string>
-    <string name="job_deleted_to_favorite">job has been removed from your favorite list</string>
+    <string name="job_removed_to_favorite">job has been removed from your favorite list</string>
 
     <string-array name="categories_list">
         <item>0Manitas, Reparaciones y Obras</item>

@@ -87,8 +87,7 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
 
         jobs = new ArrayList<>();
         adapter = new RVUserAdapter(jobs, getApplicationContext());
-
-
+        rv.setAdapter(adapter);
 
         mFirebaseRef.child("wannajobUsers").child(userID).addValueEventListener(new ValueEventListener() {
             @Override
@@ -121,7 +120,7 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
                                             showJob.putExtra("toID", job.getCreatorID());
                                             showJob.putExtra("to", job.getName());
                                             //showJob.putExtra("image", byteArray);
-                                            startActivity(showJob);
+                                            startActivityForResult(showJob, 1);
                                         }
                                     });
                                     if (adapter != null) {
@@ -229,4 +228,14 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(false);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == 1){
+            fetchJobs();
+        }
+    }
+
 }

@@ -167,6 +167,10 @@ public class ShowJobActivity extends AppCompatActivity  {
                 if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
                     likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
                 }
+                else {
+                    likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
+
+                }
                 // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
                 //  Picasso.with(getApplicationContext()).load()
@@ -406,6 +410,8 @@ public class ShowJobActivity extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         super.onResume();
+        Intent intent = getIntent();
+        setResult(RESULT_OK, intent);
         finish();
         updateViews();
     }
@@ -416,10 +422,11 @@ public class ShowJobActivity extends AppCompatActivity  {
             UserManager.deleteUserFavoriteJob(this, jobID);
             mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").child(jobID).removeValue();
             likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
-            Toast.makeText(getApplicationContext(), getString(R.string.job_added_to_favorite), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.job_removed_to_favorite), Toast.LENGTH_SHORT).show();
 
 
         } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.job_added_to_favorite), Toast.LENGTH_SHORT).show();
             Map<String, Object> likes = new HashMap<>();
             likes.put(jobID, true);
             mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").updateChildren(likes);

@@ -126,7 +126,7 @@ public class UserManager {
 
     public static void setUserAge(@NonNull Context context, String userAge) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        sharedPreferences.edit().putString(USER_AGE, userAge).commit();
+        sharedPreferences.edit().putString(USER_AGE, userAge).apply();
     }
 
     private static final String USER_FAVORITE_JOBS= "userFavoriteJobs";
@@ -145,14 +145,14 @@ public class UserManager {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> favorites = getUserfavoriteJobs(context);
         favorites.add(userFavoriteJobs);
-        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).commit();
+        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).apply();
     }
 
     public static void deleteUserFavoriteJob(@NonNull Context context, String userFavoriteJobs) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> favorites = getUserfavoriteJobs(context);
         favorites.remove(userFavoriteJobs);
-        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).commit();
+        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).apply();
     }
 
 }
