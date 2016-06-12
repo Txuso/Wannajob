@@ -95,66 +95,71 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
             public void onDataChange(DataSnapshot snapshot) {
                 final Map<String, Object> job = (Map<String, Object>) snapshot.getValue();
                 HashMap<String, Boolean> userLikes = (HashMap<String, Boolean>) job.get("likes");
-                Iterator entries = userLikes.entrySet().iterator();
+                if (userLikes != null) {
+                    Iterator entries = userLikes.entrySet().iterator();
+                    while (entries.hasNext()) {
+                        Map.Entry thisEntry = (Map.Entry) entries.next();
+                        final Object key = thisEntry.getKey();
 
-                while (entries.hasNext()) {
-                    Map.Entry thisEntry = (Map.Entry) entries.next();
-                    final Object key = thisEntry.getKey();
+                        mFirebaseRef2.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                                final Job job = dataSnapshot.getValue(Job.class);
+                                if (key.equals(dataSnapshot.getKey())) {
+                                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
+                                    item.setImageUrl(job.getJobImage());
+                                    adapter = new RVUserAdapter(jobs, getApplicationContext());
+                                    jobs.add(item);
 
-                    mFirebaseRef2.child("wannaJobs").addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                            final Job job = dataSnapshot.getValue(Job.class);
-                            if (key.equals(dataSnapshot.getKey())) {
-                                item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
-                                item.setImageUrl(job.getJobImage());
-                                adapter = new RVUserAdapter(jobs, getApplicationContext());
-                                jobs.add(item);
+                                    adapter = new RVUserAdapter(jobs, getApplicationContext());
+                                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                                        @Override
+                                        public void onItemClick(View view, int position) {
 
-                                adapter = new RVUserAdapter(jobs, getApplicationContext());
-                                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-                                    @Override
-                                    public void onItemClick(View view, int position) {
-
-                                        Intent showJob = new Intent(UserFavoriteJobsActivity.this, ShowJobActivity.class);
-                                        showJob.putExtra("jobID", jobs.get(position).getJobID());
-                                        showJob.putExtra("toID", job.getCreatorID());
-                                        showJob.putExtra("to", job.getName());
-                                        //showJob.putExtra("image", byteArray);
-                                        startActivity(showJob);
+                                            Intent showJob = new Intent(UserFavoriteJobsActivity.this, ShowJobActivity.class);
+                                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                                            showJob.putExtra("toID", job.getCreatorID());
+                                            showJob.putExtra("to", job.getName());
+                                            //showJob.putExtra("image", byteArray);
+                                            startActivity(showJob);
+                                        }
+                                    });
+                                    if (adapter != null) {
+                                        ButterKnife.bind(UserFavoriteJobsActivity.this);
+                                        rv.setAdapter(adapter);
+                                        rv.setHasFixedSize(true);
+                                        swipeRefreshLayout.setRefreshing(false);
+                                        rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                                     }
-                                });
-                                rv.setAdapter(adapter);
-                                rv.setHasFixedSize(true);
-                                swipeRefreshLayout.setRefreshing(false);
-                                rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                                }
+
                             }
 
-                        }
+                            @Override
+                            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
-                        @Override
-                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                            }
 
-                        }
+                            @Override
+                            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-                        @Override
-                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+                            }
 
-                        }
+                            @Override
+                            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
-                        @Override
-                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                            }
 
-                        }
+                            @Override
+                            public void onCancelled(FirebaseError firebaseError) {
 
-                        @Override
-                        public void onCancelled(FirebaseError firebaseError) {
+                            }
 
-                        }
+                        });
 
-                    });
-
+                    }
                 }
+
 
             }
             @Override
@@ -172,8 +177,6 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
 
                 for (final DataSnapshot like : likeDataSnapshot.child("likes").getChildren()) {
                     Toast.makeText(getApplicationContext(), like.getKey()+""  , Toast.LENGTH_LONG).show();
-
-
 
                 }
             }
@@ -198,13 +201,6 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
 
             }
         });
-
-
-
-
-
-
-
 
         //rv.setAdapter(adapter);
 

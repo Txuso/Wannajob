@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Bid;
 
@@ -157,9 +159,13 @@ public class ShowJobActivity extends AppCompatActivity  {
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
                 creatorID = job.get("creatorID").toString();
                 if (creatorID.equals(fromId)) {
+                    likeButton.setVisibility(View.GONE);
                     isMine = true;
                     betButton.setBackgroundResource(R.color.colorAccent);
                     betButton.setText(R.string.show_job_activity_edit_job);
+                }
+                if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
+                    likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
                 }
                 // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
@@ -406,9 +412,22 @@ public class ShowJobActivity extends AppCompatActivity  {
 
     @OnClick(R.id.activity_show_job_like_button)
     public void onLikePressed() {
-        Map<String, Object> likes = new HashMap<>();
-        likes.put(jobID, true);
-        mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").updateChildren(likes);
+        if (UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
+            UserManager.deleteUserFavoriteJob(this, jobID);
+            mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").child(jobID).removeValue();
+            likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
+            Toast.makeText(getApplicationContext(), getString(R.string.job_added_to_favorite), Toast.LENGTH_SHORT).show();
+
+
+        } else {
+            Map<String, Object> likes = new HashMap<>();
+            likes.put(jobID, true);
+            mFirebaseRef.child("wannajobUsers").child(fromId).child("likes").updateChildren(likes);
+            UserManager.addUserFavoriteJob(this, jobID);
+            likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
+
+        }
+
     }
 
     public void updateViews() {

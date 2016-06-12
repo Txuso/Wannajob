@@ -67,5 +67,6 @@
     <string name="exit_without_saving">¿Quieres salir sin guardar los cambios?</string>
     <string name="from_camera">De la cámara</string>
     <string name="from_sdcard">De la SD card</string>
-
+    <string name="job_added_to_favorite">ha sido añadido a tus trabajos favoritos</string>
+    <string name="job_removed_to_favorite">ha sido eliminado a tus trabajos favoritos</string>
 </resources>

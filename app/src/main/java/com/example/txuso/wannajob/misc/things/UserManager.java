@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by Txuso on 11/05/16.
  */
@@ -126,7 +129,30 @@ public class UserManager {
         sharedPreferences.edit().putString(USER_AGE, userAge).commit();
     }
 
+    private static final String USER_FAVORITE_JOBS= "userFavoriteJobs";
 
+    public static Set<String> getUserfavoriteJobs(@NonNull Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getStringSet(USER_FAVORITE_JOBS, new HashSet<String>());
+    }
 
+    public static boolean isUserfavoriteJob(@NonNull Context context, String userFavoriteJob) {
+        Set<String> favorites = getUserfavoriteJobs(context);
+        return favorites.contains(userFavoriteJob);
+    }
+
+    public static void addUserFavoriteJob(@NonNull Context context, String userFavoriteJobs) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> favorites = getUserfavoriteJobs(context);
+        favorites.add(userFavoriteJobs);
+        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).commit();
+    }
+
+    public static void deleteUserFavoriteJob(@NonNull Context context, String userFavoriteJobs) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> favorites = getUserfavoriteJobs(context);
+        favorites.remove(userFavoriteJobs);
+        sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).commit();
+    }
 
 }
