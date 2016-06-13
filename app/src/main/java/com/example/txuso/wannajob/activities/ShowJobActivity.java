@@ -10,6 +10,7 @@ import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,8 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
 import com.example.txuso.wannajob.data.model.classes.Bid;
 
+import com.example.txuso.wannajob.data.model.classes.Job;
+import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -32,6 +36,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -63,6 +68,7 @@ public class ShowJobActivity extends AppCompatActivity  {
     long viewNumber = 0;
     private GoogleMap mMap;
     boolean isMine = false;
+    boolean isFav = false;
 
     @Bind(R.id.activity_show_job_my_bid)
     LinearLayout bidLayout;
@@ -520,6 +526,7 @@ public class ShowJobActivity extends AppCompatActivity  {
             }
         });
     }
+
 
 }
 

@@ -18,6 +18,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
@@ -30,10 +31,12 @@ import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.example.txuso.wannajob.data.adapter.RVUserOpinionAdapter;
 import com.example.txuso.wannajob.data.firebase.FirebaseStorageService;
 import com.example.txuso.wannajob.data.firebase.UserFirebaseService;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
+import com.example.txuso.wannajob.data.model.classes.UserOpinionListItem;
 import com.example.txuso.wannajob.misc.RoundedImageView;
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.misc.things.UserManager;
@@ -65,6 +68,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     double longitude;
     private Uri mImageCaptureUri;
     private List<JobListItem> jobs;
+    private List<UserOpinionListItem> opinions;
+
     FirebaseStorage storage = FirebaseStorage.getInstance();
     Firebase mFirebaseRef;
     Firebase mUserJobsRef;
@@ -96,13 +101,17 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Bind(R.id.activity_user_profile_recycler_view)
     RecyclerView rv;
 
-    @Bind(R.id.activity_user_profile_show_jobs_layout)
+    @Bind(R.id.activity_user_profile_show_jobs)
     LinearLayout myJobsLayout;
+
+    @Bind(R.id.activity_user_profile_show_opinions)
+    LinearLayout myOpinionsLayout;
 
     @Bind(R.id.activity_user_profile_swiper_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
     RVUserAdapter adapter;
+    RVUserOpinionAdapter rvUserOpinionAdapter;
     JobListItem item;
 
     private static final String EXTRA_USER_ID = "EXTRA_USER_ID";
@@ -411,9 +420,33 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     }
 
 
-    @OnClick(R.id.activity_user_profile_show_jobs_layout)
+    @OnClick(R.id.activity_user_profile_show_jobs)
     public void showMyJobs() {
        fetchMyJobs(latitude, longitude);
+    }
+
+    @OnClick(R.id.activity_user_profile_show_opinions)
+    public void showMyOpinions() {
+        opinions = new ArrayList<>();
+        UserOpinionListItem u = new UserOpinionListItem("Josu","Limpiar Gracia","Hostia pues el tio este lo hizo de puta madre aisj dasjn asoidasoijd oiasjd iasjd oiasj doiajsdoijasodij asoidjasoijdiaosjd oiasjdioasjoiasjdoiajsdoiasjdoijasdasas ", 4,"https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F10208281696393233.jpg?alt=media&token=0ec08cc7-92de-4f01-929f-0fb6f681a9fc", "10208529824393627");
+        opinions.add(u);
+        opinions.add(u);
+        opinions.add(u);
+        opinions.add(u);
+        rvUserOpinionAdapter = new RVUserOpinionAdapter(opinions, getApplicationContext());
+        rvUserOpinionAdapter.SetOnItemClickListener(new RVUserOpinionAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent showJob = showOtherUserProfileIntent(getApplicationContext(), opinions.get(position).getUserID());
+                //showJob.putExtra("image", byteArray);
+                startActivity(showJob);
+            }
+        });
+        rv.setAdapter(rvUserOpinionAdapter);
+        rv.setHasFixedSize(true);
+        swipeRefreshLayout.setRefreshing(false);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
     }
 }
 

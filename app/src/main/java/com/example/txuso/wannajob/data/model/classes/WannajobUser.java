@@ -21,6 +21,7 @@ public class WannajobUser {
     private double latitude;
     private int distance;
     private String registeredDate;
+    private double rating;
     public Map<String, Boolean> likes = new HashMap<>();
 
 
@@ -31,6 +32,7 @@ public class WannajobUser {
         this.distance = 50;
         this.description = "";
         this.registeredDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
+        rating = 0;
     }
 
 
@@ -105,4 +107,17 @@ public class WannajobUser {
     public void setLikes(Map<String, Boolean> likes) {
         this.likes = likes;
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public void setRegisteredDate(String registeredDate) {
+        this.registeredDate = registeredDate;
+    }
 }
+

@@ -46,6 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
+                    android:isIndicator="true"
                     android:layout_marginTop="15dp"
                     android:progressTint="@color/colorGreen"
                     android:layout_gravity="center"
@@ -113,6 +114,7 @@
                         android:layout_gravity="center"/>
 
                     <LinearLayout
+                        android:id="@+id/activity_user_profile_show_jobs"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -135,6 +137,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/activity_user_profile_show_opinions"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

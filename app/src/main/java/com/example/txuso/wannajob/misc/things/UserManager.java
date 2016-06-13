@@ -105,7 +105,7 @@ public class UserManager {
 
     // User Photo
 
-    private static final String USER_PHOTO= "userPhoto";
+    private static final String USER_PHOTO = "userPhoto";
 
     public static String getUserPhoto(@NonNull Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -117,7 +117,7 @@ public class UserManager {
         sharedPreferences.edit().putString(USER_PHOTO, userPhoto).commit();
     }
 
-    private static final String USER_AGE= "userAge";
+    private static final String USER_AGE = "userAge";
 
     public static String getUserAge(@NonNull Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
