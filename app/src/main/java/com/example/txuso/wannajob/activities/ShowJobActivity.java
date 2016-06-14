@@ -69,6 +69,7 @@ public class ShowJobActivity extends AppCompatActivity  {
     private GoogleMap mMap;
     boolean isMine = false;
     boolean isFav = false;
+    String imageURL = "";
 
     @Bind(R.id.activity_show_job_my_bid)
     LinearLayout bidLayout;
@@ -205,6 +206,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                 jobViews.setText(viewNumber + "");
                 jobMoney.setText(job.get("salary").toString() + "€");
                 setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
+                imageURL = job.get("jobImage").toString();
                 Picasso
                         .with(getApplicationContext())
                         .load(job.get("jobImage").toString())
@@ -249,8 +251,10 @@ public class ShowJobActivity extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 if (isMine) {
-                    Intent createJobActivity = new Intent(ShowJobActivity.this, CreateJobActivity.class);
-                    startActivity(createJobActivity);
+                    Intent editJobActivity = new Intent(ShowJobActivity.this, EditJobActivity.class);
+                    editJobActivity.putExtra("jobID", jobID);
+                    editJobActivity.putExtra("imageURL", imageURL);
+                    startActivity(editJobActivity);
                 } else {
                     final Dialog myDialog = new Dialog(ShowJobActivity.this);
                     myDialog.getWindow();
@@ -385,19 +389,6 @@ public class ShowJobActivity extends AppCompatActivity  {
         */
 
     }
-
-    private void setPalette(Bitmap bd) {
-
-        Palette.from(bd).generate(new Palette.PaletteAsyncListener() {
-            @Override
-            public void onGenerated(Palette palette) {
-
-            }
-        });
-
-    }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

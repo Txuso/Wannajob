@@ -69,7 +69,6 @@
     <string name="from_sdcard">SD cardetik</string>
     <string name="job_added_to_favorite">zure lan gustukoetara gehitu da</string>
     <string name="job_removed_to_favorite">zure lan gustukoetara kendu da</string>
-
-
+    <string name="job_modified_dialog">Zure lana aldatu duzu</string>
 
 </resources>

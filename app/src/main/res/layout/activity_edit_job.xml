@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorWhite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.txuso.wannajob.activities.EditJobActivity">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:id="@+id/activity_edit_job_photo"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/clases"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/activity_edit_job_photo"
+        android:layout_marginTop="6dp"
+        android:id="@+id/activity_edit_job_name"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:maxLength="60"
+            android:text="Txuso"
+            android:selectAllOnFocus="true"
+            android:textColor="@color/colorGreen"
+            android:layout_below="@+id/user_opinion_stars"
+            android:textSize="18sp"
+            android:hint="@string/job_name"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_edit_job_name"
+        android:layout_toRightOf="@id/activity_edit_job_photo"
+        android:layout_marginTop="6dp"
+        android:id="@+id/activity_edit_job_money"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:selectAllOnFocus="true"
+
+            android:inputType="number"
+            android:hint="@string/job_salary"
+            android:text="25 €"
+            android:textColor="@color/colorGreen"
+            android:layout_below="@+id/user_opinion_stars"
+            android:textSize="18sp"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_edit_job_photo"
+        android:layout_marginTop="10dp"
+        android:id="@+id/activity_edit_job_description"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:maxLength="60"
+            android:selectAllOnFocus="true"
+
+            android:inputType="textMultiLine"
+            android:textColor="@color/colorGreen"
+            android:textSize="18sp"
+            android:hint="@string/job_description"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_edit_job_description"
+        android:layout_marginTop="6dp"
+        android:id="@+id/activity_edit_job_duration"
+        >
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:selectAllOnFocus="true"
+            android:paddingLeft="8dp"
+            android:singleLine="true"
+            android:maxLength="60"
+            android:inputType="textMultiLine"
+            android:textColor="@color/colorGreen"
+            android:textSize="18sp"
+            android:hint="@string/job_duration"
+            />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.v7.widget.AppCompatButton
+        android:layout_below="@id/activity_edit_job_duration"
+        android:layout_width="275dp"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_centerInParent="true"
+        android:id="@+id/activity_edit_job_category"
+        android:background="@drawable/rounded"
+        android:layout_height="wrap_content"
+        android:text="@string/job_category"
+        android:textColor="@color/colorGreen"
+        />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/activity_edit_job_edit_button"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:text="@string/show_job_activity_edit_job"
+        android:background="@color/colorGreen"
+        android:textColor="#fcfcfc"
+        />
+
+</RelativeLayout>

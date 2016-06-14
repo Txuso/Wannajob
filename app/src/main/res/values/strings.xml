@@ -39,6 +39,7 @@
     <string name="job_category">CHOOSE A CATEGORY</string>
     <string name="data_wrong_dialog">Some of the data is wrong. Check it again.</string>
     <string name="job_created_dialog">Your job has been created</string>
+    <string name="job_modified_dialog">Your job has been modified</string>
     <string name="send_message_button">ASK ME</string>
 
     <string name="output_category">Category</string>

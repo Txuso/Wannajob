@@ -38,6 +38,7 @@
     <string name="you_find_encounters">Encontrarás trabajos en</string>
     <string name="you_find_jobs_own_location">Encontrarás trabajos en tu propia localización y alrededor de </string>
     <string name="cancel_job">Cancelar Curro</string>
+    <string name="job_modified_dialog">Tu curro ha sido modificado</string>
 
     <string-array name="categories_list">
         <item>0Manitas, Reparaciones y Obras</item>
