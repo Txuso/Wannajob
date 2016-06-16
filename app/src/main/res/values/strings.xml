@@ -84,5 +84,9 @@
     <string name="name_text">Name</string>
     <string name="description_text">Description</string>
 
+    <string name="evaluation_text_stars">How many stars does your Wannajober deserve?</string>
+    <string name="evaluation_text">Can you do a recommendation about your Wannajober?</string>
+    <string name="evaluation_text_hint">Service quality, puntuality and other aspects?</string>
+
 
 </resources>

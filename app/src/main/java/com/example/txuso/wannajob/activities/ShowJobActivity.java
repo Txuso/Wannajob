@@ -216,12 +216,18 @@ public class ShowJobActivity extends AppCompatActivity  {
 
                 //jobDuration.getEditText().setText(job.get("jobDuration").toString());
                 //jobCategory.getEditText().setText(job.get("category").toString());
-                mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString()).addValueEventListener(new ValueEventListener() {
+                mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString())
+                        .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
                         userName.setText(user.get("name").toString());
-                        Picasso.with(getApplicationContext()).load(user.get("image").toString()).centerCrop().placeholder(R.drawable.photo_placeholder).fit().into(userPhoto);
+                        Picasso.with(getApplicationContext()).
+                                load(user.get("image").toString()).
+                                centerCrop().
+                                placeholder(R.drawable.photo_placeholder).
+                                fit().
+                                into(userPhoto);
                     }
 
                     @Override
@@ -263,7 +269,8 @@ public class ShowJobActivity extends AppCompatActivity  {
                     myDialog.setContentView(R.layout.bid_dialog);
                     final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
                     NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
-                    int maxValue = Integer.parseInt(jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
+                    int maxValue = Integer.parseInt(
+                            jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
                     numberPicker.setMaxValue(maxValue);
                     bidNumberText.setText(getString(R.string.your_bid) + maxValue + " €");
                     numberPicker.setMinValue(1);

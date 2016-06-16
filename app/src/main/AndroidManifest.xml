@@ -79,8 +79,9 @@
             android:name=".activities.ShowJobMapActivity"
             android:label="@string/title_activity_show_job_map" />
         <activity android:name=".activities.ShowMyJobsActivity" />
-        <activity android:name=".activities.JobCategoryActivity"></activity>
-        <activity android:name=".activities.EditJobActivity"></activity>
+        <activity android:name=".activities.JobCategoryActivity" />
+        <activity android:name=".activities.EditJobActivity" />
+        <activity android:name=".activities.EvaluateUserActivity"></activity>
     </application>
 
 </manifest>

@@ -70,5 +70,9 @@
     <string name="job_added_to_favorite">zure lan gustukoetara gehitu da</string>
     <string name="job_removed_to_favorite">zure lan gustukoetara kendu da</string>
     <string name="job_modified_dialog">Zure lana aldatu duzu</string>
+    <string name="evaluation_text_stars">Zenbat izar merezi ditu zeure Wannajoberak?</string>
+    <string name="evaluation_text">Zeure Wannjoberari buruz gomendioren bat egin ahal duzu?</string>
+
+    <string name="evaluation_text_hint">Zerbitzuaren kalitatea, puntualtasuna, eta bestelakoak?</string>
 
 </resources>

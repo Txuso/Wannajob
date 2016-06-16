@@ -70,4 +70,7 @@
     <string name="from_sdcard">De la SD card</string>
     <string name="job_added_to_favorite">ha sido añadido a tus trabajos favoritos</string>
     <string name="job_removed_to_favorite">ha sido eliminado a tus trabajos favoritos</string>
+    <string name="evaluation_text_stars">¿Cuántas estrellas merece tu Wannajober?</string>
+    <string name="evaluation_text">¿Puedes hacer una recomendación tu Wannajober?</string>
+    <string name="evaluation_text_hint">Calidad del servicio, puntualidad y otros aspectos?</string>
 </resources>
