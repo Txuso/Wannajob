@@ -60,6 +60,7 @@
     <string name="and_around"> and around </string>
     <string name="edit_profile_here">Edit your profile</string>
     <string name="show_job_activity_edit_job">Edit Job</string>
+    <string name="activity_evaluate_user_evaluation_button_text">Evaluate your Wannajober</string>
     <string name="no_dialog">No</string>
     <string name="yes_dialog">Yes</string>
     <string name="exit_without_saving">Do you want to exit without saving the changes?</string>

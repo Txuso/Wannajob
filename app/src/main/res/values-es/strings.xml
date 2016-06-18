@@ -73,4 +73,5 @@
     <string name="evaluation_text_stars">¿Cuántas estrellas merece tu Wannajober?</string>
     <string name="evaluation_text">¿Puedes hacer una recomendación tu Wannajober?</string>
     <string name="evaluation_text_hint">Calidad del servicio, puntualidad y otros aspectos?</string>
+    <string name="activity_evaluate_user_evaluation_button_text">Evalua a tu Wannajober</string>
 </resources>

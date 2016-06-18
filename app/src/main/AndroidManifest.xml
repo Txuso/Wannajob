@@ -81,7 +81,13 @@
         <activity android:name=".activities.ShowMyJobsActivity" />
         <activity android:name=".activities.JobCategoryActivity" />
         <activity android:name=".activities.EditJobActivity" />
-        <activity android:name=".activities.EvaluateUserActivity"></activity>
+        <activity android:name=".activities.EvaluateUserActivity" />
+
+        <service
+            android:name=".data.service.NewBidsIntentService"
+            android:exported="false" />
+
+        <activity android:name=".activities.JobBidWannajobersActivity"></activity>
     </application>
 
 </manifest>

@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
+import com.example.txuso.wannajob.data.service.NewBidsIntentService;
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
@@ -92,6 +93,8 @@ public class MainActivity extends AppCompatActivity
        // Intent service = new Intent(this, NotificationHandler.class);
         //service.putExtra("userID", extras.getString("userID"));
         //this.startService(service);
+
+        NewBidsIntentService.startNotificationService(getApplicationContext(), UserManager.getUserId(getApplicationContext()));
 
         latitude = UserManager.getUserLatitude(this);
         longitude = UserManager.getUserLongitude(this);

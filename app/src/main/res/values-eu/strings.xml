@@ -74,5 +74,7 @@
     <string name="evaluation_text">Zeure Wannjoberari buruz gomendioren bat egin ahal duzu?</string>
 
     <string name="evaluation_text_hint">Zerbitzuaren kalitatea, puntualtasuna, eta bestelakoak?</string>
+    <string name="activity_evaluate_user_evaluation_button_text">Zeure Wannajoberra ebaluatu</string>
+
 
 </resources>

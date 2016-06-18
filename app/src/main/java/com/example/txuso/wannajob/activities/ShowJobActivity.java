@@ -294,6 +294,8 @@ public class ShowJobActivity extends AppCompatActivity  {
                             mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
                             bidLayout.setVisibility(View.VISIBLE);
                             bidText.setText(getString(R.string.your_bid) + val + " €");
+                            //TODO NOTIFY USER
+                            mFirebaseRef.child("wannajobUsers").child(creatorID).child("newBidMessage").setValue(UserManager.getUserName(getApplicationContext()) + "^" + fromId + "^" + jobID);
                             myDialog.cancel();
                         }
                     });
