@@ -170,6 +170,12 @@ public class ShowJobActivity extends AppCompatActivity  {
                     isMine = true;
                     betButton.setBackgroundResource(R.color.colorAccent);
                     betButton.setText(R.string.show_job_activity_edit_job);
+                    jobBidsLayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                        }
+                    });
                 }
                 if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
                     likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);

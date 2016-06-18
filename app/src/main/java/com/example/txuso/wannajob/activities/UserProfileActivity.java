@@ -44,6 +44,7 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -53,6 +54,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +71,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private Uri mImageCaptureUri;
     private List<JobListItem> jobs;
     private List<UserOpinionListItem> opinions;
+    int numberJobsCounter;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     Firebase mFirebaseRef;
@@ -104,6 +107,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Bind(R.id.activity_user_profile_show_jobs)
     LinearLayout myJobsLayout;
 
+    @Bind(R.id.activity_user_profile_show_jobs_number)
+    TextView jobNumber;
+
     @Bind(R.id.activity_user_profile_show_opinions)
     LinearLayout myOpinionsLayout;
 
@@ -134,27 +140,92 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         uService = new UserFirebaseService(UserProfileActivity.this);
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
+        numberJobsCounter = 0;
         userID = getIntent().getExtras().getString(EXTRA_USER_ID);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        if (!userID.equals(UserManager.getUserId(this))) {
-            editProfileTextView.setVisibility(View.GONE);
-        }
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         mUserJobsRef = new Firebase("https://wannajob.firebaseio.com/");
 
+        if (!userID.equals(UserManager.getUserId(this))) {
+            editProfileTextView.setVisibility(View.GONE);
+            mFirebaseRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
+                    latitude = (Double) wannaUser.get("latitude");
+                    longitude = (Double) wannaUser.get("longitude");
+                    userName.setText(wannaUser.get("name").toString() + " - " + wannaUser.get("age").toString());
+                    userDescription.setText(wannaUser.get("description").toString());
+                    Picasso.with(getApplicationContext()).
+                            load(wannaUser.get("image").toString()).
+                            placeholder(R.drawable.person_placeholder).
+                            fit().
+                            into(userPhoto);
+                    setUpMapIfNeeded();
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
+        } else {
+
+            latitude = UserManager.getUserLatitude(this);
+            longitude = UserManager.getUserLongitude(this);
+            //Bitmap pic = ImageManager.decodeBase64(UserManager.getUserPhoto(this));
+            userName.setText(UserManager.getUserName(this) + " - " + UserManager.getUserAge(this));
+
+            userDescription.setText(UserManager.getUserDescription(this));
+
+            Picasso.with(getApplicationContext()).
+                    load(UserManager.getUserPhoto(getApplicationContext())).
+                    placeholder(R.drawable.person_placeholder).
+                    fit().
+                    into(userPhoto);
+            setUpMapIfNeeded();
+
+
+        }
+
+
+        mUserJobsRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Job job = dataSnapshot.getValue(Job.class);
+                if (job.getCreatorID().equals(userID)) {
+                    numberJobsCounter++;
+                    jobNumber.setText(numberJobsCounter + "");
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.user_map);
+                        .findFragmentById(R.id.user_map);
 
-        latitude = UserManager.getUserLatitude(this);
-        longitude = UserManager.getUserLongitude(this);
-        //Bitmap pic = ImageManager.decodeBase64(UserManager.getUserPhoto(this));
-        userName.setText(UserManager.getUserName(this) + " - " + UserManager.getUserAge(this));
-
-        userDescription.setText(UserManager.getUserDescription(this));
-
-        Picasso.with(getApplicationContext()).load(UserManager.getUserPhoto(getApplicationContext())).placeholder(R.drawable.photo_placeholder).fit().into(userPhoto);
-
-        setUpMapIfNeeded();
             /*
 
     public void createEvent () {

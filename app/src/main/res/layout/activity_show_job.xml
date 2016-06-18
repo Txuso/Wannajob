@@ -241,7 +241,6 @@
                         android:layout_gravity="center"
                         android:textSize="16sp"
                         android:inputType="textMultiLine"
-                        android:text="Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
                         android:textColor="@color/colorGray"/>
 
                 </LinearLayout>
@@ -293,7 +292,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:id="@+id/activity_show_job_user_name"
-                            android:text="Ane la de Alex"
                             android:gravity="center"
                             android:layout_marginTop="4dp"
                             android:textSize="20dp"

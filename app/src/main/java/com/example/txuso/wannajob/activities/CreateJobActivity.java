@@ -140,6 +140,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     Intent intent = getIntent();
                     setResult(RESULT_OK, intent);
 
+
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();
                     finish();
                 }

@@ -123,12 +123,14 @@
                         >
 
                         <TextView
+                            android:id="@+id/activity_user_profile_show_jobs_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="7"
                             android:textSize="20dp"
                             android:textColor="@color/colorHead"/>
                         <TextView
+
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Jobs"
@@ -145,6 +147,7 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/activity_user_profile_show_opinions_number"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="23"
