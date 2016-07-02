@@ -8,19 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.txuso.wannajob.R;
-import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
-import com.example.txuso.wannajob.data.model.classes.Bid;
-import com.example.txuso.wannajob.data.model.classes.Job;
-import com.example.txuso.wannajob.data.model.classes.JobListItem;
-import com.example.txuso.wannajob.data.model.classes.UserOpinionListItem;
-import com.example.txuso.wannajob.data.model.classes.WannajobUser;
-import com.example.txuso.wannajob.misc.things.UserManager;
+import com.example.txuso.wannajob.data.model.classes.WannajobBidUser;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -40,9 +33,9 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
     Firebase mFirebaseUserRef;
 
     RVUserAdapter adapter;
-    private List<WannajobUser> users;
+    private List<WannajobBidUser> users;
 
-    WannajobUser item;
+    WannajobBidUser item;
     String jobId;
 
 
@@ -76,13 +69,13 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
         mFirebaseBidRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Map<String, Object> bid = (Map<String, Object>) dataSnapshot.getValue();
+                final Map<String, Object> bid = (Map<String, Object>) dataSnapshot.getValue();
                 if (bid.get("jobId").equals(jobId)) {
                     mFirebaseUserRef.child(bid.get("userId").toString()).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
-                            fetchUserInfo(wannaUser, dataSnapshot.getKey());
+                            fetchUserInfo(wannaUser, dataSnapshot.getKey(), (long)bid.get("number"));
                         }
 
                         @Override
@@ -116,12 +109,12 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
         });
 
     }
-    public void fetchUserInfo(final Map<String, Object> wannaUser, final String userId) {
+    public void fetchUserInfo(final Map<String, Object> wannaUser, final String userId, long bidNumber) {
         swipeRefreshLayout.setRefreshing(true);
-        long rating = (long)wannaUser.get("rating");
-        double ratingDouble = (double) rating;
 
-        item = new WannajobUser(wannaUser.get("name").toString(), wannaUser.get("description").toString(), wannaUser.get("image").toString(), ratingDouble);
+        double ratingDouble = Double.parseDouble(wannaUser.get("rating").toString());
+
+        item = new WannajobBidUser(wannaUser.get("name").toString(), wannaUser.get("description").toString(), wannaUser.get("image").toString(), ratingDouble, bidNumber, userId, jobId);
         users.add(item);
         adapter = new RVUserAdapter(users, JobBidWannajobersActivity.this);
 

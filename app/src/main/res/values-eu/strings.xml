@@ -21,6 +21,7 @@
     <string name="nav_discovery_preferences_option">Bilatzeko Lehentasunak</string>
     <string name="nav_create_job">Lantxoa Sortu</string>
     <string name="nav_favorites_option">Gogokoenak</string>
+    <string name="nav_bid">Nire Apostuak</string>
     <string name="nav_share_option">Wannajob Partekatu</string>
     <string name="output_category">Kategoria</string>
     <string name="edit_profile_here">Zeure profila aldatu</string>
@@ -76,5 +77,9 @@
     <string name="evaluation_text_hint">Zerbitzuaren kalitatea, puntualtasuna, eta bestelakoak?</string>
     <string name="activity_evaluate_user_evaluation_button_text">Zeure Wannajoberra ebaluatu</string>
 
+    <string name="user_adapter_dialog">Onartu nahi duzu</string>
+    <string name="user_adapter_dialog2">zure lana egiteko?</string>
+    <string name="dialog_yes">Bai</string>
+    <string name="dialog_no">Ez</string>
 
 </resources>

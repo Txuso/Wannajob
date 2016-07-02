@@ -21,6 +21,7 @@
     <string name="nav_discovery_preferences_option">Preferencias de búsqueda</string>
     <string name="nav_create_job">Crear Trabajillo</string>
     <string name="nav_favorites_option">Favoritos</string>
+    <string name="nav_bid">Mis Pujas</string>
     <string name="nav_share_option">Compartir Wannajob</string>
     <string name="output_category">Categoría</string>
     <string name="edit_profile_here">Edita tu perfil</string>
@@ -74,4 +75,10 @@
     <string name="evaluation_text">¿Puedes hacer una recomendación tu Wannajober?</string>
     <string name="evaluation_text_hint">Calidad del servicio, puntualidad y otros aspectos?</string>
     <string name="activity_evaluate_user_evaluation_button_text">Evalua a tu Wannajober</string>
+
+    <string name="user_adapter_dialog">¿Quieres aceptar a</string>
+    <string name="user_adapter_dialog2">para hacer el trabajo?</string>
+    <string name="dialog_yes">Sí</string>
+    <string name="dialog_no">No</string>
+
 </resources>

@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.content_main_recycler_view)
     RecyclerView rv;
 
-    @Bind(R.id.app_bar_main_toolbar)
-    Toolbar toolbar;
-
     @Bind(R.id.activity_user_favorite_jobs_swiper_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    @Bind(R.id.app_bar_main_toolbar)
+    Toolbar toolbar;
 
     @Bind(R.id.app_bar_main_create_job_floating_action_button)
     FloatingActionButton createJob;
@@ -563,6 +563,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_favorites) {
             Intent favorites = new Intent(MainActivity.this,UserFavoriteJobsActivity.class);
             startActivity(favorites);
+        } else if (id == R.id.nav_my_bids) {
+            Intent myBids = new Intent(MainActivity.this, ShowMyBidsActivity.class);
+            startActivity(myBids);
         } else if (id == R.id.nav_options) {
             callDiscoveryPreferences();
         } else if (id == R.id.nav_share) {

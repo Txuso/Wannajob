@@ -11,10 +11,11 @@
     >
 
     <RelativeLayout
+        android:id="@+id/user_item_layout"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         >
 
         <ImageView
@@ -28,14 +29,16 @@
             android:id="@+id/user_item_rating"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginBottom="-4dp"
-            android:scaleX="0.5"
-            android:scaleY="0.5"
+            android:transformPivotX="0dp"
+            android:transformPivotY="15dp"
+            android:scaleX="0.4"
+            android:scaleY="0.4"
             android:numStars="5"
             android:isIndicator="true"
             android:progressTint="@color/colorGreen"
             android:secondaryProgressTint="@color/colorGreen"
-            android:layout_toRightOf="@+id/user_item_photo"/>
+            android:layout_below="@+id/user_item_photo"/>
+
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,8 +49,7 @@
             android:layout_toRightOf="@id/user_item_photo"
             android:text="Txuso"
             android:textColor="@color/colorGreen"
-            android:layout_below="@+id/user_item_rating"
-            android:textSize="18sp"
+            android:textSize="24sp"
             />
 
 
@@ -55,29 +57,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/user_item_description"
+            android:layout_marginTop="10dp"
             android:text="Hostia pues el tio este lo hizo de puta madre aisj dasjn asoidasoijd oiasjd iasjd oiasj doiajsdoijasodij asoidjasoijdiaosjd oiasjdioasjoiasjdoiajsdoiasjdoijasdasas "
             android:paddingTop="4dp"
+            android:gravity="center"
             android:textStyle="italic"
+            android:layout_marginRight="10dp"
             android:textSize="14dp"
-            android:paddingLeft="8dp"
+            android:paddingRight="10dp"
             android:layout_below="@+id/user_item_name"
             android:layout_toRightOf="@id/user_item_photo"
             />
 
         <TextView
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/user_item_description"
-            android:id="@+id/user_item_accept_button"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/user_item_bid"
+            android:textStyle="bold"
+            android:text="699€"
+            android:textColor="@color/colorGreen"
+            android:textSize="24sp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignTop="@id/user_item_description" />
+        <TextView
+            android:id="@+id/user_item_accept_button"
+            android:layout_width="300dp"
+            android:layout_height="30dp"
             android:gravity="center"
             android:text="Accept"
             android:textColor="@color/colorWhite"
             android:background="@drawable/rounded_user_item"
-            android:layout_marginTop="20dp"
-            android:padding="10dp"
+            android:layout_below="@+id/user_item_rating"
+            android:layout_centerHorizontal="true" />
+
+
+        <View
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/user_item_accept_button"
+            android:layout_width="match_parent"
+            android:layout_height="0.2dp"
+            android:background="@color/colorGreen"
             />
     </RelativeLayout>
-
 
 </android.support.v7.widget.CardView>

@@ -87,7 +87,8 @@
             android:name=".data.service.NewBidsIntentService"
             android:exported="false" />
 
-        <activity android:name=".activities.JobBidWannajobersActivity"></activity>
+        <activity android:name=".activities.JobBidWannajobersActivity" />
+        <activity android:name=".activities.ShowMyBidsActivity"></activity>
     </application>
 
 </manifest>

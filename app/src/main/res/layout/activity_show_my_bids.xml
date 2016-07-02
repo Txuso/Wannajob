@@ -3,18 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
-    tools:context="com.example.txuso.wannajob.activities.JobBidWannajobersActivity">
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.txuso.wannajob.activities.ShowMyBidsActivity">
+
 
     <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/activity_job_bid_swiper_refresh_layout"
+        android:id="@+id/activity_show_my_job_swiper_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/activity_job_bid_wannajobers_recycler_view"
+            android:id="@+id/activity_show_my_job_recycler_view"
             />
     </android.support.v4.widget.SwipeRefreshLayout>
 
