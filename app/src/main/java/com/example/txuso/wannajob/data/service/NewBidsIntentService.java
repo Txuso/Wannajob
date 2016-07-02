@@ -101,6 +101,7 @@ public class NewBidsIntentService extends IntentService {
                                         .child("newBidMessage").setValue(" ^ ^ ");
                                 notificationManager.notify(9999, notification);
                             }
+
                         }
 
                     }

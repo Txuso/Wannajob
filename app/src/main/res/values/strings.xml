@@ -43,7 +43,7 @@
     <string name="send_message_button">ASK ME</string>
 
     <string name="output_category">Category</string>
-    <string name="modify_discovery_pref_message">There are not jobs around you. Change your discovery preferences and try again.</string>
+    <string name="modify_discovery_pref_message">There are not users around you. Change your discovery preferences and try again.</string>
     <string name="sort_by_distance">Sort By Distance</string>
     <string name="sort_by_salary">Sort By Salary</string>
     <string name="search_key_word">Search Key Words</string>
@@ -55,8 +55,8 @@
     <string name="enter_location">Enter a location</string>
 
     <string name="from_you"> from you.</string>
-    <string name="you_find_jobs_own_location">You will find jobs in your own location and around</string>
-    <string name="you_find_encounters">You will find jobs in</string>
+    <string name="you_find_jobs_own_location">You will find users in your own location and around</string>
+    <string name="you_find_encounters">You will find users in</string>
     <string name="and_around"> and around </string>
     <string name="edit_profile_here">Edit your profile</string>
     <string name="show_job_activity_edit_job">Edit Job</string>
@@ -69,13 +69,13 @@
     <string name="select_image">Select Image</string>
     <string name="dialog_complete_action_using">Complete action using</string>
 
-    <string name="dialog_download_this_app">Download this application and discover jobs around you!!</string>
+    <string name="dialog_download_this_app">Download this application and discover users around you!!</string>
     <string name="choose_option_share">Choose an application to share Wannajob</string>
     <string name="your_bid">Your Bid: </string>
     <string name="manitas_category">Manitas, Reparaciones y Obras</string>
 
     <string name="create_job">Create Job</string>
-    <string name="share_wannajob_message">\n Download this application and discover jobs around you!!\n\n</string>
+    <string name="share_wannajob_message">\n Download this application and discover users around you!!\n\n</string>
     <string name="choose_app_share_wannajob_message">Choose an application to share Wannajob</string>
     <string name="title_activity_show_job_map">Map</string>
     <string name="request_job_text_button">BET FOR THIS JOB</string>

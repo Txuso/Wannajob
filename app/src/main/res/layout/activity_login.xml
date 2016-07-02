@@ -36,8 +36,18 @@
             android:scaleType="centerCrop"
             android:src="@drawable/clases_particulares"
             />
+
+
     </ViewFlipper>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Free login"
+        android:layout_marginBottom="160dp"
+
+        android:layout_alignParentBottom="true"
+        android:id="@+id/button" />
 
     <com.facebook.widget.LoginButton
         android:id="@+id/login_with_facebook"

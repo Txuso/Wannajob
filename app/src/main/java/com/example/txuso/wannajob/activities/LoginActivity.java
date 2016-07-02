@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -41,6 +42,8 @@ import java.util.Date;
 import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.WannajobUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -50,6 +53,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Bind(R.id.login_view_flipper)
     ViewFlipper fliper;
+
+    @Bind(R.id.button)
+    Button button;
 
     Intent intent;
 
@@ -136,10 +142,11 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
 
         //Initializing google api client
+        /*
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
+        */
         signInButton.setOnClickListener(this);
 
 
@@ -192,7 +199,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                             public void onDataChange(DataSnapshot snapshot) {
                                 if (snapshot.getValue() != null) {
                                     Map<String, Object> wannaUser = (Map<String, Object>) snapshot.getValue();
-                                    intent = new Intent(LoginActivity.this, MainActivity.class);
                                     UserManager.setUserName(getApplicationContext(), wannaUser.get("name").toString());
                                     UserManager.setUserAge(getApplicationContext(), wannaUser.get("age").toString());
                                     UserManager.setUserPhoto(getApplicationContext(), wannaUser.get("image").toString());
@@ -208,6 +214,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     intent.putExtra("latitude", (Double)wannaUser.get("latitude"));
                                     intent.putExtra("longitude", (Double)wannaUser.get("longitude"));
                                     */
+                                    intent = new Intent(LoginActivity.this, MainActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
@@ -412,5 +419,28 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @OnClick(R.id.button)
+    public void click() {
+        UserManager.setUserName(getApplicationContext(), "Patxi");
+        UserManager.setUserAge(getApplicationContext(), "25");
+        UserManager.setUserPhoto(getApplicationContext(), "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KJV4bKSeT91gkSf3vqz.jpg?alt=media&token=be415d0a-5743-4f15-98f7-5578a947421e");
+        UserManager.setUserDescription(getApplicationContext(),"Putuuuuuun");
+        Firebase newTandRef = mFirebaseRef.push();
+        String logedUserID = newTandRef.getKey();
+        UserManager.setUserId(getApplicationContext(), logedUserID);
+        UserManager.setUserLatitude(getApplicationContext(),41.3850639);
+        UserManager.setUserLongitude(getApplicationContext(), 2.1734035);
+        UserManager.setUserRegisteredDate(getApplicationContext(), "2016/02/10");
+        WannajobUser newUser = new WannajobUser("Patxi", "25", "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KJV4bKSeT91gkSf3vqz.jpg?alt=media&token=be415d0a-5743-4f15-98f7-5578a947421e");
+
+        //We store the user in the Firebase root
+        mFirebaseRef.child(logedUserID).setValue(newUser);
+
+        intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
+
+    }
 
 }

@@ -1,7 +1,6 @@
 package com.example.txuso.wannajob.activities;
 
 import android.app.Dialog;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -9,8 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -23,11 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
-import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
 import com.example.txuso.wannajob.data.model.classes.Bid;
 
-import com.example.txuso.wannajob.data.model.classes.Job;
-import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -36,12 +30,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 
-import com.example.txuso.wannajob.misc.things.ImageManager;
-import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -50,7 +40,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -477,7 +466,7 @@ public class ShowJobActivity extends AppCompatActivity  {
             // Try to obtain the map from the SupportMapFragment.
             mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.activity_show_job_user_map))
                     .getMap();
-            mMap.setMyLocationEnabled(true);
+//            mMap.setMyLocationEnabled(true);
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));

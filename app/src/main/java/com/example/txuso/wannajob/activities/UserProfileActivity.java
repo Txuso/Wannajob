@@ -30,7 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
-import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.example.txuso.wannajob.data.adapter.RVUserOpinionAdapter;
 import com.example.txuso.wannajob.data.firebase.FirebaseStorageService;
 import com.example.txuso.wannajob.data.firebase.UserFirebaseService;
@@ -116,7 +116,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Bind(R.id.activity_user_profile_swiper_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    RVUserAdapter adapter;
+    RVJobAdapter adapter;
     RVUserOpinionAdapter rvUserOpinionAdapter;
     JobListItem item;
 
@@ -225,6 +225,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                         .findFragmentById(R.id.user_map);
+        fetchMyJobs(latitude, longitude);
 
             /*
 
@@ -328,8 +329,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
 
-            mMap.setMyLocationEnabled(true);
-
             // Check if we were successful in obtaining the map.
 
         }
@@ -423,7 +422,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs, getApplicationContext());
+        adapter = new RVJobAdapter(jobs, getApplicationContext());
         //rv.setAdapter(adapter);
         mUserJobsRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
                 @Override
@@ -439,14 +438,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                         item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
                         item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
-                        adapter = new RVUserAdapter(jobs, getApplicationContext());
+                        adapter = new RVJobAdapter(jobs, getApplicationContext());
                         jobs.add(item);
 
                     }
 
                     jobs = adapter.sortListByDistance();
-                    adapter = new RVUserAdapter(jobs, getApplicationContext());
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    adapter = new RVJobAdapter(jobs, getApplicationContext());
+                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
 

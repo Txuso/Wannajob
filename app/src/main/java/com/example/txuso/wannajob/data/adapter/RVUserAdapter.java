@@ -1,161 +1,122 @@
 package com.example.txuso.wannajob.data.adapter;
 
 import android.content.Context;
-import android.support.v7.widget.CardView;
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.txuso.wannajob.R;
-import com.example.txuso.wannajob.data.model.classes.JobListItem;
-import com.squareup.picasso.Picasso;
+import com.example.txuso.wannajob.data.model.classes.WannajobUser;
+import com.example.txuso.wannajob.misc.things.DialogUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Txuso on 09/02/16.
  */
-public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHolder> {
+public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHolder> {
 
 
-    List<JobListItem> jobs;
+    List<WannajobUser> users;
     OnItemClickListener mItemClickListener;
     Context context;
 
-    public RVUserAdapter(List<JobListItem> jobs, Context context){
-        this.jobs = jobs;
+    public RVUserAdapter(List<WannajobUser> users, Context context){
+        this.users = users;
         this.context = context;
     }
 
 
     @Override
-    public JobViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.job_item, parent, false);
-        JobViewHolder pvh = new JobViewHolder(v);
+    public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
+        UserViewHolder pvh = new UserViewHolder(v);
         return pvh;
     }
 
 
 
     @Override
-    public void onBindViewHolder(JobViewHolder holder, int position) {
-        holder.jobName.setText(jobs.get(position).getName());
-        holder.jobSalary.setText(jobs.get(position).getSalary() + " €");
-        //holder.jobPhoto.setImageResource(jobs.get(position).photoId);
-        Glide
-                .with(context)
-                .load(jobs.get(position).getImageUrl())
-                .centerCrop()
-                .placeholder(R.drawable.photo_placeholder)
-                .crossFade()
-                .into(holder.jobPhoto);
-        //Picasso.with(context).load(jobs.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.person_placeholder).into(holder.jobPhoto);
-       // holder.jobPhoto.setBackground(jobs.get(position).getImageId());
+    public void onBindViewHolder(final UserViewHolder holder, int position) {
+        holder.userName.setText(users.get(position).getName());
+        holder.userRating.setRating((float) users.get(position).getRating());
+        holder.userDescription.setText(users.get(position).getDescription());
+
+        Glide.with(context).load(users.get(position).getImage()).asBitmap().centerCrop().into(new BitmapImageViewTarget(holder.jobPhoto) {
+            @Override
+            protected void setResource(Bitmap resource) {
+                RoundedBitmapDrawable circularBitmapDrawable =
+                        RoundedBitmapDrawableFactory.create(context.getResources(), resource);
+                circularBitmapDrawable.setCircular(true);
+                holder.jobPhoto.setImageDrawable(circularBitmapDrawable);
+            }
+        });
+        //Picasso.with(context).load(users.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.person_placeholder).into(holder.jobPhoto);
+       // holder.jobPhoto.setBackground(users.get(position).getImageId());
 
     }
 
     @Override
     public int getItemCount() {
-        return jobs.size();
+        return users.size();
     }
 
-    public void clearContent() {
-        this.jobs.clear();
-        int size = getItemCount();
-        if (size > 0) {
-            for (int i = 0; i < size; i++) {
-                this.jobs.remove(0);
-            }
-
-            this.notifyItemRangeRemoved(0, size);
-        }
-    }
-
-    public boolean findJob(String id){
-        boolean found = false;
-        int i = 0;
-            while (i <= getItemCount() || !found) {
-                if (jobs.get(i).getJobID().equals(id))
-                    found = true;
-                else i++;
-            }
-        return found;
-    }
-
-    public List findJobsByWord(String word){
-        List<JobListItem> newJobs = new ArrayList<>();
-       for (JobListItem item : jobs) {
-           if (item.getJobDescription().toLowerCase().contains(word.toLowerCase()) || item.getName().toLowerCase().contains(word.toLowerCase()))
-               newJobs.add(item);
-       }
-
-        return newJobs;
-    }
-
-
-    public List sortListBySalary () {
-        for (int i = 0; i < getItemCount() - 1; i++) {
-          int index = i;
-            for (int j = i + 1; j < getItemCount(); j++)
-                if (jobs.get(j).getSalary() < jobs.get(index).getSalary())
-                    index = j;
-
-            JobListItem smallerSalaryJob = jobs.get(index);
-            jobs.set(index, jobs.get(i));
-            jobs.set(i, smallerSalaryJob);
-        }
-        return jobs;
-    }
-
-    public List sortListByDistance () {
-        for (int i = 0; i < getItemCount() - 1; i++) {
-            int index = i;
-            for (int j = i + 1; j < getItemCount(); j++)
-                if (jobs.get(j).getDistance() < jobs.get(index).getDistance())
-                    index = j;
-
-            JobListItem smallerDistanceJob = jobs.get(index);
-            jobs.set(index, jobs.get(i));
-            jobs.set(i, smallerDistanceJob);
-        }
-        return jobs;
-    }
-
-    //TODO
-    public void removeJob (String id) {
-        int i = 0;
-        boolean found = false;
-
-        while (i <  getItemCount() -1|| !found) {
-            if (jobs.get(i).getJobID().equals(id)) {
-                jobs.remove(i);
-                found = true;
-            }
-            else i++;
-        }
-    }
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public class JobViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        CardView cv;
-        TextView jobName;
-        TextView jobSalary;
+    public class UserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView userName;
+        RatingBar userRating;
         ImageView jobPhoto;
+        TextView acceptButton;
+        TextView userDescription;
 
-        JobViewHolder(View itemView) {
+        UserViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            jobName = (TextView)itemView.findViewById(R.id.job_name);
-            jobSalary = (TextView)itemView.findViewById(R.id.job_salary);
-            jobPhoto = (ImageView)itemView.findViewById(R.id.job_photo);
+            userName = (TextView)itemView.findViewById(R.id.user_item_name);
+            userRating = (RatingBar) itemView.findViewById(R.id.user_item_rating);
+            jobPhoto = (ImageView)itemView.findViewById(R.id.user_item_photo);
+            userDescription = (TextView) itemView.findViewById(R.id.user_item_description);
+            acceptButton = (TextView) itemView.findViewById(R.id.user_item_accept_button);
+            acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    DialogUtils.buildAlertDialog(context)
+                            .setMessage("Do you want to accept " + userName.getText() + " to do your job?")
+                            .setCancelable(true)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+
+                                }
+                            })
+                            .show();
+
+
+                }
+            });
             itemView.setOnClickListener(this);
         }
 
@@ -170,7 +131,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.JobViewHol
     }
 
     public interface OnItemClickListener {
-         void onItemClick(View view , int position);
+         void onItemClick(View view, int position);
     }
 
     public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {

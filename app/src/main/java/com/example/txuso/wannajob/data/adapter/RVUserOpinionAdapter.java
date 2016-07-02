@@ -66,9 +66,9 @@ public class RVUserOpinionAdapter extends RecyclerView.Adapter<RVUserOpinionAdap
                 holder.jobPhoto.setImageDrawable(circularBitmapDrawable);
             }
         });
-        //holder.jobPhoto.setImageResource(jobs.get(position).photoId);
-        //Picasso.with(context).load(jobs.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.person_placeholder).into(holder.jobPhoto);
-       // holder.jobPhoto.setBackground(jobs.get(position).getImageId());
+        //holder.jobPhoto.setImageResource(users.get(position).photoId);
+        //Picasso.with(context).load(users.get(position).getImageUrl()).fit().centerCrop().placeholder(R.drawable.person_placeholder).into(holder.jobPhoto);
+       // holder.jobPhoto.setBackground(users.get(position).getImageId());
 
     }
 

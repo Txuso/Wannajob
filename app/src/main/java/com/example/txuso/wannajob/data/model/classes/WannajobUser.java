@@ -21,20 +21,28 @@ public class WannajobUser {
     private double latitude;
     private int distance;
     private String registeredDate;
-    private double rating;
+    private Double rating;
     public Map<String, Boolean> likes = new HashMap<>();
 
 
     public WannajobUser(String name, String age, String image) {
         this.name = name;
         this.image = image;
+        this.latitude = 0;
+        this.longitude = 0;
         this.age = age;
         this.distance = 50;
         this.description = "";
         this.registeredDate = new SimpleDateFormat("yyyy/MM/dd").format(new Date());
-        rating = 0;
+        rating = 0.0;
     }
 
+    public WannajobUser(String name, String description, String image, Double rating) {
+        this.name = name;
+        this.description = description;
+        this.image = image;
+        this.rating = rating;
+    }
 
     public String getRegisteredDate() {
         return registeredDate;
@@ -112,7 +120,7 @@ public class WannajobUser {
         return rating;
     }
 
-    public void setRating(double rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 

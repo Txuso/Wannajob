@@ -14,10 +14,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
-import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
-import com.example.txuso.wannajob.data.model.classes.WannajobUser;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
@@ -56,7 +55,7 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
     private List<JobListItem> jobs;
     JobListItem item;
 
-    RVUserAdapter adapter;
+    RVJobAdapter adapter;
 
 
 
@@ -86,7 +85,7 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs, getApplicationContext());
+        adapter = new RVJobAdapter(jobs, getApplicationContext());
         rv.setAdapter(adapter);
 
         mFirebaseRef.child("wannajobUsers").child(userID).addValueEventListener(new ValueEventListener() {
@@ -107,11 +106,11 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
                                 if (key.equals(dataSnapshot.getKey())) {
                                     item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
                                     item.setImageUrl(job.getJobImage());
-                                    adapter = new RVUserAdapter(jobs, getApplicationContext());
+                                    adapter = new RVJobAdapter(jobs, getApplicationContext());
                                     jobs.add(item);
 
-                                    adapter = new RVUserAdapter(jobs, getApplicationContext());
-                                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                                    adapter = new RVJobAdapter(jobs, getApplicationContext());
+                                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(View view, int position) {
 

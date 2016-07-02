@@ -23,22 +23,20 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.service.NewBidsIntentService;
-import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import java.io.ByteArrayOutputStream;
+
 import java.util.ArrayList;
 import java.util.List;
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
-import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -49,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     Firebase mFirebaseRef;
     private List<JobListItem> jobs;
     private List<JobListItem> wordJobs;
-    RVUserAdapter adapter;
+    RVJobAdapter adapter;
     JobListItem item;
     GPSTracker gps;
     Bitmap pic;
@@ -196,7 +194,7 @@ public class MainActivity extends AppCompatActivity
         swipeRefreshLayout.setRefreshing(true);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs, getApplicationContext());
+        adapter = new RVJobAdapter(jobs, getApplicationContext());
         //rv.setAdapter(adapter);
 
         if (categoryID == UserManager.NOT_CATEGORY_FILTER) {
@@ -217,14 +215,14 @@ public class MainActivity extends AppCompatActivity
                         item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
                         item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
-                        adapter = new RVUserAdapter(jobs, getApplicationContext());
+                        adapter = new RVJobAdapter(jobs, getApplicationContext());
                         jobs.add(item);
 
                     }
 
                     jobs = adapter.sortListByDistance();
-                    adapter = new RVUserAdapter(jobs, getApplicationContext());
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    adapter = new RVJobAdapter(jobs, getApplicationContext());
+                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
 
@@ -321,14 +319,14 @@ public class MainActivity extends AppCompatActivity
                         item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
                         item.setImageUrl(job.getJobImage());
                         item.setDistance(distance);
-                        adapter = new RVUserAdapter(jobs, getApplicationContext());
+                        adapter = new RVJobAdapter(jobs, getApplicationContext());
                         jobs.add(item);
 
                     }
 
                     jobs = adapter.sortListByDistance();
-                    adapter = new RVUserAdapter(jobs, getApplicationContext());
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    adapter = new RVJobAdapter(jobs, getApplicationContext());
+                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
 
@@ -437,8 +435,8 @@ public class MainActivity extends AppCompatActivity
             public boolean onQueryTextSubmit(String query) {
                 onSearchRequested();
                 wordJobs = adapter.findJobsByWord(query);
-                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
-                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                adapter = new RVJobAdapter(wordJobs, getApplicationContext());
+                adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
@@ -489,8 +487,8 @@ public class MainActivity extends AppCompatActivity
 
             case 0:{
                 wordJobs = adapter.sortListBySalary();
-                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
-                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                adapter = new RVJobAdapter(wordJobs, getApplicationContext());
+                adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
@@ -509,8 +507,8 @@ public class MainActivity extends AppCompatActivity
             }
             case 1:{
                 wordJobs = adapter.sortListByDistance();
-                adapter = new RVUserAdapter(wordJobs, getApplicationContext());
-                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                adapter = new RVJobAdapter(wordJobs, getApplicationContext());
+                adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 
@@ -526,8 +524,8 @@ public class MainActivity extends AppCompatActivity
 
             }
             case 2:
-                adapter = new RVUserAdapter(jobs, getApplicationContext());
-                adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                adapter = new RVJobAdapter(jobs, getApplicationContext());
+                adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
 

@@ -24,14 +24,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.txuso.wannajob.misc.things.ImageManager;
-import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
+import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.example.txuso.wannajob.misc.things.RoundedImageView;
 
 public class ShowMyJobsActivity extends AppCompatActivity {
 
     private List<JobListItem> jobs;
     Firebase mFirebaseRef;
-    RVUserAdapter adapter;
+    RVJobAdapter adapter;
     String userID;
     JobListItem item;
     private RecyclerView rv;
@@ -50,7 +50,7 @@ public class ShowMyJobsActivity extends AppCompatActivity {
         userID = UserManager.getUserId(this);
 
         jobs = new ArrayList<>();
-        adapter = new RVUserAdapter(jobs, getApplicationContext());
+        adapter = new RVJobAdapter(jobs, getApplicationContext());
 
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
@@ -64,8 +64,8 @@ public class ShowMyJobsActivity extends AppCompatActivity {
 
                     item = new JobListItem(dataSnapshot.getKey(), job.get("name").toString(), Integer.parseInt(job.get("salary").toString()), job.get("creatorID").toString(), job.get("description").toString());
                     jobs.add(item);
-                    adapter = new RVUserAdapter(jobs, getApplicationContext());
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                    adapter = new RVJobAdapter(jobs, getApplicationContext());
+                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(View view, int position) {
 
