@@ -95,5 +95,8 @@
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
 
+    <string name="eliminate_job">Eliminate Job</string>
+    <string name="eliminate_job_dialog">Are you sure you want to remove this job?</string>
+
 
 </resources>

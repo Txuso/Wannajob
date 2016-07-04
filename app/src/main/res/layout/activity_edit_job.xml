@@ -142,7 +142,6 @@
         android:text="@string/job_category"
         android:textColor="@color/colorGreen"
         />
-
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/activity_edit_job_edit_button"
         android:layout_height="wrap_content"
@@ -152,5 +151,16 @@
         android:background="@color/colorGreen"
         android:textColor="#fcfcfc"
         />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/activity_edit_job_eliminate_button"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/eliminate_job"
+        android:background="@color/colorAccent"
+        android:textColor="#fcfcfc"
+        android:layout_above="@+id/activity_edit_job_edit_button"
+        android:layout_alignRight="@+id/activity_edit_job_money"
+        android:layout_alignEnd="@+id/activity_edit_job_money" />
 
 </RelativeLayout>

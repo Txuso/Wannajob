@@ -80,5 +80,7 @@
     <string name="user_adapter_dialog2">para hacer el trabajo?</string>
     <string name="dialog_yes">Sí</string>
     <string name="dialog_no">No</string>
+    <string name="eliminate_job">Eliminar Trabajillo</string>
+    <string name="eliminate_job_dialog">¿Estás seguro de que quieres eliminar este trabajillo?</string>
 
 </resources>

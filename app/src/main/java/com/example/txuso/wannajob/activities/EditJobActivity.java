@@ -1,5 +1,6 @@
 package com.example.txuso.wannajob.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.Job;
+import com.example.txuso.wannajob.misc.things.DialogUtils;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -41,6 +43,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditJobActivity extends AppCompatActivity {
     Firebase mFirebaseRef;
@@ -79,6 +82,8 @@ public class EditJobActivity extends AppCompatActivity {
     @Bind(R.id.activity_edit_job_edit_button)
     android.support.v7.widget.AppCompatButton editJobButton;
 
+    @Bind(R.id.activity_edit_job_eliminate_button)
+    android.support.v7.widget.AppCompatButton eliminateButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +95,6 @@ public class EditJobActivity extends AppCompatActivity {
         storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com/images");
         imageURL = getIntent().getExtras().getString("imageURL");
         ButterKnife.bind(this);
-
 
         jobPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,5 +304,30 @@ public class EditJobActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @OnClick(R.id.activity_edit_job_eliminate_button)
+    public void eliminateJob() {
+
+        DialogUtils.buildAlertDialog(getApplicationContext())
+                .setMessage(getString(R.string.eliminate_job_dialog))
+                .setCancelable(true)
+                .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, int which) {
+                        mFirebaseRef.child(jobID).removeValue();
+                        Intent main = new Intent(EditJobActivity.this, UserProfileActivity.class);
+                        startActivity(main);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
     }
 }

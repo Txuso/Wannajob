@@ -152,84 +152,86 @@ public class ShowJobActivity extends AppCompatActivity  {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
-                collapsingToolbarLayout.setTitle(job.get("name").toString());
-                creatorID = job.get("creatorID").toString();
-                if (creatorID.equals(fromId)) {
-                    likeButton.setVisibility(View.GONE);
-                    isMine = true;
-                    betButton.setBackgroundResource(R.color.colorAccent);
-                    betButton.setText(R.string.show_job_activity_edit_job);
-                    jobBidsLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
-                        }
-                    });
-                }
-                if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
-                    likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
-                }
-                else {
-                    likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
+                if (job != null) {
+                    collapsingToolbarLayout.setTitle(job.get("name").toString());
+                    creatorID = job.get("creatorID").toString();
+                    if (creatorID.equals(fromId)) {
+                        likeButton.setVisibility(View.GONE);
+                        isMine = true;
+                        betButton.setBackgroundResource(R.color.colorAccent);
+                        betButton.setText(R.string.show_job_activity_edit_job);
+                        jobBidsLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                            }
+                        });
+                    }
+                    if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
+                        likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
+                    }
+                    else {
+                        likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
 
-                }
-                // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
+                    }
+                    // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
-                //  Picasso.with(getApplicationContext()).load()
-                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                    //  Picasso.with(getApplicationContext()).load()
+                    // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
 
-                if (job.get("bidNumber")  != null)
-                    bidNumber = (long) job.get("bidNumber");
-                else
-                    bidNumber = 0;
-                if (job.get("viewNumber") != null)
-                    viewNumber = (long) job.get("viewNumber");
-                else
-                    viewNumber = 0;
+                    if (job.get("bidNumber")  != null)
+                        bidNumber = (long) job.get("bidNumber");
+                    else
+                        bidNumber = 0;
+                    if (job.get("viewNumber") != null)
+                        viewNumber = (long) job.get("viewNumber");
+                    else
+                        viewNumber = 0;
 
-               // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
+                    // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
 
 //                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
-                int color = getResources().getColor(R.color.colorGray);
-                collapsingToolbarLayout.setStatusBarScrimColor(color);
+                    int color = getResources().getColor(R.color.colorGray);
+                    collapsingToolbarLayout.setStatusBarScrimColor(color);
 
-                jobName.setText(job.get("name").toString());
-                jobDescription.setText(job.get("description").toString());
-                jobBids.setText(bidNumber + "");
+                    jobName.setText(job.get("name").toString());
+                    jobDescription.setText(job.get("description").toString());
+                    jobBids.setText(bidNumber + "");
 
-                jobViews.setText(viewNumber + "");
-                jobMoney.setText(job.get("salary").toString() + "€");
-                setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
-                imageURL = job.get("jobImage").toString();
-                Picasso
-                        .with(getApplicationContext())
-                        .load(job.get("jobImage").toString())
-                        .placeholder(R.drawable.photo_placeholder)
-                        .fit()
-                        .into(jobImage);
+                    jobViews.setText(viewNumber + "");
+                    jobMoney.setText(job.get("salary").toString() + "€");
+                    setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
+                    imageURL = job.get("jobImage").toString();
+                    Picasso
+                            .with(getApplicationContext())
+                            .load(job.get("jobImage").toString())
+                            .placeholder(R.drawable.photo_placeholder)
+                            .fit()
+                            .into(jobImage);
 
-                //jobDuration.getEditText().setText(job.get("jobDuration").toString());
-                //jobCategory.getEditText().setText(job.get("category").toString());
-                mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString())
-                        .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-                        userName.setText(user.get("name").toString());
-                        Picasso.with(getApplicationContext()).
-                                load(user.get("image").toString()).
-                                centerCrop().
-                                placeholder(R.drawable.photo_placeholder).
-                                fit().
-                                into(userPhoto);
-                    }
+                    //jobDuration.getEditText().setText(job.get("jobDuration").toString());
+                    //jobCategory.getEditText().setText(job.get("category").toString());
+                    mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString())
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
+                                    userName.setText(user.get("name").toString());
+                                    Picasso.with(getApplicationContext()).
+                                            load(user.get("image").toString()).
+                                            centerCrop().
+                                            placeholder(R.drawable.photo_placeholder).
+                                            fit().
+                                            into(userPhoto);
+                                }
 
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
+                                @Override
+                                public void onCancelled(FirebaseError firebaseError) {
 
-                    }
-                });
+                                }
+                            });
+                }
 
             }
 
@@ -300,6 +302,10 @@ public class ShowJobActivity extends AppCompatActivity  {
 
             }
         });
+
+        Intent i = new Intent(ShowJobActivity.this, JobMatchActivity.class);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(i);
 
 
         /*

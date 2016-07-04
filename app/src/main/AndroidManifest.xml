@@ -88,7 +88,12 @@
             android:exported="false" />
 
         <activity android:name=".activities.JobBidWannajobersActivity" />
-        <activity android:name=".activities.ShowMyBidsActivity"></activity>
+        <activity android:name=".activities.ShowMyBidsActivity" />
+        <activity android:name=".activities.JobMatchActivity"
+            android:theme="@style/Theme.AppCompat.Transparent"
+            >
+
+        </activity>
     </application>
 
 </manifest>

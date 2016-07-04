@@ -8,21 +8,16 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
-import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
-import com.example.txuso.wannajob.misc.things.GPSTracker;
-import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +26,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ShowMyBidsActivity extends AppCompatActivity {
+public class ShowMyBidsActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     Firebase mFirebaseRef;
     Firebase mFirebaseJobsRef;
@@ -54,7 +49,42 @@ public class ShowMyBidsActivity extends AppCompatActivity {
         jobs = new ArrayList<>();
         ButterKnife.bind(this);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
+        swipeRefreshLayout.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        fetchBids();
+                                    }
+                                }
+        );    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                onBackPressed();
+                //NavUtils.navigateUpFromSameTask(this);
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
+    public void fetchBids() {
+        jobs = new ArrayList<>();
+        adapter = new RVJobAdapter(jobs, getApplicationContext());
+        rv.setAdapter(adapter);
 
         mFirebaseRef.child("bid").addChildEventListener(new ChildEventListener() {
             @Override
@@ -75,11 +105,10 @@ public class ShowMyBidsActivity extends AppCompatActivity {
                             adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-
                                     Intent showJob = new Intent(ShowMyBidsActivity.this, ShowJobActivity.class);
                                     showJob.putExtra("jobID", jobs.get(position).getJobID());
                                     //showJob.putExtra("image", byteArray);
-                                    startActivity(showJob);
+                                    startActivityForResult(showJob, 2);
                                 }
                             });
                             rv.setAdapter(adapter);
@@ -118,28 +147,20 @@ public class ShowMyBidsActivity extends AppCompatActivity {
             }
         });
 
-
     }
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
-    }
+    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        switch (item.getItemId()) {
-            case android.R.id.home: {
-                onBackPressed();
-                //NavUtils.navigateUpFromSameTask(this);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
-
+        if (resultCode == RESULT_OK && requestCode == 2){
+            fetchBids();
         }
     }
+
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
 }

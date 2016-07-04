@@ -81,5 +81,7 @@
     <string name="user_adapter_dialog2">zure lana egiteko?</string>
     <string name="dialog_yes">Bai</string>
     <string name="dialog_no">Ez</string>
+    <string name="eliminate_job">Lana Kendu</string>
+    <string name="eliminate_job_dialog">Ziur zara lana kendu nahi duzula?</string>
 
 </resources>
