@@ -3,11 +3,14 @@ package com.example.txuso.wannajob.activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,8 +31,8 @@ public class EvaluateUserActivity extends AppCompatActivity {
     @Bind(R.id.activity_show_job_user_rating)
     RatingBar rating;
 
-    @Bind(R.id.activity_evaluate_user_input_job_evaluation_text)
-    TextView opinionText;
+    @Bind(R.id.activity_evaluate_user_input_job_evaluation)
+    TextInputLayout opinionText;
 
     String jobName;
     Bundle extras;
@@ -43,8 +46,8 @@ public class EvaluateUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_evaluate_user);
         extras = getIntent().getExtras();
         jobName = extras.getString("jobName");
-        jobId = extras.getString("jobId");
-        toId = extras.getString("toId");
+        jobId = extras.getString("jobID");
+        toId = extras.getString("toID");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/userOpinion");
 
 
@@ -82,7 +85,7 @@ public class EvaluateUserActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         UserOpinion opinion = new UserOpinion(
                                 UserManager.getUserName(getApplicationContext()), jobName,
-                                opinionText.getText().toString(),rating.getNumStars(),
+                                opinionText.getEditText().getText().toString(),rating.getNumStars(),
                                 UserManager.getUserPhoto(getApplicationContext()),toId,
                                 UserManager.getUserId(getApplicationContext()));
                         mFirebaseRef.push().setValue(opinion);

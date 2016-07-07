@@ -19,21 +19,31 @@ public class JobMatchActivity extends Activity {
     @Bind(R.id.activity_job_match_evaluate_button)
     TextView evaluateButton;
 
-    String jobId;
 
+
+    String jobName;
+    Bundle extras;
+    String jobId;
+    String toId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_job_match);
         ButterKnife.bind(this);
+        extras = getIntent().getExtras();
         jobId = getIntent().getExtras().getString("jobID");
-
+        jobName = extras.getString("jobName");
+        jobId = extras.getString("jobID");
+        toId = extras.getString("toID");
     }
 
     @OnClick (R.id.activity_job_match_evaluate_button)
     public void onEvaluateClick() {
         Intent evaluateIntent = new Intent(JobMatchActivity.this, EvaluateUserActivity.class);
+        evaluateIntent.putExtra("jobID", jobId);
+        evaluateIntent.putExtra("jobName", jobName);
+        evaluateIntent.putExtra("toID", toId);
         startActivity(evaluateIntent);
     }
 }
