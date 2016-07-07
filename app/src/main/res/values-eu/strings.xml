@@ -83,5 +83,10 @@
     <string name="dialog_no">Ez</string>
     <string name="eliminate_job">Lana Kendu</string>
     <string name="eliminate_job_dialog">Ziur zara lana kendu nahi duzula?</string>
+    <string name="job_match_title">AUKERATU ZAITUZTE</string>
+    <string name="be_on_time">PUNTUALA IZAN</string>
+    <string name="send_message_or_call">DEITU EDO MEZUA BIDALI</string>
+    <string name="dont_forget_evaluate_wannajober">EZ AHAZTU ZEURE WANNAJOBERRA EBALUATZEAZ</string>
+    <string name="evaluate_button">EBALUATU</string>
 
 </resources>

@@ -98,5 +98,12 @@
     <string name="eliminate_job">Eliminate Job</string>
     <string name="eliminate_job_dialog">Are you sure you want to remove this job?</string>
 
+    <string name="job_match_title">YOU HAVE BEEN CHOSEN</string>
+    <string name="be_on_time">BE ON TIME</string>
+    <string name="send_message_or_call">SEND A MESSAGE OR CALL</string>
+    <string name="dont_forget_evaluate_wannajober">DO NOT FORGET TO EVALUATE YOUR WANNAJOBER</string>
+    <string name="evaluate_button">EVALUATE</string>
+
+
 
 </resources>

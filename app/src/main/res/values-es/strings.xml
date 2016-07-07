@@ -82,5 +82,12 @@
     <string name="dialog_no">No</string>
     <string name="eliminate_job">Eliminar Trabajillo</string>
     <string name="eliminate_job_dialog">¿Estás seguro de que quieres eliminar este trabajillo?</string>
+    <string name="job_match_title">HAS SIDO ELEGIDO</string>
+    <string name="be_on_time">SE PUNTUAL</string>
+    <string name="send_message_or_call">LLAMA O ENVIA UN MENSAJE A</string>
+    <string name="dont_forget_evaluate_wannajober">NO TE OLVIDES DE EVALUAR A TU WANNAJOBER</string>
+    <string name="evaluate_button">EVALUAR</string>
+
+
 
 </resources>
