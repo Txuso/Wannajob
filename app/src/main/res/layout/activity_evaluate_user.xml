@@ -29,7 +29,7 @@
                 android:layout_marginBottom="16dp"
                 android:text="@string/evaluation_text_stars"
                 android:textColor="@color/colorGreen"
-                android:layout_gravity=""
+                android:layout_gravity="center"
                 android:textSize="16sp"
                 />
 
@@ -78,11 +78,15 @@
                 android:paddingRight="24dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/activity_evaluate_user_input_job_evaluation">
-                <EditText
+                <ScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:hint="@string/evaluation_text_hint" />
+                    android:layout_height="wrap_content">
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:hint="@string/evaluation_text_hint" />
+                </ScrollView>
             </android.support.design.widget.TextInputLayout>
 
 
@@ -90,16 +94,5 @@
 
 
     </LinearLayout>
-
-    <android.support.v7.widget.AppCompatButton
-        android:id="@+id/activity_edit_job_edit_button"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:text="@string/activity_evaluate_user_evaluation_button_text"
-        android:background="@color/colorGreen"
-        android:textColor="#fcfcfc"
-        />
-
 
 </RelativeLayout>

@@ -304,6 +304,7 @@ public class ShowJobActivity extends AppCompatActivity  {
         });
 
         Intent i = new Intent(ShowJobActivity.this, JobMatchActivity.class);
+        i.putExtra("jobID", jobID);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(i);
 
