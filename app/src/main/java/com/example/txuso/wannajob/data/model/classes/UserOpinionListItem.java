@@ -10,6 +10,7 @@ public class UserOpinionListItem {
     private String jobName;
     private String imageUrl;
     private String opinion;
+    private String fromId;
     private String userID;
     public UserOpinionListItem(String name, String jobName, String opinion, int stars, String imageUrl, String userID) {
         this.name = name;
@@ -18,6 +19,16 @@ public class UserOpinionListItem {
         this.opinion = opinion;
         this.stars = stars;
         this.userID = userID;
+    }
+
+    public UserOpinionListItem(String name, String jobName, String opinion, int stars, String imageUrl, String userID, String fromId) {
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.jobName = jobName;
+        this.opinion = opinion;
+        this.stars = stars;
+        this.userID = userID;
+        this.fromId = fromId;
     }
 
     public String getJobName() {
@@ -66,5 +77,13 @@ public class UserOpinionListItem {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getFromId() {
+        return fromId;
+    }
+
+    public void setFromId(String fromId) {
+        this.fromId = fromId;
     }
 }
