@@ -3,70 +3,87 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.LoginActivity"
+    android:background="@color/login_background">
 
-
-    tools:context=".activities.LoginActivity">
-    
-    <ViewFlipper
+    <ImageView
+        android:id="@+id/logo"
         android:layout_width="match_parent"
-        android:id="@+id/login_view_flipper"
-        android:autoStart="true"
-        android:layout_height="match_parent">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/wannajob_login_image"
-            />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/txuso"
-            />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/neska"
-            />
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/clases_particulares"
-            />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/ic_launcher"/>
 
+    <EditText
+        android:id="@+id/txtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btnSignIn"
+        android:layout_alignStart="@+id/btnSignIn"
+        android:layout_alignRight="@+id/btnSignIn"
+        android:layout_alignEnd="@+id/btnSignIn"
+        android:layout_below="@+id/logo"
+        android:layout_marginTop="30dp"
+        android:hint="Email"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorGray" />
 
-    </ViewFlipper>
+    <EditText
+        android:id="@+id/txtPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:textColor="@color/colorWhite"
+        android:textColorHint="@color/colorGray"
+        android:hint="Contraseña"
+        android:layout_below="@+id/txtEmail"
+        android:layout_alignLeft="@+id/btnSignIn"
+        android:layout_alignStart="@+id/btnSignIn"
+        android:layout_alignRight="@+id/btnSignIn"
+        android:layout_alignEnd="@+id/btnSignIn"
+        android:layout_marginTop="15dp"/>
 
     <Button
+        android:id="@+id/btnSignIn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Free login"
-        android:layout_marginBottom="160dp"
-
-        android:layout_alignParentBottom="true"
-        android:id="@+id/button" />
+        android:text="Iniciar sesión"
+        android:layout_marginBottom="60dp"
+        android:background="@color/sign_in_button"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/txtPassword"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
 
     <com.facebook.widget.LoginButton
-        android:id="@+id/login_with_facebook"
+        android:id="@+id/btnSignInFacebook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        />
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/sign_in_button"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/lblPasswordForgotter"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="¿Has olvidado tu contraseña?"
+        android:textColor="@color/colorpara"
+        android:layout_alignBottom="@+id/lblRegister"
+        android:layout_marginLeft="30dp"/>
+
+    <TextView
+        android:id="@+id/lblRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Únete ahora"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        />
+        android:layout_marginRight="30dp"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/colorpara"
+        android:layout_marginBottom="20dp" />
 
 </RelativeLayout>

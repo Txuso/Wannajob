@@ -1,18 +1,16 @@
 package com.example.txuso.wannajob.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.misc.things.UserManager;
@@ -29,12 +27,8 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.SignInButton;
-import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -46,31 +40,14 @@ import butterknife.OnClick;
 
 import com.example.txuso.wannajob.misc.things.ImageManager;
 import com.example.txuso.wannajob.data.model.classes.WannajobUser;
-import com.google.firebase.storage.FirebaseStorage;
 
+public class LoginActivity extends AppCompatActivity {
 
-public class LoginActivity extends Activity implements View.OnClickListener {
+    // Boton de iniciar sesion
+    @Bind(R.id.btnSignIn)
+    Button          button;
 
-    @Bind(R.id.login_view_flipper)
-    ViewFlipper fliper;
-
-    @Bind(R.id.button)
-    Button button;
-
-    Intent intent;
-
-    //Signin button
-    private SignInButton signInButton;
-
-    //Signing Options
-    private GoogleSignInOptions gso;
-
-    //google api client
-    private GoogleApiClient mGoogleApiClient;
-
-    /**
-     *The Facebook login button which a component within the GUI
-     */
+    // Boton de iniciar sesion con Facebook
     LoginButton mFacebookLoginButton;
 
     //Signin constant to check the activity result
@@ -102,9 +79,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     };
 
-    Animation fadeIn;
-    Animation fadeOut;
-
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,13 +87,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
-
-        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
-        fadeOut = AnimationUtils.loadAnimation(this, R.anim.fade_out);
-        fliper.setInAnimation(fadeIn);
-        fliper.setOutAnimation(fadeOut);
-        fliper.setFlipInterval(5000);
-        fliper.startFlipping();
 
         /**
          * We set the the uihelper and the firebase context.
@@ -132,25 +100,8 @@ public class LoginActivity extends Activity implements View.OnClickListener {
          */
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
 
-        signInButton = (SignInButton) findViewById(R.id.sign_in_button);
-        signInButton.setSize(SignInButton.SIZE_WIDE);
-        signInButton.setScopes(gso.getScopeArray());
-
-
-        //Initializing google api client
-        /*
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-        */
-        signInButton.setOnClickListener(this);
-
-
-        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_with_facebook);
+        mFacebookLoginButton = (LoginButton) findViewById(R.id.btnSignInFacebook);
 
         /**
          * Data that will be gathered from the user's Facebook account is set here
@@ -334,7 +285,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         Session session = Session.getActiveSession();
         if (session != null && (session.isOpened() || session.isClosed())) {
             mFacebookLoginButton.setVisibility(View.GONE);
-            signInButton.setVisibility(View.GONE);
             onFacebookSessionStateChange(session, session.getState(), null);
         }
         uiHelper.onResume();
@@ -350,7 +300,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
         uiHelper.onDestroy();
     }
@@ -359,15 +308,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         uiHelper.onSaveInstanceState(outState);
-    }
-
-    //This function will option signing intent
-    private void signIn() {
-        //Creating an intent
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-
-        //Starting intent for result
-        startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
     //After the signing we are calling this function
@@ -411,15 +351,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == signInButton) {
-            //Calling signin
-            signIn();
-        }
-    }
-
-    @OnClick(R.id.button)
+    @OnClick(R.id.btnSignIn)
     public void click() {
         UserManager.setUserName(getApplicationContext(), "Patxi");
         UserManager.setUserAge(getApplicationContext(), "25");
@@ -440,7 +372,5 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
-
     }
-
 }

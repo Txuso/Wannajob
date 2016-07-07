@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorWhite">#FFFF</color>
+    <color name="colorWhite">#ffffff</color>
     <color name="color_menufont">#555555</color>
     <color name="color_texmenutop">#989898</color>
     <color name="colorPrimaryDark">#303F9F</color>
@@ -12,8 +12,11 @@
 
     <color name="green_pressed">#9dcfc3</color>
 
-    <color name="colorGray">#7B7B7B</color>
+    <color name="colorGray">#7b7b7b</color>
     <color name="colorAccent">#f54851</color>
     <color name="colorHead">#363147</color>
     <color name="colorpara">#8b8a8d</color>
+
+    <color name="sign_in_button">#f84f01</color>
+    <color name="login_background">#1c2533</color>
 </resources>
