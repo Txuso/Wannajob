@@ -88,5 +88,7 @@
     <string name="send_message_or_call">DEITU EDO MEZUA BIDALI</string>
     <string name="dont_forget_evaluate_wannajober">EZ AHAZTU ZEURE WANNAJOBERRA EBALUATZEAZ</string>
     <string name="evaluate_button">EBALUATU</string>
+    <string name="want_to_send_this_evaluation">Ziur zaude ebaluazio hau bidali nahi diozula zeure Wannajoberari?</string>
+
 
 </resources>

@@ -5,29 +5,21 @@ package com.example.txuso.wannajob.data.model.classes;
  */
 public class UserOpinion {
 
-    private String name;
+    private String fromUser;
     private int stars;
     private String jobName;
     private String imageUrl;
     private String opinion;
     private String fromId;
-    private String userID;
-    public UserOpinion(String name, String jobName, String opinion, int stars, String imageUrl, String userID) {
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.jobName = jobName;
-        this.opinion = opinion;
-        this.stars = stars;
-        this.userID = userID;
-    }
+    private String toID;
 
-    public UserOpinion(String name, String jobName, String opinion, int stars, String imageUrl, String userID, String fromId) {
-        this.name = name;
+    public UserOpinion(String fromUser, String jobName, String opinion, int stars, String imageUrl, String toID, String fromId) {
+        this.fromUser = fromUser;
         this.imageUrl = imageUrl;
         this.jobName = jobName;
         this.opinion = opinion;
         this.stars = stars;
-        this.userID = userID;
+        this.toID = toID;
         this.fromId = fromId;
     }
 
@@ -48,11 +40,11 @@ public class UserOpinion {
     }
 
     public String getName() {
-        return name;
+        return fromUser;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String fromUser) {
+        this.fromUser = fromUser;
     }
 
     public String getImageUrl() {
@@ -72,11 +64,11 @@ public class UserOpinion {
     }
 
     public String getUserID() {
-        return userID;
+        return toID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserID(String toID) {
+        this.toID = toID;
     }
 
     public String getFromId() {
