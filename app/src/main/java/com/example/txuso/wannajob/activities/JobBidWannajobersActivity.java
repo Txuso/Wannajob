@@ -112,28 +112,32 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
     public void fetchUserInfo(final Map<String, Object> wannaUser, final String userId, long bidNumber) {
         swipeRefreshLayout.setRefreshing(true);
 
-        double ratingDouble = Double.parseDouble(wannaUser.get("rating").toString());
+        if (wannaUser.get("rating") != null) {
+            double ratingDouble = Double.parseDouble(wannaUser.get("rating").toString());
 
-        item = new WannajobBidUser(wannaUser.get("name").toString(), wannaUser.get("description").toString(), wannaUser.get("image").toString(), ratingDouble, bidNumber, userId, jobId);
-        users.add(item);
-        adapter = new RVUserAdapter(users, JobBidWannajobersActivity.this);
+            item = new WannajobBidUser(wannaUser.get("name").toString(), wannaUser.get("description").toString(), wannaUser.get("image").toString(), ratingDouble, bidNumber, userId, jobId);
+            users.add(item);
+            adapter = new RVUserAdapter(users, JobBidWannajobersActivity.this);
 
-        adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
+            adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
 
-                Intent showUser = UserProfileActivity.showOtherUserProfileIntent(getApplicationContext(), userId);
-                startActivity(showUser);
+                    Intent showUser = UserProfileActivity.showOtherUserProfileIntent(getApplicationContext(), userId);
+                    startActivity(showUser);
+                }
+            });
+            if (adapter != null) {
+                ButterKnife.bind(JobBidWannajobersActivity.this);
+                rv.setAdapter(adapter);
+                rv.setHasFixedSize(true);
+                swipeRefreshLayout.setRefreshing(false);
+                rv.setLayoutManager(new LinearLayoutManager(this));
+
             }
-        });
-        if (adapter != null) {
-            ButterKnife.bind(JobBidWannajobersActivity.this);
-            rv.setAdapter(adapter);
-            rv.setHasFixedSize(true);
-            swipeRefreshLayout.setRefreshing(false);
-            rv.setLayoutManager(new LinearLayoutManager(this));
-
         }
+
+
 
     }
 

@@ -119,6 +119,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
                             .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(final DialogInterface dialog, int which) {
+                                    mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
                                     mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
                                     dialog.dismiss();
                                 }

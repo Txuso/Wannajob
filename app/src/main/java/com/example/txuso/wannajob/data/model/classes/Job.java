@@ -19,9 +19,10 @@ public class Job {
     private double longitude;
     private long bidNumber;
     private long viewNumber;
+    private String selectedUserID;
     private ArrayList<String> wannajobers;
 
-    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude){
+    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude, String selectedUserID){
         this.name = name;
         this.description = description;
         this.salary = salary;
@@ -35,6 +36,7 @@ public class Job {
         wannajobers = new ArrayList<>();
         bidNumber = 0;
         viewNumber = 0;
+        this.selectedUserID = selectedUserID;
     }
 
     public Job (String name, int salary, String jobImage){
@@ -153,6 +155,14 @@ public class Job {
 
     public void setViewNumber(long viewNumber) {
         this.viewNumber = viewNumber;
+    }
+
+    public String getSelectedUserID() {
+        return selectedUserID;
+    }
+
+    public void setSelectedUserID(String selectedUserID) {
+        this.selectedUserID = selectedUserID;
     }
 }
 

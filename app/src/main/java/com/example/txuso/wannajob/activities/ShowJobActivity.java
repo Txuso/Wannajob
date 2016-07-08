@@ -195,11 +195,17 @@ public class ShowJobActivity extends AppCompatActivity  {
                         viewNumber = 0;
                     }
 
-                    i.putExtra("toID", creatorID);
-                    i.putExtra("jobID", jobID);
-                    i.putExtra("jobName", jobName.getText().toString());
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(i);
+                    if (job.get("selectedUserID") != null) {
+                        if (job.get("selectedUserID").toString().equals(UserManager.getUserId(getApplicationContext()))) {
+                            i.putExtra("toID", creatorID);
+                            i.putExtra("jobID", jobID);
+                            i.putExtra("jobName", jobName.getText().toString());
+                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(i);
+                        }
+                    }
+
+
 
                     // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);

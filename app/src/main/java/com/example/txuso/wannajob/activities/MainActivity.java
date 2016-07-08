@@ -34,6 +34,8 @@ import com.firebase.client.FirebaseError;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
@@ -201,10 +203,10 @@ public class MainActivity extends AppCompatActivity
             mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                    final Job job = dataSnapshot.getValue(Job.class);
+                    final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
 
-                    double latitude2 = job.getLatitude();
-                    double longitude2 = job.getLongitude();
+                    double latitude2 = Double.parseDouble(job.get("latitude").toString());
+                    double longitude2 = Double.parseDouble(job.get("longitude").toString());
                     double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
                     if (distance <= 25) {
@@ -212,8 +214,12 @@ public class MainActivity extends AppCompatActivity
                         //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
                        // Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
-                        item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
-                        item.setImageUrl(job.getJobImage());
+                        item = new JobListItem(dataSnapshot.getKey(),
+                                job.get("name").toString(),
+                                Integer.parseInt(job.get("salary").toString()),
+                                job.get("creatorID").toString(),
+                                job.get("description").toString());
+                        item.setImageUrl(job.get("jobImage").toString());
                         item.setDistance(distance);
                         adapter = new RVJobAdapter(jobs, getApplicationContext());
                         jobs.add(item);
@@ -228,8 +234,8 @@ public class MainActivity extends AppCompatActivity
 
                             Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
                             showJob.putExtra("jobID", jobs.get(position).getJobID());
-                            showJob.putExtra("toID", job.getCreatorID());
-                            showJob.putExtra("to", job.getName());
+                            showJob.putExtra("toID", job.get("creatorID").toString());
+                            showJob.putExtra("to", job.get("name").toString());
                             //showJob.putExtra("image", byteArray);
                             startActivity(showJob);
                         }

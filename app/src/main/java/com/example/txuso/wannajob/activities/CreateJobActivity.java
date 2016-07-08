@@ -149,7 +149,7 @@ public class CreateJobActivity extends AppCompatActivity {
                             Integer.parseInt(jobSalary.getEditText().getText().toString()),
                             category,
                             UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
-                            jobDuration.getEditText().getText().toString(),latitude, longitude);
+                            jobDuration.getEditText().getText().toString(),latitude, longitude, "");
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     jService.createJob(jobId, newJob);
                     Intent intent = getIntent();
