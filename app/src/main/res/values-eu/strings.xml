@@ -84,9 +84,9 @@
     <string name="eliminate_job">Lana Kendu</string>
     <string name="eliminate_job_dialog">Ziur zara lana kendu nahi duzula?</string>
     <string name="job_match_title">AUKERATU ZAITUZTE</string>
-    <string name="be_on_time">PUNTUALA IZAN</string>
-    <string name="send_message_or_call">DEITU EDO MEZUA BIDALI</string>
-    <string name="dont_forget_evaluate_wannajober">EZ AHAZTU ZEURE WANNAJOBERRA EBALUATZEAZ</string>
+    <string name="be_on_time">Puntuala izan</string>
+    <string name="send_message_or_call">Deitu edo mezua bidali</string>
+    <string name="dont_forget_evaluate_wannajober">Ez ahaztu zeure Wannajoberra ebaluatzeaz</string>
     <string name="evaluate_button">EBALUATU</string>
     <string name="want_to_send_this_evaluation">Ziur zaude ebaluazio hau bidali nahi diozula zeure Wannajoberari?</string>
 

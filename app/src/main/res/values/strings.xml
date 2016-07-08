@@ -99,12 +99,10 @@
     <string name="eliminate_job_dialog">Are you sure you want to remove this job?</string>
 
     <string name="job_match_title">YOU HAVE BEEN CHOSEN</string>
-    <string name="be_on_time">BE ON TIME</string>
-    <string name="send_message_or_call">SEND A MESSAGE OR CALL</string>
-    <string name="dont_forget_evaluate_wannajober">DO NOT FORGET TO EVALUATE YOUR WANNAJOBER</string>
+    <string name="be_on_time">Be on time</string>
+    <string name="send_message_or_call">Send a message or call</string>
+    <string name="dont_forget_evaluate_wannajober">Do not forget to evaluate your Wannajober</string>
     <string name="evaluate_button">EVALUATE</string>
     <string name="want_to_send_this_evaluation">Do you want to send this evaluation to your wannajober?</string>
-
-
 
 </resources>
