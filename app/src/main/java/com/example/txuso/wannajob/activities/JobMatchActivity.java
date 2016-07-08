@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
 
@@ -36,6 +37,7 @@ public class JobMatchActivity extends Activity {
         jobName = extras.getString("jobName");
         jobId = extras.getString("jobID");
         toId = extras.getString("toID");
+
     }
 
     @OnClick (R.id.activity_job_match_evaluate_button)

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +26,15 @@ import java.io.IOException;
 import java.util.List;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class EvaluateUserActivity extends AppCompatActivity {
 
     @Bind(R.id.activity_show_job_user_rating)
     RatingBar rating;
+    //TODO SEE K COJONES OCURRE AKI
+    @Bind(R.id.activity_evaluate_user_input_job_evaluation_scroll)
+    ScrollView scroll;
 
     @Bind(R.id.activity_evaluate_user_input_job_evaluation)
     TextInputLayout opinionText;
@@ -44,12 +49,13 @@ public class EvaluateUserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_evaluate_user);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ButterKnife.bind(this);
         extras = getIntent().getExtras();
         jobName = extras.getString("jobName");
         jobId = extras.getString("jobID");
         toId = extras.getString("toID");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/userOpinion");
-
 
     }
 
@@ -74,6 +80,7 @@ public class EvaluateUserActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case android.R.id.home: {
+                onBackPressed();
                 return true;
             }
             case R.id.action_evaluate_user:{
@@ -85,7 +92,7 @@ public class EvaluateUserActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         UserOpinion opinion = new UserOpinion(
                                 UserManager.getUserName(getApplicationContext()), jobName,
-                                opinionText.getEditText().getText().toString(),rating.getNumStars(),
+                                opinionText.getEditText().getText().toString(),rating.getRating(),
                                 UserManager.getUserPhoto(getApplicationContext()),toId,
                                 UserManager.getUserId(getApplicationContext()));
                         mFirebaseRef.push().setValue(opinion);
@@ -107,4 +114,7 @@ public class EvaluateUserActivity extends AppCompatActivity {
         }
             return super.onOptionsItemSelected(item);
         }
+
+
+
 }

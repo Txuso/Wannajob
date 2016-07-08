@@ -70,7 +70,10 @@
                 android:textColor="@color/colorGreen"
                 android:textSize="16sp"
                 />
-
+            <ScrollView
+                android:id="@+id/activity_evaluate_user_input_job_evaluation_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <!--  Name Label -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -78,18 +81,14 @@
                 android:paddingRight="24dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/activity_evaluate_user_input_job_evaluation">
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
                     <EditText
                         android:id="@+id/activity_evaluate_user_input_job_evaluation_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:hint="@string/evaluation_text_hint" />
-                </ScrollView>
             </android.support.design.widget.TextInputLayout>
-
+            </ScrollView>
 
         </LinearLayout>
 

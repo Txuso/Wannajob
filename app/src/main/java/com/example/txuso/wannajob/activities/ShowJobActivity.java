@@ -140,6 +140,8 @@ public class ShowJobActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fromId = UserManager.getUserId(this);
+        final Intent i = new Intent(ShowJobActivity.this, JobMatchActivity.class);
+
 
         jobID = extras.getString("jobID");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
@@ -155,6 +157,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                 if (job != null) {
                     collapsingToolbarLayout.setTitle(job.get("name").toString());
                     creatorID = job.get("creatorID").toString();
+
                     if (creatorID.equals(fromId)) {
                         likeButton.setVisibility(View.GONE);
                         isMine = true;
@@ -179,14 +182,24 @@ public class ShowJobActivity extends AppCompatActivity  {
                     //  Picasso.with(getApplicationContext()).load()
                     // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
 
-                    if (job.get("bidNumber")  != null)
+                    if (job.get("bidNumber")  != null) {
                         bidNumber = (long) job.get("bidNumber");
-                    else
+                    }
+                    else {
                         bidNumber = 0;
-                    if (job.get("viewNumber") != null)
+                    }
+                    if (job.get("viewNumber") != null) {
                         viewNumber = (long) job.get("viewNumber");
-                    else
+                    }
+                    else {
                         viewNumber = 0;
+                    }
+
+                    i.putExtra("toID", creatorID);
+                    i.putExtra("jobID", jobID);
+                    i.putExtra("jobName", jobName.getText().toString());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(i);
 
                     // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
@@ -233,6 +246,7 @@ public class ShowJobActivity extends AppCompatActivity  {
                             });
                 }
 
+
             }
 
             @Override
@@ -241,7 +255,6 @@ public class ShowJobActivity extends AppCompatActivity  {
             }
 
         });
-
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -303,12 +316,6 @@ public class ShowJobActivity extends AppCompatActivity  {
             }
         });
 
-        Intent i = new Intent(ShowJobActivity.this, JobMatchActivity.class);
-        i.putExtra("jobID", jobID);
-        i.putExtra("jobName", jobName.getText().toString());
-        i.putExtra("toID", creatorID);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
 
 
         /*
