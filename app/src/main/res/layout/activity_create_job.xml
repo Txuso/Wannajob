@@ -99,6 +99,13 @@
                 android:text="@string/job_category"
                 android:gravity="start" />
 
+            <CheckBox
+                android:layout_marginLeft="24dp"
+                android:id="@+id/activity_create_job_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="YA" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -109,15 +116,15 @@
                     android:editable="false"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="24dp"
-                    android:hint="Date"
-                    android:id="@+id/in_date" />
+                    android:hint="From"
+                    android:id="@+id/in_init_date" />
 
                 <EditText
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:hint="Hour"
+                    android:hint="To"
                     android:editable="false"
-                    android:id="@+id/in_hour" />
+                    android:id="@+id/in_finish_date" />
             </LinearLayout>
 
 

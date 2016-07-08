@@ -2,7 +2,6 @@ package com.example.txuso.wannajob.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,16 +18,15 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.firebase.FirebaseStorageService;
 import com.example.txuso.wannajob.data.firebase.JobFirebaseService;
 import com.example.txuso.wannajob.misc.things.UserManager;
-import com.firebase.client.Firebase;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,8 +45,6 @@ import com.google.firebase.storage.UploadTask;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
-import butterknife.OnItemSelected;
 
 public class CreateJobActivity extends AppCompatActivity {
 
@@ -89,11 +85,14 @@ public class CreateJobActivity extends AppCompatActivity {
     @Bind(R.id.job_photo_button)
     android.support.v7.widget.AppCompatImageButton imageP;
 
-    @Bind(R.id.in_date)
-    EditText dateP;
+    @Bind(R.id.in_init_date)
+    EditText initDate;
 
-    @Bind(R.id.in_hour)
-    EditText hourP;
+    @Bind(R.id.activity_create_job_checkbox)
+    CheckBox doItNowCheckbox;
+
+    @Bind(R.id.in_finish_date)
+    EditText finishDate;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     double latitude;
@@ -307,8 +306,8 @@ public class CreateJobActivity extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
-    @OnClick(R.id.in_date)
-    public void chooseDate() {
+    @OnClick(R.id.in_init_date)
+    public void chooseInitDate() {
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -322,32 +321,34 @@ public class CreateJobActivity extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        dateP.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        initDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
 
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
     }
 
-    @OnClick(R.id.in_hour)
-    public void chooseHour() {
+    @OnClick(R.id.in_finish_date)
+    public void chooseFinishDate() {
         // Get Current Time
         final Calendar c = Calendar.getInstance();
-        mHour = c.get(Calendar.HOUR_OF_DAY);
-        mMinute = c.get(Calendar.MINUTE);
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        // Launch Time Picker Dialog
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                new TimePickerDialog.OnTimeSetListener() {
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
 
                     @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay,
-                                          int minute) {
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
 
-                        hourP.setText(hourOfDay + ":" + minute);
+                        finishDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+
                     }
-                }, mHour, mMinute, false);
-        timePickerDialog.show();
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
 
     }
 
