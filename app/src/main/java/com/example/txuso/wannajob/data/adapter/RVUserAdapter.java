@@ -1,10 +1,14 @@
 package com.example.txuso.wannajob.data.adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -21,6 +26,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.activities.DiscoveryPreferencesActivity;
+import com.example.txuso.wannajob.activities.ShowJobActivity;
+import com.example.txuso.wannajob.data.model.classes.Bid;
 import com.example.txuso.wannajob.data.model.classes.WannajobBidUser;
 import com.example.txuso.wannajob.data.model.classes.WannajobUser;
 import com.example.txuso.wannajob.misc.things.DialogUtils;
@@ -111,26 +118,26 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogUtils.buildAlertDialog(context)
-                            .setMessage(context.getString(R.string.user_adapter_dialog )
-                                    + " " + userName.getText().toString()
-                                    + " " + context.getString(R.string.user_adapter_dialog2))
-                            .setCancelable(true)
-                            .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(final DialogInterface dialog, int which) {
-                                    mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
-                                    mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNegativeButton(R.string.dialog_no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
+
+                    final Dialog myDialog = new Dialog(context);
+                    myDialog.getWindow();
+                    myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    myDialog.setContentView(R.layout.confirm_wannajober_dialog);
+                    final TextInputLayout userNumber = (TextInputLayout)myDialog.findViewById(R.id.confirm_wannajober_dialog_number);
+
+                    myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!userNumber.getEditText().getText().toString().equals("")) {
+                                mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserNumber").setValue(userNumber.getEditText().getText().toString());
+                                mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
+                                mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
+                            }
+                        }
+                    });
+
+                    myDialog.show();
                 }
             });
             itemView.setOnClickListener(this);

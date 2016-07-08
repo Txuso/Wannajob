@@ -196,9 +196,11 @@ public class ShowJobActivity extends AppCompatActivity  {
                     }
 
                     if (job.get("selectedUserID") != null) {
+                        betButton.setVisibility(View.GONE);
                         if (job.get("selectedUserID").toString().equals(UserManager.getUserId(getApplicationContext()))) {
                             i.putExtra("toID", creatorID);
                             i.putExtra("jobID", jobID);
+                            i.putExtra("number", job.get("selectedUserNumber").toString());
                             i.putExtra("jobName", jobName.getText().toString());
                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(i);

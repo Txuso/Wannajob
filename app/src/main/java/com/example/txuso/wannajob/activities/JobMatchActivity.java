@@ -20,11 +20,15 @@ public class JobMatchActivity extends Activity {
     @Bind(R.id.activity_job_match_evaluate_button)
     TextView evaluateButton;
 
+    @Bind(R.id.activity_job_match_call_text)
+    TextView callText;
+
 
 
     String jobName;
     Bundle extras;
     String jobId;
+    String number;
     String toId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,9 @@ public class JobMatchActivity extends Activity {
         jobName = extras.getString("jobName");
         jobId = extras.getString("jobID");
         toId = extras.getString("toID");
+        number = extras.getString("number");
+        callText.append( " \n" + number);
+
 
     }
 

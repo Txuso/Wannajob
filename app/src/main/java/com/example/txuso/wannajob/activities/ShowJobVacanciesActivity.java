@@ -106,10 +106,10 @@ public class ShowJobVacanciesActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                 collapsingToolbarLayout.setTitle(job.get("name").toString());
-               // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
+                // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
 
                 //  Picasso.with(getApplicationContext()).load()
-               // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+                // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
                 Bitmap pic = ImageManager.decodeBase64(job.get("jobImage").toString());
                 Drawable d = new BitmapDrawable(getResources(), pic);
 

@@ -73,7 +73,7 @@ public class CreateJobActivity extends AppCompatActivity {
     @Bind(R.id.input_job_salary)
     TextInputLayout jobSalary;
 
-    @Bind(R.id.input_job_duration)
+    @Bind(R.id.confirm_wannajober_dialog)
     TextInputLayout jobDuration;
 
     @Bind(R.id.btn_categories)

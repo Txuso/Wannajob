@@ -76,7 +76,7 @@
                 android:paddingLeft="24dp"
                 android:paddingRight="24dp"
                 android:layout_marginBottom="8dp"
-                android:id="@+id/input_job_duration">
+                android:id="@+id/confirm_wannajober_dialog">
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

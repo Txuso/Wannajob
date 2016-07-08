@@ -53,9 +53,6 @@
         <activity
             android:name=".activities.ShowJobActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activities.ShowJobVacanciesActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activities.ChatActivity" />
         <activity android:name=".activities.UserFavoriteJobsActivity" />
 

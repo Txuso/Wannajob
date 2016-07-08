@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/rounded_corner_layout"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Introduce el número que recibirá"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/confirm_wannajober_dialog_number">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:hint="Your number" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:id="@+id/bid_dialog_bid_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
+            android:paddingLeft="30dp"
+            android:paddingBottom="10dp"
+            android:textSize="16dp"
+            android:background="@drawable/rounded"
+            android:text="ACEPTAR"
+            android:textColor="@color/colorGreen"/>
+
+    </LinearLayout>
+
+</LinearLayout>
