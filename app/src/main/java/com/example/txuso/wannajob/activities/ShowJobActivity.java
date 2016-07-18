@@ -195,9 +195,12 @@ public class ShowJobActivity extends AppCompatActivity  {
                         viewNumber = 0;
                     }
 
-                    if (job.get("selectedUserID") != null) {
-                        betButton.setVisibility(View.GONE);
+                    if (job.get("selectedUserID") != null &&
+                            job.get("selectedUserID").
+                                    toString().
+                                    equals(UserManager.getUserId(getApplicationContext()))) {
                         if (job.get("selectedUserID").toString().equals(UserManager.getUserId(getApplicationContext()))) {
+                            betButton.setVisibility(View.GONE);
                             i.putExtra("toID", creatorID);
                             i.putExtra("jobID", jobID);
                             i.putExtra("number", job.get("selectedUserNumber").toString());
