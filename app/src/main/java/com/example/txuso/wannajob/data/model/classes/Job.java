@@ -19,10 +19,24 @@ public class Job {
     private double longitude;
     private long bidNumber;
     private long viewNumber;
+    private boolean doItKnow;
     private String selectedUserID;
+    String initDate;
+    String finishDate;
     private ArrayList<String> wannajobers;
 
-    public Job (String name, String description, int salary, String category, String creatorID, String createdDate, String jobImage, String jobDuration, double latitude, double longitude, String selectedUserID){
+    public Job (String name,
+                String description,
+                int salary,
+                String category,
+                String creatorID,
+                String createdDate,
+                String jobImage,
+                String jobDuration,
+                double latitude,
+                double longitude,
+                String selectedUserID,
+                boolean doItKnow){
         this.name = name;
         this.description = description;
         this.salary = salary;
@@ -37,9 +51,23 @@ public class Job {
         bidNumber = 0;
         viewNumber = 0;
         this.selectedUserID = selectedUserID;
+        this.doItKnow = doItKnow;
+        this.initDate = "";
+        this.finishDate = "";
     }
 
-    public Job (String name, int salary, String jobImage){
+    public Job (String name,
+                String description,
+                int salary,
+                String category,
+                String creatorID,
+                String createdDate,
+                String jobImage,
+                String jobDuration,
+                double latitude,
+                double longitude,
+                String selectedUserID,
+                String initDate, String finishDate){
         this.name = name;
         this.description = description;
         this.salary = salary;
@@ -47,12 +75,21 @@ public class Job {
         this.creatorID = creatorID;
         this.createdDate = createdDate;
         this.jobImage = jobImage;
+        this.jobDuration = jobDuration;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        wannajobers = new ArrayList<>();
+        bidNumber = 0;
+        viewNumber = 0;
+        this.selectedUserID = selectedUserID;
+        this.doItKnow = false;
+        this.initDate = initDate;
+        this.finishDate = finishDate;
     }
 
-    public Job () {
+    public Job() {
 
     }
-
     public double getLatitude() {
         return latitude;
     }
@@ -163,6 +200,30 @@ public class Job {
 
     public void setSelectedUserID(String selectedUserID) {
         this.selectedUserID = selectedUserID;
+    }
+
+    public String getFinishDate() {
+        return finishDate;
+    }
+
+    public boolean isDoItKnow() {
+        return doItKnow;
+    }
+
+    public String getInitDate() {
+        return initDate;
+    }
+
+    public void setDoItKnow(boolean doItKnow) {
+        this.doItKnow = doItKnow;
+    }
+
+    public void setFinishDate(String finishDate) {
+        this.finishDate = finishDate;
+    }
+
+    public void setInitDate(String initDate) {
+        this.initDate = initDate;
     }
 }
 

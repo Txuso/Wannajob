@@ -102,6 +102,9 @@ public class CreateJobActivity extends AppCompatActivity {
     double latitude;
     double longitude;
 
+    Date dateFinish;
+    Date dateInit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,13 +150,25 @@ public class CreateJobActivity extends AppCompatActivity {
         createJobB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!checkConditions()) {
-                    Job newJob = new Job(jobName.getEditText().getText().toString(),
-                            jobDescription.getEditText().getText().toString(),
-                            Integer.parseInt(jobSalary.getEditText().getText().toString()),
-                            category,
-                            UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
-                            jobDuration.getEditText().getText().toString(),latitude, longitude, "");
+                if (!checkConditions() && checkDates()) {
+                    Job newJob;
+                    if (doItNowCheckbox.isChecked()) {
+                        newJob = new Job(jobName.getEditText().getText().toString(),
+                                jobDescription.getEditText().getText().toString(),
+                                Integer.parseInt(jobSalary.getEditText().getText().toString()),
+                                category,
+                                UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
+                                jobDuration.getEditText().getText().toString(),latitude, longitude, "", true);
+                    } else {
+                            newJob = new Job(jobName.getEditText().getText().toString(),
+                                    jobDescription.getEditText().getText().toString(),
+                                    Integer.parseInt(jobSalary.getEditText().getText().toString()),
+                                    category,
+                                    UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
+                                    jobDuration.getEditText().getText().toString(),latitude, longitude, "",
+                                    initDate.getText().toString(), finishDate.getText().toString());
+
+                    }
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     jService.createJob(jobId, newJob);
                     Intent intent = getIntent();
@@ -175,6 +190,21 @@ public class CreateJobActivity extends AppCompatActivity {
                 jobSalary.getEditText().getText().toString().trim().equals("") ||
                 jobCategoryB.getText().toString().equals(R.string.job_category) ||
                 jobDuration.getEditText().getText().toString().trim().equals(""));
+    }
+
+    public boolean checkDates() {
+        boolean areDatesRight = true;
+        if (!initDate.getText().toString().equals("") ||
+                !finishDate.getText().toString().equals("")) {
+            if (dateFinish.getTime() - dateInit.getTime() > 0){
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return areDatesRight;
+        }
+
     }
 
 
@@ -279,7 +309,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
                     final ProgressDialog progress = ProgressDialog.show(this, "Uploading Picture",
                             "Your picture is being uploaded", true);
-                    UploadTask uploadTask = mountainImagesRef.putFile(resultUri);
+                    UploadTask uploadTask = mountainImagesRef.putBytes(data2);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
@@ -338,7 +368,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-
+                        dateInit = c.getTime();
                         initDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
 
                     }
@@ -355,7 +385,7 @@ public class CreateJobActivity extends AppCompatActivity {
         mDay = c.get(Calendar.DAY_OF_MONTH);
 
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 new DatePickerDialog.OnDateSetListener() {
 
                     @Override
@@ -363,11 +393,35 @@ public class CreateJobActivity extends AppCompatActivity {
                                           int monthOfYear, int dayOfMonth) {
 
                         finishDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        c.set(year, monthOfYear, dayOfMonth, 0, 0);
+                        dateFinish = c.getTime();
+                        if (dateInit != null) {
+                            if (dateFinish.getTime() - dateInit.getTime() > 0) {
+                                Toast.makeText(getApplicationContext(), "maquinon!", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Choose a date later than " + dateInit.getTime(), Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+
+
 
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
 
+    }
+
+    @OnClick(R.id.activity_create_job_checkbox)
+    public void createNowCheckboxClicked() {
+        if (doItNowCheckbox.isChecked()) {
+            initDate.setVisibility(View.GONE);
+            finishDate.setVisibility(View.GONE);
+        } else {
+            initDate.setVisibility(View.VISIBLE);
+            finishDate.setVisibility(View.VISIBLE);
+        }
     }
 
 }
