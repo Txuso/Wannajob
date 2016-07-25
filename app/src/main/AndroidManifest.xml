@@ -84,6 +84,8 @@
             android:name=".data.service.NewBidsIntentService"
             android:exported="false" />
 
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+
         <activity android:name=".activities.JobBidWannajobersActivity" />
         <activity android:name=".activities.ShowMyBidsActivity" />
         <activity android:name=".activities.JobMatchActivity"

@@ -19,6 +19,7 @@
                 android:layout_width="90dp"
                 android:layout_gravity="center"
                 android:layout_height="90dp"
+                android:scaleType="centerCrop"
                 android:background="@drawable/ic_add_a_photo_black_24dp"
                 android:id="@+id/job_photo_button" />
             <!--  Name Label -->

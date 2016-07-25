@@ -2,6 +2,7 @@ package com.example.txuso.wannajob.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -30,6 +31,7 @@ import com.example.txuso.wannajob.misc.things.UserManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,6 +43,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -249,51 +253,65 @@ public class CreateJobActivity extends AppCompatActivity {
         if (resultCode != RESULT_OK) return;
 
         Bitmap bitmap   = null;
-        String path     = "";
 
         if (requestCode == PICK_FROM_FILE) {
             mImageCaptureUri = data.getData();
-            path = getRealPathFromURI(mImageCaptureUri); //from Gallery
+            CropImage.activity(mImageCaptureUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this);
+        }
 
-            if (path == null)
-                path = mImageCaptureUri.getPath(); //from File Manager
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri resultUri = result.getUri();
+//                bitmap = BitmapFactory.decodeFile(getRealPathFromURI(resultUri));
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
+                    byte[] data2 = baos.toByteArray();
 
-            if (path != null)
-                bitmap  = BitmapFactory.decodeFile(path);
-        } else {
-            path    = mImageCaptureUri.getPath();
-            bitmap  = BitmapFactory.decodeFile(path);
+                    imageP.setImageBitmap(bitmap);
+                    StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
+
+                    // Create a reference to 'images/mountains.jpg'
+                    StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
+                    final ProgressDialog progress = ProgressDialog.show(this, "Uploading Picture",
+                            "Your picture is being uploaded", true);
+                    UploadTask uploadTask = mountainImagesRef.putFile(resultUri);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle unsuccessful uploads
+                            progress.dismiss();
+
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            if (downloadUrl.toString() != null) {
+                                imageURL = downloadUrl.toString();
+                                progress.dismiss();
+
+                            }
+                        }
+                    });
+                } catch (IOException e) {
+
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
         }
         //imageURL = sService.uploadTaskImage(jobId, bitmap);
         //imageURL = ImageManager.encodeTobase64(bitmap);
         // Create a storage reference from our app
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
 
-        // Create a reference to 'images/mountains.jpg'
-        StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, baos);
-        byte[] data2 = baos.toByteArray();
-
-        UploadTask uploadTask = mountainImagesRef.putBytes(data2);
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                if (downloadUrl.toString() != null) {
-                    imageURL = downloadUrl.toString();
-                }
-            }
-        });
-        imageP.setBackground(null);
-        imageP.setImageBitmap(Bitmap.createScaledBitmap(bitmap,100, 100, false));
     }
 
     public String getRealPathFromURI(Uri contentUri) {
