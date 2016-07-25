@@ -72,6 +72,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private List<JobListItem> jobs;
     private List<UserOpinionListItem> opinions;
     int numberJobsCounter;
+    int numberOpinionsCounter;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
     Firebase mFirebaseRef;
@@ -111,6 +112,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @Bind(R.id.activity_user_profile_show_jobs_number)
     TextView jobNumber;
 
+    @Bind(R.id.activity_user_profile_show_opinions_number)
+    TextView opinionNumber;
+
     @Bind(R.id.activity_user_profile_show_opinions)
     LinearLayout myOpinionsLayout;
 
@@ -142,6 +146,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_user_profile);
         ButterKnife.bind(this);
         numberJobsCounter = 0;
+        numberOpinionsCounter = 0;
         userID = getIntent().getExtras().getString(EXTRA_USER_ID);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
@@ -199,6 +204,38 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 if (job.get("creatorID").toString().equals(userID)) {
                     numberJobsCounter++;
                     jobNumber.setText(numberJobsCounter + "");
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        mUserOpinionRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                if (job.get("userID").toString().equals(userID)) {
+                    numberOpinionsCounter++;
+                    opinionNumber.setText(numberOpinionsCounter + "");
                 }
 
             }
