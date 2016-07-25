@@ -25,6 +25,7 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class ShowJobMapActivity extends AppCompatActivity {
 
@@ -56,14 +57,15 @@ public class ShowJobMapActivity extends AppCompatActivity {
         mFirebaseRef.child("wannaJobs").addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                final Job job = dataSnapshot.getValue(Job.class);
+                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
 
-                double latitude2 = job.getLatitude();
-                double longitude2 = job.getLongitude();
+                double latitude2 = Double.parseDouble(job.get("latitude").toString());
+                double longitude2 = Double.parseDouble(job.get("longitude").toString());
                 double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
                 if (distance <= 50) {
-                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(job.getLatitude(), job.getLongitude())).title(job.getName()));
+                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude2,
+                            longitude2)).title(job.get("name").toString()));
                     jobMarkerId.put(m, dataSnapshot.getKey());
 
                 }

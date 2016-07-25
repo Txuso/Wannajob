@@ -428,6 +428,12 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ButterKnife.bind(this);
+        onRefresh();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

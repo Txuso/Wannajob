@@ -102,10 +102,14 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
                         mFirebaseRef2.child("wannaJobs").addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                                final Job job = dataSnapshot.getValue(Job.class);
+                                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
                                 if (key.equals(dataSnapshot.getKey())) {
-                                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), job.getCreatorID(), job.getDescription());
-                                    item.setImageUrl(job.getJobImage());
+                                    item = new JobListItem(dataSnapshot.getKey(),
+                                            job.get("name").toString(),
+                                            Integer.parseInt(job.get("salary").toString()),
+                                            job.get("creatorID").toString(),
+                                            job.get("description").toString());
+                                    item.setImageUrl(job.get("jobImage").toString());
                                     adapter = new RVJobAdapter(jobs, getApplicationContext());
                                     jobs.add(item);
 
@@ -116,8 +120,8 @@ public class UserFavoriteJobsActivity extends AppCompatActivity implements Swipe
 
                                             Intent showJob = new Intent(UserFavoriteJobsActivity.this, ShowJobActivity.class);
                                             showJob.putExtra("jobID", jobs.get(position).getJobID());
-                                            showJob.putExtra("toID", job.getCreatorID());
-                                            showJob.putExtra("to", job.getName());
+                                            showJob.putExtra("toID", job.get("creatorID").toString());
+                                            showJob.putExtra("to", job.get("name").toString());
                                             //showJob.putExtra("image", byteArray);
                                             startActivityForResult(showJob, 1);
                                         }
