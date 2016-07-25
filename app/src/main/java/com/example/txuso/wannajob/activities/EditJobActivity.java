@@ -309,7 +309,7 @@ public class EditJobActivity extends AppCompatActivity {
     @OnClick(R.id.activity_edit_job_eliminate_button)
     public void eliminateJob() {
 
-        DialogUtils.buildAlertDialog(getApplicationContext())
+        DialogUtils.buildAlertDialog(EditJobActivity.this)
                 .setMessage(getString(R.string.eliminate_job_dialog))
                 .setCancelable(true)
                 .setPositiveButton(R.string.dialog_yes, new DialogInterface.OnClickListener() {

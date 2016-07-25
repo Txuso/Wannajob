@@ -429,9 +429,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        ButterKnife.bind(this);
+    protected void onRestart() {
+        super.onRestart();
         onRefresh();
     }
 
@@ -595,9 +594,6 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
 
     @Override
     public void onRefresh() {
