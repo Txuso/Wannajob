@@ -6,14 +6,14 @@ package com.example.txuso.wannajob.data.model.classes;
 public class UserOpinion {
 
     private String fromUser;
-    private float stars;
+    private int stars;
     private String jobName;
     private String imageUrl;
     private String opinion;
     private String fromId;
     private String toID;
 
-    public UserOpinion(String fromUser, String jobName, String opinion, float stars, String imageUrl, String toID, String fromId) {
+    public UserOpinion(String fromUser, String jobName, String opinion, int stars, String imageUrl, String toID, String fromId) {
         this.fromUser = fromUser;
         this.imageUrl = imageUrl;
         this.jobName = jobName;
@@ -55,11 +55,11 @@ public class UserOpinion {
         this.imageUrl = imageUrl;
     }
 
-    public float getStars() {
+    public int getStars() {
         return stars;
     }
 
-    public void setStars(float stars) {
+    public void setStars(int stars) {
         this.stars = stars;
     }
 

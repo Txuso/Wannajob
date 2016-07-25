@@ -76,6 +76,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     FirebaseStorage storage = FirebaseStorage.getInstance();
     Firebase mFirebaseRef;
     Firebase mUserJobsRef;
+    Firebase mUserOpinionRef;
 
 
     UserFirebaseService uService;
@@ -145,6 +146,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         mUserJobsRef = new Firebase("https://wannajob.firebaseio.com/");
+        mUserOpinionRef = new Firebase("https://wannajob.firebaseio.com/userOpinion");
 
         if (!userID.equals(UserManager.getUserId(this))) {
             editProfileTextView.setVisibility(View.GONE);
@@ -502,24 +504,61 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     @OnClick(R.id.activity_user_profile_show_opinions)
     public void showMyOpinions() {
         opinions = new ArrayList<>();
-        UserOpinionListItem u = new UserOpinionListItem("Josu","Limpiar Gracia","Hostia pues el tio este lo hizo de puta madre aisj dasjn asoidasoijd oiasjd iasjd oiasj doiajsdoijasodij asoidjasoijdiaosjd oiasjdioasjoiasjdoiajsdoiasjdoijasdasas ", 4,"https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F10208281696393233.jpg?alt=media&token=0ec08cc7-92de-4f01-929f-0fb6f681a9fc", "10208529824393627");
-        opinions.add(u);
-        opinions.add(u);
-        opinions.add(u);
-        opinions.add(u);
-        rvUserOpinionAdapter = new RVUserOpinionAdapter(opinions, getApplicationContext());
-        rvUserOpinionAdapter.SetOnItemClickListener(new RVUserOpinionAdapter.OnItemClickListener() {
+        //
+        //rv.setAdapter(adapter);
+        mUserOpinionRef.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onItemClick(View view, int position) {
-                Intent showJob = showOtherUserProfileIntent(getApplicationContext(), opinions.get(position).getUserID());
-                //showJob.putExtra("image", byteArray);
-                startActivity(showJob);
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                final Map<String, Object> opinion = (Map<String, Object>) dataSnapshot.getValue();
+                if (opinion.get("userID").toString().equals(UserManager.getUserId(UserProfileActivity.this))) {
+                    UserOpinionListItem userOpinion = new UserOpinionListItem(opinion.get("name").toString(),
+                            opinion.get("jobName").toString(),
+                            opinion.get("opinion").toString(),
+                            Integer.parseInt(opinion.get("stars").toString()),
+                            opinion.get("imageUrl").toString(),
+                            opinion.get("fromId").toString());
+                    opinions.add(userOpinion);
+
+                }
+                rvUserOpinionAdapter = new RVUserOpinionAdapter(opinions, getApplicationContext());
+                rvUserOpinionAdapter.SetOnItemClickListener(new RVUserOpinionAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent showJob = showOtherUserProfileIntent(getApplicationContext(), opinions.get(position).getUserID());
+                        //showJob.putExtra("image", byteArray);
+                        startActivity(showJob);
+                    }
+                });
+                rv.setAdapter(rvUserOpinionAdapter);
+                rv.setHasFixedSize(true);
+                swipeRefreshLayout.setRefreshing(false);
+                rv.setLayoutManager(new LinearLayoutManager(UserProfileActivity.this));
+
             }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+
+
         });
-        rv.setAdapter(rvUserOpinionAdapter);
-        rv.setHasFixedSize(true);
-        swipeRefreshLayout.setRefreshing(false);
-        rv.setLayoutManager(new LinearLayoutManager(this));
 
     }
 }

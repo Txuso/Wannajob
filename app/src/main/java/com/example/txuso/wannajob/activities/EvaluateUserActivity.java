@@ -92,7 +92,8 @@ public class EvaluateUserActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         UserOpinion opinion = new UserOpinion(
                                 UserManager.getUserName(getApplicationContext()), jobName,
-                                opinionText.getEditText().getText().toString(),rating.getRating(),
+                                opinionText.getEditText().getText().toString(),
+                                Math.round(rating.getRating()),
                                 UserManager.getUserPhoto(getApplicationContext()),toId,
                                 UserManager.getUserId(getApplicationContext()));
                         mFirebaseRef.push().setValue(opinion);
