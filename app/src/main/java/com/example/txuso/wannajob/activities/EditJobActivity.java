@@ -316,7 +316,7 @@ public class EditJobActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         mFirebaseRef.child(jobID).removeValue();
-                        Intent main = new Intent(EditJobActivity.this, UserProfileActivity.class);
+                        Intent main = new Intent(EditJobActivity.this, MainActivity.class);
                         startActivity(main);
                         dialog.dismiss();
                     }

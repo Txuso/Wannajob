@@ -395,17 +395,6 @@ public class CreateJobActivity extends AppCompatActivity {
                         finishDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                         c.set(year, monthOfYear, dayOfMonth, 0, 0);
                         dateFinish = c.getTime();
-                        if (dateInit != null) {
-                            if (dateFinish.getTime() - dateInit.getTime() > 0) {
-                                Toast.makeText(getApplicationContext(), "maquinon!", Toast.LENGTH_SHORT).show();
-
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Choose a date later than " + dateInit.getTime(), Toast.LENGTH_SHORT).show();
-                            }
-
-                        }
-
-
 
                     }
                 }, mYear, mMonth, mDay);
