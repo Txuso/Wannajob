@@ -2,7 +2,9 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorWhite">#FFFF</color>
+    <color name="colorOrangeBid">#fac850</color>
     <color name="color_menufont">#555555</color>
+    <color name="colorBlack">#000000</color>
     <color name="color_texmenutop">#989898</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorGreen">#4fad60</color>
