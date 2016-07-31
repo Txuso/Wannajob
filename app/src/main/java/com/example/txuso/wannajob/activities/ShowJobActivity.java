@@ -164,123 +164,124 @@ public class ShowJobActivity extends AppCompatActivity  {
         checkIfBid();
 
         collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
+        if (UserManager.getIsUserLogged(ShowJobActivity.this)) {
+            mFirebaseRef.child("wannaJobs").child(jobID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
+                    if (job != null) {
+                        collapsingToolbarLayout.setTitle(job.get("name").toString());
+                        creatorID = job.get("creatorID").toString();
 
-        mFirebaseRef.child("wannaJobs").child(jobID).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final Map<String, Object> job = (Map<String, Object>) dataSnapshot.getValue();
-                if (job != null) {
-                    collapsingToolbarLayout.setTitle(job.get("name").toString());
-                    creatorID = job.get("creatorID").toString();
-
-                    if (creatorID.equals(fromId)) {
-                        likeButton.setVisibility(View.GONE);
-                        isMine = true;
-                        betButton.setBackgroundResource(R.color.colorAccent);
-                        betButton.setText(R.string.show_job_activity_edit_job);
-                        jobBidsLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
-                            }
-                        });
-                    }
-                    if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
-                        likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
-                    }
-                    else {
-                        likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
-
-                    }
-                    // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
-
-                    //  Picasso.with(getApplicationContext()).load()
-                    // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
-
-                    if (job.get("bidNumber")  != null) {
-                        bidNumber = (long) job.get("bidNumber");
-                    }
-                    else {
-                        bidNumber = 0;
-                    }
-                    if (job.get("viewNumber") != null) {
-                        viewNumber = (long) job.get("viewNumber");
-                    }
-                    else {
-                        viewNumber = 0;
-                    }
-
-                    if (job.get("selectedUserID") != null &&
-                            job.get("selectedUserID").
-                                    toString().
-                                    equals(UserManager.getUserId(getApplicationContext()))) {
-                        if (job.get("selectedUserID").toString().equals(UserManager.getUserId(getApplicationContext()))) {
-                            betButton.setVisibility(View.GONE);
-                            i.putExtra("toID", creatorID);
-                            i.putExtra("jobID", jobID);
-                            i.putExtra("number", job.get("selectedUserNumber").toString());
-                            i.putExtra("jobName", jobName.getText().toString());
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(i);
+                        if (creatorID.equals(fromId)) {
+                            likeButton.setVisibility(View.GONE);
+                            isMine = true;
+                            betButton.setBackgroundResource(R.color.colorAccent);
+                            betButton.setText(R.string.show_job_activity_edit_job);
+                            jobBidsLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                                }
+                            });
                         }
-                    }
+                        if (!UserManager.isUserfavoriteJob(getApplicationContext(), jobID)) {
+                            likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_gray);
+                        }
+                        else {
+                            likeButton.setBackgroundResource(R.drawable.rounded_corner_button_layout_red);
+
+                        }
+                        // Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.get("jobImage").toString()),100,100);
+
+                        //  Picasso.with(getApplicationContext()).load()
+                        // BitmapDrawable ob = new BitmapDrawable(getResources(), pic);
+
+                        if (job.get("bidNumber")  != null) {
+                            bidNumber = (long) job.get("bidNumber");
+                        }
+                        else {
+                            bidNumber = 0;
+                        }
+                        if (job.get("viewNumber") != null) {
+                            viewNumber = (long) job.get("viewNumber");
+                        }
+                        else {
+                            viewNumber = 0;
+                        }
+
+                        if (job.get("selectedUserID") != null &&
+                                job.get("selectedUserID").
+                                        toString().
+                                        equals(UserManager.getUserId(getApplicationContext()))) {
+                            if (job.get("selectedUserID").toString().equals(UserManager.getUserId(getApplicationContext()))) {
+                                betButton.setVisibility(View.GONE);
+                                i.putExtra("toID", creatorID);
+                                i.putExtra("jobID", jobID);
+                                i.putExtra("number", job.get("selectedUserNumber").toString());
+                                i.putExtra("jobName", jobName.getText().toString());
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+                            }
+                        }
 
 
 
-                    // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
+                        // Bitmap image =ImageManager.fromURLToBitmap(getApplicationContext(), job.get("jobImage").toString());
 //                setPalette(image);
 
 //                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
-                    int color = getResources().getColor(R.color.colorGray);
-                    collapsingToolbarLayout.setStatusBarScrimColor(color);
+                        int color = getResources().getColor(R.color.colorGray);
+                        collapsingToolbarLayout.setStatusBarScrimColor(color);
 
-                    jobName.setText(job.get("name").toString());
-                    jobDescription.setText(job.get("description").toString());
-                    jobBids.setText(bidNumber + "");
+                        jobName.setText(job.get("name").toString());
+                        jobDescription.setText(job.get("description").toString());
+                        jobBids.setText(bidNumber + "");
 
-                    jobViews.setText(viewNumber + "");
-                    jobMoney.setText(job.get("salary").toString() + "€");
-                    setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
-                    imageURL = job.get("jobImage").toString();
-                    Picasso
-                            .with(getApplicationContext())
-                            .load(job.get("jobImage").toString())
-                            .placeholder(R.drawable.photo_placeholder)
-                            .fit()
-                            .into(jobImage);
+                        jobViews.setText(viewNumber + "");
+                        jobMoney.setText(job.get("salary").toString() + "€");
+                        setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
+                        imageURL = job.get("jobImage").toString();
+                        Picasso
+                                .with(getApplicationContext())
+                                .load(job.get("jobImage").toString())
+                                .placeholder(R.drawable.photo_placeholder)
+                                .fit()
+                                .into(jobImage);
 
-                    //jobDuration.getEditText().setText(job.get("jobDuration").toString());
-                    //jobCategory.getEditText().setText(job.get("category").toString());
-                    mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString())
-                            .addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
-                                    userName.setText(user.get("name").toString());
-                                    Picasso.with(getApplicationContext()).
-                                            load(user.get("image").toString()).
-                                            centerCrop().
-                                            placeholder(R.drawable.photo_placeholder).
-                                            fit().
-                                            into(userPhoto);
-                                }
+                        //jobDuration.getEditText().setText(job.get("jobDuration").toString());
+                        //jobCategory.getEditText().setText(job.get("category").toString());
+                        mFirebaseRef.child("wannajobUsers").child(job.get("creatorID").toString())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
+                                        userName.setText(user.get("name").toString());
+                                        Picasso.with(getApplicationContext()).
+                                                load(user.get("image").toString()).
+                                                centerCrop().
+                                                placeholder(R.drawable.photo_placeholder).
+                                                fit().
+                                                into(userPhoto);
+                                    }
 
-                                @Override
-                                public void onCancelled(FirebaseError firebaseError) {
+                                    @Override
+                                    public void onCancelled(FirebaseError firebaseError) {
 
-                                }
-                            });
+                                    }
+                                });
+                    }
+
+
                 }
 
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
 
-            }
+                }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-
-        });
+            });
+        }
         userPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -292,51 +293,57 @@ public class ShowJobActivity extends AppCompatActivity  {
         betButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isMine) {
-                    Intent editJobActivity = new Intent(ShowJobActivity.this, EditJobActivity.class);
-                    editJobActivity.putExtra("jobID", jobID);
-                    editJobActivity.putExtra("imageURL", imageURL);
-                    startActivity(editJobActivity);
+                if (UserManager.getIsUserLogged(ShowJobActivity.this)) {
+
+                    if (isMine) {
+                        Intent editJobActivity = new Intent(ShowJobActivity.this, EditJobActivity.class);
+                        editJobActivity.putExtra("jobID", jobID);
+                        editJobActivity.putExtra("imageURL", imageURL);
+                        startActivity(editJobActivity);
+                    } else {
+                        final Dialog myDialog = new Dialog(ShowJobActivity.this);
+                        myDialog.getWindow();
+                        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        myDialog.setContentView(R.layout.bid_dialog);
+                        final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
+                        NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
+                        int maxValue = Integer.parseInt(
+                                jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
+                        numberPicker.setMaxValue(maxValue);
+                        bidNumberText.setText(getString(R.string.your_bid) + maxValue + " €");
+                        numberPicker.setMinValue(1);
+                        numberPicker.setValue(maxValue);
+
+                        val = maxValue;
+                        numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+                            @Override
+                            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+                                bidNumberText.setText(getString(R.string.your_bid) + newVal+" €");
+                                val = newVal;
+                            }
+                        });
+
+                        myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Bid newBid = new Bid(val, jobID, fromId);
+                                mFirebaseRef.child("bid").push().setValue(newBid);
+                                bidNumber++;
+                                mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
+                                bidLayout.setVisibility(View.VISIBLE);
+                                bidText.setText(getString(R.string.your_bid) + val + " €");
+                                //TODO NOTIFY USER
+                                mFirebaseRef.child("wannajobUsers").child(creatorID).child("newBidMessage").setValue(UserManager.getUserName(getApplicationContext()) + "^" + fromId + "^" + jobID);
+                                myDialog.cancel();
+                            }
+                        });
+
+                        myDialog.show();
+                    }
                 } else {
-                    final Dialog myDialog = new Dialog(ShowJobActivity.this);
-                    myDialog.getWindow();
-                    myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    myDialog.setContentView(R.layout.bid_dialog);
-                    final TextView bidNumberText = (TextView)myDialog.findViewById(R.id.bid_dialog_bid_number);
-                    NumberPicker numberPicker = (NumberPicker)myDialog.findViewById(R.id.bid_dialog_bid_number2);
-                    int maxValue = Integer.parseInt(
-                            jobMoney.getText().subSequence(0,jobMoney.getText().length()-1).toString());
-                    numberPicker.setMaxValue(maxValue);
-                    bidNumberText.setText(getString(R.string.your_bid) + maxValue + " €");
-                    numberPicker.setMinValue(1);
-                    numberPicker.setValue(maxValue);
-
-                    val = maxValue;
-                    numberPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                        @Override
-                        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                            bidNumberText.setText(getString(R.string.your_bid) + newVal+" €");
-                            val = newVal;
-                        }
-                    });
-
-                    myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Bid newBid = new Bid(val, jobID, fromId);
-                            mFirebaseRef.child("bid").push().setValue(newBid);
-                            bidNumber++;
-                            mFirebaseRef.child("wannaJobs").child(jobID).child("bidNumber").setValue(bidNumber);
-                            bidLayout.setVisibility(View.VISIBLE);
-                            bidText.setText(getString(R.string.your_bid) + val + " €");
-                            //TODO NOTIFY USER
-                            mFirebaseRef.child("wannajobUsers").child(creatorID).child("newBidMessage").setValue(UserManager.getUserName(getApplicationContext()) + "^" + fromId + "^" + jobID);
-                            myDialog.cancel();
-                        }
-                    });
-
-                    myDialog.show();
+                    Intent loginIntent = new Intent(ShowJobActivity.this, LoginActivity.class);
+                    startActivity(loginIntent);
                 }
 
             }

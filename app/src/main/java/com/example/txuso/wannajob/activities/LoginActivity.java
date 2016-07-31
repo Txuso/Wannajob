@@ -214,6 +214,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     intent.putExtra("latitude", (Double)wannaUser.get("latitude"));
                                     intent.putExtra("longitude", (Double)wannaUser.get("longitude"));
                                     */
+                                    UserManager.setIsUserLogged(getApplicationContext(), true);
                                     intent = new Intent(LoginActivity.this, MainActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -261,6 +262,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
                                     //We store the user in the Firebase root
                                     mFirebaseRef.child(user.getId()).setValue(newUser);
+                                    UserManager.setIsUserLogged(getApplicationContext(), true);
 
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
@@ -422,7 +424,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
     public void click() {
         UserManager.setUserName(getApplicationContext(), "Patxi");
         UserManager.setUserAge(getApplicationContext(), "25");
-        UserManager.setUserPhoto(getApplicationContext(), "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KJV4bKSeT91gkSf3vqz.jpg?alt=media&token=be415d0a-5743-4f15-98f7-5578a947421e");
+        UserManager.setUserPhoto(getApplicationContext(), "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2FWannajob1.jpg?alt=media&token=8670db7c-f1c5-49a3-a0af-337557569353");
         UserManager.setUserDescription(getApplicationContext(),"Putuuuuuun");
         Firebase newTandRef = mFirebaseRef.push();
         String logedUserID = newTandRef.getKey();
@@ -430,7 +432,7 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         UserManager.setUserLatitude(getApplicationContext(),41.3850639);
         UserManager.setUserLongitude(getApplicationContext(), 2.1734035);
         UserManager.setUserRegisteredDate(getApplicationContext(), "2016/02/10");
-        WannajobUser newUser = new WannajobUser("Patxi", "25", "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KJV4bKSeT91gkSf3vqz.jpg?alt=media&token=be415d0a-5743-4f15-98f7-5578a947421e");
+        WannajobUser newUser = new WannajobUser("Patxi", "25", "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2FWannajob1.jpg?alt=media&token=8670db7c-f1c5-49a3-a0af-337557569353");
 
         //We store the user in the Firebase root
         mFirebaseRef.child(logedUserID).setValue(newUser);

@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity
         com.example.txuso.wannajob.misc.RoundedImageView userImage = (com.example.txuso.wannajob.misc.RoundedImageView) headerView.findViewById(R.id.nav_header_main_user_photo);
         TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
 
-        userIsLogged();
 
         if (UserManager.getIsUserLogged(getApplicationContext())) {
             NewBidsIntentService.startNotificationService(getApplicationContext(), UserManager.getUserId(getApplicationContext()));
@@ -661,22 +660,4 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.unbind(this);
     }
 
-    public void userIsLogged() {
-        mFirebaseRef.child("wannajobUsers").
-                child(UserManager.getUserId(getApplicationContext())).
-                addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.getValue() != null) {
-                            UserManager.setIsUserLogged(getApplicationContext(), true);
-                        } else {
-                            UserManager.setIsUserLogged(getApplicationContext(), false);
-                        }
-                    }
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-
-                    }
-                });
-    }
 }
