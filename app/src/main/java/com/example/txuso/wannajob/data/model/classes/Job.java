@@ -22,7 +22,6 @@ public class Job {
     private boolean doItKnow;
     private String selectedUserID;
     String initDate;
-    String finishDate;
     private ArrayList<String> wannajobers;
 
     public Job (String name,
@@ -53,7 +52,6 @@ public class Job {
         this.selectedUserID = selectedUserID;
         this.doItKnow = doItKnow;
         this.initDate = "";
-        this.finishDate = "";
     }
 
     public Job (String name,
@@ -67,7 +65,7 @@ public class Job {
                 double latitude,
                 double longitude,
                 String selectedUserID,
-                String initDate, String finishDate){
+                String initDate){
         this.name = name;
         this.description = description;
         this.salary = salary;
@@ -84,7 +82,6 @@ public class Job {
         this.selectedUserID = selectedUserID;
         this.doItKnow = false;
         this.initDate = initDate;
-        this.finishDate = finishDate;
     }
 
     public Job() {
@@ -202,10 +199,6 @@ public class Job {
         this.selectedUserID = selectedUserID;
     }
 
-    public String getFinishDate() {
-        return finishDate;
-    }
-
     public boolean isDoItKnow() {
         return doItKnow;
     }
@@ -216,10 +209,6 @@ public class Job {
 
     public void setDoItKnow(boolean doItKnow) {
         this.doItKnow = doItKnow;
-    }
-
-    public void setFinishDate(String finishDate) {
-        this.finishDate = finishDate;
     }
 
     public void setInitDate(String initDate) {

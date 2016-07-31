@@ -316,6 +316,20 @@ public class EditJobActivity extends AppCompatActivity {
                     @Override
                     public void onClick(final DialogInterface dialog, int which) {
                         mFirebaseRef.child(jobID).removeValue();
+                        StorageReference storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com");
+                        StorageReference desertRef = storageRef.child("images/"+jobID +".jpg");
+
+                        desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // File deleted successfully
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Uh-oh, an error occurred!
+                            }
+                        });
                         Intent main = new Intent(EditJobActivity.this, MainActivity.class);
                         startActivity(main);
                         dialog.dismiss();

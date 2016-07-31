@@ -399,44 +399,7 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                /*
-                final Job job = dataSnapshot.getValue(Job.class);
 
-
-                double latitude2 = job.getLatitude();
-                double longitude2 = job.getLongitude();
-                double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
-
-
-                if (distance <= 25 && !adapter.findJob(dataSnapshot.getKey())) {
-
-                    Bitmap pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
-                    Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 300);
-                    BitmapDrawable ima = new BitmapDrawable(getApplicationContext().getResources(), picRounded);
-
-                    item = new JobListItem(dataSnapshot.getKey(), job.getName(), job.getSalary(), ima, job.getCreatorID(), job.getDescription());
-                    adapter = new RVUserAdapter(jobs);
-
-
-                    jobs.add(item);
-                    rv.setAdapter(adapter);
-
-                    adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
-                            showJob.putExtra("jobID", jobs.get(position).getJobID());
-                            showJob.putExtra("toID", job.getCreatorID());
-                            showJob.putExtra("to", job.getName());
-                            startActivity(showJob);
-                        }
-                    });
-
-                }
-
-                rv.setAdapter(adapter);
-                swipeRefreshLayout.setRefreshing(false);
-                */
 
                 }
 

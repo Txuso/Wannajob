@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
 
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
@@ -71,7 +72,7 @@ public class ShowMyBidsActivity extends AppCompatActivity implements SwipeRefres
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             case android.R.id.home: {
-                onBackPressed();
+                finish();
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
@@ -84,7 +85,6 @@ public class ShowMyBidsActivity extends AppCompatActivity implements SwipeRefres
     public void fetchBids() {
         jobs = new ArrayList<>();
         adapter = new RVJobAdapter(jobs, getApplicationContext());
-        rv.setAdapter(adapter);
 
         mFirebaseRef.child("bid").addChildEventListener(new ChildEventListener() {
             @Override
@@ -105,16 +105,22 @@ public class ShowMyBidsActivity extends AppCompatActivity implements SwipeRefres
                             adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View view, int position) {
-                                    Intent showJob = new Intent(ShowMyBidsActivity.this, ShowJobActivity.class);
+                                    Intent showJob = ShowJobActivity.
+                                            createShowJobFromMyBids(getApplicationContext(),
+                                                    jobs.get(position).getJobID());
                                     showJob.putExtra("jobID", jobs.get(position).getJobID());
                                     //showJob.putExtra("image", byteArray);
-                                    startActivityForResult(showJob, 2);
+                                    startActivity(showJob);
+
                                 }
                             });
-                            rv.setAdapter(adapter);
-                            rv.setHasFixedSize(true);
-                            swipeRefreshLayout.setRefreshing(false);
-                            rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                            if (adapter != null) {
+                                ButterKnife.bind(ShowMyBidsActivity.this);
+                                rv.setAdapter(adapter);
+                                rv.setHasFixedSize(true);
+                                swipeRefreshLayout.setRefreshing(false);
+                                rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                            }
 
                         }
 
@@ -148,18 +154,10 @@ public class ShowMyBidsActivity extends AppCompatActivity implements SwipeRefres
         });
 
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (resultCode == RESULT_OK && requestCode == 2){
-            fetchBids();
-        }
-    }
-
 
     @Override
     public void onRefresh() {
+        fetchBids();
         swipeRefreshLayout.setRefreshing(false);
     }
 

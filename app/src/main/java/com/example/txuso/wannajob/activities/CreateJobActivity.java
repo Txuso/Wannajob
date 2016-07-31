@@ -95,8 +95,6 @@ public class CreateJobActivity extends AppCompatActivity {
     @Bind(R.id.activity_create_job_checkbox)
     CheckBox doItNowCheckbox;
 
-    @Bind(R.id.in_finish_date)
-    EditText finishDate;
     private int mYear, mMonth, mDay, mHour, mMinute;
 
     double latitude;
@@ -150,8 +148,11 @@ public class CreateJobActivity extends AppCompatActivity {
         createJobB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!checkConditions() && checkDates()) {
+                if (!checkConditions()) {
                     Job newJob;
+                    if (imageURL.equals("")) {
+                        imageURL = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2FWannajob1.jpg?alt=media&token=8670db7c-f1c5-49a3-a0af-337557569353";
+                    }
                     if (doItNowCheckbox.isChecked()) {
                         newJob = new Job(jobName.getEditText().getText().toString(),
                                 jobDescription.getEditText().getText().toString(),
@@ -166,12 +167,13 @@ public class CreateJobActivity extends AppCompatActivity {
                                     category,
                                     UserManager.getUserId(getApplicationContext()), new SimpleDateFormat("yyyy/MM/dd").format(new Date()), imageURL,
                                     jobDuration.getEditText().getText().toString(),latitude, longitude, "",
-                                    initDate.getText().toString(), finishDate.getText().toString());
+                                    initDate.getText().toString());
 
                     }
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     jService.createJob(jobId, newJob);
                     Intent intent = new Intent(CreateJobActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
 
@@ -184,29 +186,12 @@ public class CreateJobActivity extends AppCompatActivity {
     }
 
     public boolean checkConditions () {
-        return (imageURL.equals("") ||
-                jobName.getEditText().getText().toString().trim().equals("") ||
+        return (jobName.getEditText().getText().toString().trim().equals("") ||
                 jobDescription.getEditText().getText().toString().trim().equals("") ||
                 jobSalary.getEditText().getText().toString().trim().equals("") ||
                 jobCategoryB.getText().toString().equals(R.string.job_category) ||
                 jobDuration.getEditText().getText().toString().trim().equals(""));
     }
-
-    public boolean checkDates() {
-        boolean areDatesRight = true;
-        if (!initDate.getText().toString().equals("") ||
-                !finishDate.getText().toString().equals("")) {
-            if (dateFinish.getTime() - dateInit.getTime() > 0){
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return areDatesRight;
-        }
-
-    }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -312,8 +297,8 @@ public class CreateJobActivity extends AppCompatActivity {
 
                     // Create a reference to 'images/mountains.jpg'
                     StorageReference mountainImagesRef = storageRef.child("images/"+jobId +".jpg");
-                    final ProgressDialog progress = ProgressDialog.show(this, "Uploading Picture",
-                            "Your picture is being uploaded", true);
+                    final ProgressDialog progress = ProgressDialog.show(this, "Procesando imagen",
+                            "La imagen está siendo procesada, espere un momento.", true);
                     UploadTask uploadTask = mountainImagesRef.putBytes(data2);
                     uploadTask.addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -381,40 +366,12 @@ public class CreateJobActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    @OnClick(R.id.in_finish_date)
-    public void chooseFinishDate() {
-        // Get Current Time
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-
-
-        final DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
-
-                        finishDate.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-                        c.set(year, monthOfYear, dayOfMonth, 0, 0);
-                        dateFinish = c.getTime();
-
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-
-    }
-
     @OnClick(R.id.activity_create_job_checkbox)
     public void createNowCheckboxClicked() {
         if (doItNowCheckbox.isChecked()) {
             initDate.setVisibility(View.GONE);
-            finishDate.setVisibility(View.GONE);
         } else {
             initDate.setVisibility(View.VISIBLE);
-            finishDate.setVisibility(View.VISIBLE);
         }
     }
 

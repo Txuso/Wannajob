@@ -1,11 +1,13 @@
 package com.example.txuso.wannajob.activities;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -124,6 +126,15 @@ public class ShowJobActivity extends AppCompatActivity  {
 
     StorageReference storageRef;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    boolean fromMyBids = false;
+
+
+    public static Intent createShowJobFromMyBids(@NonNull Context context, String jobId) {
+        Intent intent = new Intent(context, ShowJobActivity.class);
+        intent.putExtra("JobID", jobId);
+        intent.putExtra("fromMyBids", true);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +142,10 @@ public class ShowJobActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_show_job);
         ButterKnife.bind(this);
         extras = getIntent().getExtras();
+
+        if (extras.get("fromMyBids") != null) {
+            fromMyBids = extras.getBoolean("fromMyBids");
+        }
 
         storageRef = storage.getReferenceFromUrl("gs://project-6871569626797643888.appspot.com/images");
 
@@ -425,7 +440,12 @@ public class ShowJobActivity extends AppCompatActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                finish();
+                if (fromMyBids) {
+                    finish();
+                } else {
+                    finish();
+                    updateViews();
+                }
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
@@ -433,15 +453,6 @@ public class ShowJobActivity extends AppCompatActivity  {
                 return super.onOptionsItemSelected(item);
 
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onResume();
-        Intent intent = getIntent();
-        setResult(RESULT_OK, intent);
-        finish();
-        updateViews();
     }
 
     @OnClick(R.id.activity_show_job_like_button)
