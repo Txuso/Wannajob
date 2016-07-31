@@ -51,11 +51,6 @@ public class ShowJobVacanciesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         jobID = UserManager.getUserId(this);
-        final String fromId = extras.getString("fromID");
-        final String toId = extras.getString("toID");
-        final String to = extras.getString("to");
-
-        final Intent chat = new Intent(this, ChatActivity.class);
 
 
 

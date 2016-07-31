@@ -133,6 +133,10 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
                                 mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserNumber").setValue(userNumber.getEditText().getText().toString());
                                 mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
                                 mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
+                                myDialog.dismiss();
+                                Toast.makeText(context,
+                                        "Contacto enviado. Tu Wannajober se pondrá en contacto en seguida. No te olvides de evaluar su servicio!!", Toast.LENGTH_LONG).show();
+
                             }
                         }
                     });

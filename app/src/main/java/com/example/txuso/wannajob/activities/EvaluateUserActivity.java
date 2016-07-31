@@ -97,6 +97,10 @@ public class EvaluateUserActivity extends AppCompatActivity {
                                 UserManager.getUserPhoto(getApplicationContext()),toId,
                                 UserManager.getUserId(getApplicationContext()));
                         mFirebaseRef.push().setValue(opinion);
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Tu valoración ha sido enviada correctamente." +
+                                "No dudes en seguir Wannajobeando! :)", Toast.LENGTH_SHORT).show();
+
 
                     }
                 });

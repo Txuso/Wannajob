@@ -122,7 +122,6 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
             adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-
                     Intent showUser = UserProfileActivity.showOtherUserProfileIntent(getApplicationContext(), userId);
                     startActivity(showUser);
                 }
