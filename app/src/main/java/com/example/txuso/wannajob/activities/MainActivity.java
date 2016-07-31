@@ -90,7 +90,6 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
-        Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
        // Intent service = new Intent(this, NotificationHandler.class);
         //service.putExtra("userID", extras.getString("userID"));

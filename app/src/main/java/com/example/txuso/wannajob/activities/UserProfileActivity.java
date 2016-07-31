@@ -48,6 +48,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -88,7 +89,7 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private static final int PICK_FROM_CAMERA = 1;
     private static final int PICK_FROM_FILE = 2;
 
-    private GoogleMap mMap;
+    private SupportMapFragment mMap;
 
     String imageURL = "";
 
@@ -363,11 +364,14 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.user_map))
-                    .getMap();
-            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
-
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.user_map));
+            mMap.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+                }
+            });
             // Check if we were successful in obtaining the map.
 
         }

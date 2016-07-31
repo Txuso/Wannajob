@@ -69,7 +69,7 @@ public class ShowMyJobsActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(View view, int position) {
 
-                            Intent showJob = new Intent(ShowMyJobsActivity.this, ShowJobVacanciesActivity.class);
+                            Intent showJob = new Intent(ShowMyJobsActivity.this, ShowJobActivity.class);
                             showJob.putExtra("jobID", dataSnapshot.getKey());
                             showJob.putExtra("fromID", userID);
                             showJob.putExtra("toID", job.get("creatorID").toString());

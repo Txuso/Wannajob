@@ -16,6 +16,7 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -29,11 +30,12 @@ import java.util.Map;
 
 public class ShowJobMapActivity extends AppCompatActivity {
 
-    private GoogleMap mMap;
+    private SupportMapFragment mMap;
     Geocoder gc;
     Bundle extras;
     Double longitude;
     Double latitude;
+    GoogleMap map;
     Firebase mFirebaseRef;
     HashMap<Marker, String> jobMarkerId = new HashMap<>();
 
@@ -46,6 +48,8 @@ public class ShowJobMapActivity extends AppCompatActivity {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
+        setUpMapIfNeeded();
 
         extras = getIntent().getExtras();
         longitude = extras.getDouble("longitude");
@@ -64,7 +68,7 @@ public class ShowJobMapActivity extends AppCompatActivity {
                 double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
                 if (distance <= 50) {
-                    Marker m = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude2,
+                    Marker m = map.addMarker(new MarkerOptions().position(new LatLng(latitude2,
                             longitude2)).title(job.get("name").toString()));
                     jobMarkerId.put(m, dataSnapshot.getKey());
 
@@ -117,30 +121,28 @@ public class ShowJobMapActivity extends AppCompatActivity {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
-            mMap.setMyLocationEnabled(true);
-            // Check if we were successful in obtaining the map.
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+            mMap.getMapAsync(new OnMapReadyCallback() {
                 @Override
-                public boolean onMarkerClick(Marker marker) {
-                    Intent showJob = new Intent(ShowJobMapActivity.this, ShowJobActivity.class);
-                    showJob.putExtra("jobID", jobMarkerId.get(marker));
-                    startActivity(showJob);
-                    return false;
+                public void onMapReady(GoogleMap googleMap) {
+                    map = googleMap;
+                    // Check if we were successful in obtaining the map.
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+                    googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            Intent showJob = new Intent(ShowJobMapActivity.this, ShowJobActivity.class);
+                            showJob.putExtra("jobID", jobMarkerId.get(marker));
+                            startActivity(showJob);
+                            return false;
+                        }
+                    });
                 }
             });
 
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                    @Override
-                    public void onMyLocationChange(Location location) {
-                        //We draw a marker in our current position
 
 
-                    }
-                });
+
 
         }
     }

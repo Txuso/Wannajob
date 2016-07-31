@@ -36,6 +36,7 @@ import java.util.Map;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -57,7 +58,7 @@ public class ShowJobActivity extends AppCompatActivity  {
     int val;
     long bidNumber = 0;
     long viewNumber = 0;
-    private GoogleMap mMap;
+    private SupportMapFragment mMap;
     boolean isMine = false;
     boolean isFav = false;
     String imageURL = "";
@@ -505,31 +506,19 @@ public class ShowJobActivity extends AppCompatActivity  {
         });
     }
 
-    private void setUpMapIfNeeded(double latitude, double longitude) {
+    private void setUpMapIfNeeded(final double latitude, final double longitude) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.activity_show_job_user_map))
-                    .getMap();
-//            mMap.setMyLocationEnabled(true);
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.activity_show_job_user_map));
+            mMap.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("It's Me!"));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 12.0f));
+                }
+            });
 
-
-                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
-                    @Override
-                    public void onMyLocationChange(Location location) {
-                        //We draw a marker in our current position
-
-
-
-                    }
-                });
-
-            }
         }
     }
 
