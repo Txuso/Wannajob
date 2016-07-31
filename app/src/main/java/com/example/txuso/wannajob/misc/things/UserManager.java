@@ -109,7 +109,7 @@ public class UserManager {
 
     public static String getUserPhoto(@NonNull Context context) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.getString(USER_PHOTO, "");
+        return sharedPreferences.getString(USER_PHOTO, "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KNXaoe-WMIyO-F0_4p9.jpg?alt=media&token=684439ea-83e1-4de7-a892-ef639e9064b1");
     }
 
     public static void setUserPhoto(@NonNull Context context, String userPhoto) {
@@ -153,6 +153,27 @@ public class UserManager {
         Set<String> favorites = getUserfavoriteJobs(context);
         favorites.remove(userFavoriteJobs);
         sharedPreferences.edit().putStringSet(USER_FAVORITE_JOBS, favorites).apply();
+    }
+
+
+    private static final String IS_USER_LOGGED = "isUserLogged";
+
+
+    public static boolean getIsUserLogged(@NonNull Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return sharedPreferences.getBoolean(IS_USER_LOGGED, false);
+    }
+
+    public static void setIsUserLogged(@NonNull Context context, boolean isUserLogged) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPreferences.edit().putBoolean(IS_USER_LOGGED, isUserLogged).commit();
+    }
+
+    public static void removeSharedPrefData(@NonNull Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.commit();
     }
 
 }

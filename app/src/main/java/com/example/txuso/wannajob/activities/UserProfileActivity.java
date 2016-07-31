@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -152,7 +153,6 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         mUserJobsRef = new Firebase("https://wannajob.firebaseio.com/");
         mUserOpinionRef = new Firebase("https://wannajob.firebaseio.com/userOpinion");
-
         if (!userID.equals(UserManager.getUserId(this))) {
             editProfileTextView.setVisibility(View.GONE);
             mFirebaseRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {

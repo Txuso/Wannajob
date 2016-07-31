@@ -1,6 +1,7 @@
 package com.example.txuso.wannajob.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.txuso.wannajob.data.model.classes.JobListItem;
 import com.example.txuso.wannajob.R;
@@ -39,6 +41,7 @@ import java.util.Map;
 import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
+import com.firebase.client.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -89,33 +92,110 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
-
        // Intent service = new Intent(this, NotificationHandler.class);
         //service.putExtra("userID", extras.getString("userID"));
         //this.startService(service);
 
-        NewBidsIntentService.startNotificationService(getApplicationContext(), UserManager.getUserId(getApplicationContext()));
-
         latitude = UserManager.getUserLatitude(this);
         longitude = UserManager.getUserLongitude(this);
-
         swipeRefreshLayout.setOnRefreshListener(this);
-        //we get data from the Facebook account
-        if (latitude == 0 || longitude == 0) {
-            gps = new GPSTracker(MainActivity.this);
-            if (gps.canGetLocation()) {
 
-                latitude = (long)gps.getLatitude();
-                mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("latitude").setValue(latitude);
-                UserManager.setUserLatitude(this,latitude);
+        headerView = navigationView.getHeaderView(0);
+        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.nav_header_profile);
+        com.example.txuso.wannajob.misc.RoundedImageView userImage = (com.example.txuso.wannajob.misc.RoundedImageView) headerView.findViewById(R.id.nav_header_main_user_photo);
+        TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
 
-                longitude = (long)gps.getLongitude();
-                mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("longitude").setValue(longitude);
-                UserManager.setUserLongitude(this,longitude);
+        userIsLogged();
 
-            } else
-                gps.showSettingsAlert();
+        if (UserManager.getIsUserLogged(getApplicationContext())) {
+            NewBidsIntentService.startNotificationService(getApplicationContext(), UserManager.getUserId(getApplicationContext()));
+            if (latitude == 0 || longitude == 0) {
+                gps = new GPSTracker(MainActivity.this);
+                if (gps.canGetLocation()) {
+
+                    latitude = gps.getLatitude();
+                    mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("latitude").setValue(latitude);
+                    UserManager.setUserLatitude(this,latitude);
+
+                    longitude = gps.getLongitude();
+                    mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("longitude").setValue(longitude);
+                    UserManager.setUserLongitude(this,longitude);
+
+
+                } else
+                    gps.showSettingsAlert();
+            }
+
+
+            /**
+             * We set the navigation drawer that will be displayed to the user
+             */
+            navigationView.setNavigationItemSelectedListener(this);
+
+            /**
+             * We get the header so that the user can click on it and
+             * go to his/her profiles when it is clicked
+             */
+            headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
+            Picasso
+                    .with(getApplicationContext())
+                    .load(UserManager.getUserPhoto(this))
+                    .fit()
+                    .into(userImage);
+            //   headerJobs.append(new StringBuffer(countJobs+""));
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent userProf = UserProfileActivity.showMyUserProfileIntent(MainActivity.this);
+                    startActivity(userProf);
+                }
+            });
+
+            createJob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
+                    startActivity(newJobIntent);
+
+                }
+            });
+            /**
+             * The drawer layout settings
+             */
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
+        } else {
+                gps = new GPSTracker(MainActivity.this);
+                if (gps.canGetLocation()) {
+
+                    latitude = 41.3850639;
+                    longitude = 2.1734035;
+                } else
+                    gps.showSettingsAlert();
+
+            headerName.append("Login now");
+            final Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+
+            userImage.setImageResource(R.drawable.wannajob_login_image);
+            //   headerJobs.append(new StringBuffer(countJobs+""));
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(loginIntent);
+                }
+            });
+            createJob.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(loginIntent);
+                }
+            });
         }
+
+        //we get data from the Facebook account
+
 
 
         swipeRefreshLayout.post(new Runnable() {
@@ -143,50 +223,11 @@ public class MainActivity extends AppCompatActivity
         /**
          * The floating button that allows the creation of jobs
          */
-        createJob.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent newJobIntent = new Intent(MainActivity.this, CreateJobActivity.class);
 
-                startActivityForResult(newJobIntent, 3);
-            }
-        });
 
-        /**
-         * The drawer layout settings
-         */
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
 
-        /**
-         * We set the navigation drawer that will be displayed to the user
-         */
-        navigationView.setNavigationItemSelectedListener(this);
 
-        /**
-         * We get the header so that the user can click on it and
-         * go to his/her profiles when it is clicked
-         */
-        headerView = navigationView.getHeaderView(0);
-        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.nav_header_profile);
-        com.example.txuso.wannajob.misc.RoundedImageView userImage = (com.example.txuso.wannajob.misc.RoundedImageView) headerView.findViewById(R.id.nav_header_main_user_photo);
-        TextView headerName = (TextView) headerView.findViewById(R.id.nav_header_main_user_name);
-        headerName.append(new StringBuffer(UserManager.getUserName(getApplicationContext())));
-        Picasso
-                .with(getApplicationContext())
-                .load(UserManager.getUserPhoto(this))
-                .fit()
-                .into(userImage);
-         //   headerJobs.append(new StringBuffer(countJobs+""));
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent userProf = UserProfileActivity.showMyUserProfileIntent(MainActivity.this);
-                startActivity(userProf);
-            }
-        });
+
         // rv.setLayoutManager(llm);
       //  rv.setHasFixedSize(true);
     }
@@ -442,40 +483,42 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
-        searchView.setQueryHint(getString(R.string.search_key_word));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        if (UserManager.getIsUserLogged(getApplicationContext())) {
+            getMenuInflater().inflate(R.menu.main, menu);
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+            searchView.setQueryHint(getString(R.string.search_key_word));
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                onSearchRequested();
-                wordJobs = adapter.findJobsByWord(query);
-                adapter = new RVJobAdapter(wordJobs, getApplicationContext());
-                adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    onSearchRequested();
+                    wordJobs = adapter.findJobsByWord(query);
+                    adapter = new RVJobAdapter(wordJobs, getApplicationContext());
+                    adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
 
-                        Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
-                        showJob.putExtra("jobID", jobs.get(position).getJobID());
-                        showJob.putExtra("toID", jobs.get(position).getCreatorID());
-                        showJob.putExtra("to", jobs.get(position).getName());
-                        //showJob.putExtra("image", byteArray);
-                        startActivity(showJob);
-                    }
-                });
-                rv.setAdapter(adapter);
-                return false;
-            }
+                            Intent showJob = new Intent(MainActivity.this, ShowJobActivity.class);
+                            showJob.putExtra("jobID", jobs.get(position).getJobID());
+                            showJob.putExtra("toID", jobs.get(position).getCreatorID());
+                            showJob.putExtra("to", jobs.get(position).getName());
+                            //showJob.putExtra("image", byteArray);
+                            startActivity(showJob);
+                        }
+                    });
+                    rv.setAdapter(adapter);
+                    return false;
+                }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-        menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
-        menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
-        menu.add(2, 2, 2, getString(R.string.reset_filters)).setShortcut('3', 'c');
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+            menu.add(0, 0, 0, getString(R.string.sort_by_salary)).setShortcut('3', 'c');
+            menu.add(1, 1, 1, getString(R.string.sort_by_distance)).setShortcut('3', 'c');
+            menu.add(2, 2, 2, getString(R.string.reset_filters)).setShortcut('3', 'c');
+        }
 
         return super.onCreateOptionsMenu(menu);
 
@@ -644,8 +687,6 @@ public class MainActivity extends AppCompatActivity
                                         }
                                     }
             );
-        } else if (resultCode == RESULT_OK && requestCode == 3){
-            fetchJobs(latitude,longitude, UserManager.NOT_CATEGORY_FILTER);
         }
 
 
@@ -655,5 +696,24 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+    }
+
+    public void userIsLogged() {
+        mFirebaseRef.child("wannajobUsers").
+                child(UserManager.getUserId(getApplicationContext())).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            UserManager.setIsUserLogged(getApplicationContext(), true);
+                        } else {
+                            UserManager.setIsUserLogged(getApplicationContext(), false);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+
+                    }
+                });
     }
 }

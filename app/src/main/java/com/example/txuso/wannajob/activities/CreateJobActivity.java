@@ -171,8 +171,8 @@ public class CreateJobActivity extends AppCompatActivity {
                     }
                     Toast.makeText(getApplicationContext(), jobDuration.getEditText().getText().toString(), Toast.LENGTH_SHORT).show();
                     jService.createJob(jobId, newJob);
-                    Intent intent = getIntent();
-                    setResult(RESULT_OK, intent);
+                    Intent intent = new Intent(CreateJobActivity.this, MainActivity.class);
+                    startActivity(intent);
 
 
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();
@@ -254,7 +254,8 @@ public class CreateJobActivity extends AppCompatActivity {
                     mImageCaptureUri = Uri.fromFile(file);
 
                     try {
-                        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+                        Uri cameraUri = Uri.fromFile(file);
+                        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,cameraUri );
                         intent.putExtra("return-data", true);
 
                         startActivityForResult(intent, PICK_FROM_CAMERA);
@@ -282,15 +283,19 @@ public class CreateJobActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) return;
 
-        Bitmap bitmap   = null;
-
+        Bitmap bitmap;
         if (requestCode == PICK_FROM_FILE) {
             mImageCaptureUri = data.getData();
             CropImage.activity(mImageCaptureUri)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .start(this);
+        } else if (requestCode == PICK_FROM_CAMERA) {
+            File file = new File(Environment.getExternalStorageDirectory().getPath(), "photo.jpg");
+            Uri uri = Uri.fromFile(file);
+            CropImage.activity(mImageCaptureUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this);
         }
-
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {

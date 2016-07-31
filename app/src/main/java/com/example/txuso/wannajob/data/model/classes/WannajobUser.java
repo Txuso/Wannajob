@@ -28,8 +28,8 @@ public class WannajobUser {
     public WannajobUser(String name, String age, String image) {
         this.name = name;
         this.image = image;
-        this.latitude = 0;
-        this.longitude = 0;
+        this.latitude = 0.0;
+        this.longitude = 0.0;
         this.age = age;
         this.distance = 50;
         this.description = "";

@@ -251,7 +251,9 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     catch (MalformedURLException e){
                                         im = "lksnflksdnflsd";
                                     }
+                                    im = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KNXaoe-WMIyO-F0_4p9.jpg?alt=media&token=684439ea-83e1-4de7-a892-ef639e9064b1";
 
+                                    UserManager.setUserPhoto(LoginActivity.this, "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2F-KNXaoe-WMIyO-F0_4p9.jpg?alt=media&token=684439ea-83e1-4de7-a892-ef639e9064b1");
                                     //We create the tandem user with the needed data
 
                                     // we create a new instance cause it will be useful to get the ID of the new user
@@ -260,9 +262,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                                     //We store the user in the Firebase root
                                     mFirebaseRef.child(user.getId()).setValue(newUser);
 
-                                    //we put it as an extra data in the next activity
-                                    intent.putExtra("userID", user.getId());
-                                    intent.putExtra("name", user.getName());
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
                                     finish();
@@ -435,11 +434,10 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
         //We store the user in the Firebase root
         mFirebaseRef.child(logedUserID).setValue(newUser);
-
+        UserManager.setIsUserLogged(getApplicationContext(), true);
         intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
 
     }
 
