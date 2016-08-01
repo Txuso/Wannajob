@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -353,10 +354,22 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                 //NavUtils.navigateUpFromSameTask(this);
                 return true;
             }
+            case R.id.action_logout: {
+
+            } break;
+            case 0:{
+                UserManager.setIsUserLogged(getApplicationContext(), false);
+                Intent i = new Intent(UserProfileActivity.this, MainActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
 
         }
+        return true;
 
     }
 
@@ -375,6 +388,13 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
             // Check if we were successful in obtaining the map.
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, 0, 0, "Logout").setShortcut('3', 'c');
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     public AlertDialog pickImageChooser () {

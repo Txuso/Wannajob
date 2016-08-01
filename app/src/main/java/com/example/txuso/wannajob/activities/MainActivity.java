@@ -358,7 +358,7 @@ public class MainActivity extends AppCompatActivity
 
                     if (distance <= 25
                             && Character.getNumericValue(job.get("category").toString().charAt(0)) == categoryID &&
-                            !job.get("selectedUserID").toString().equals("")) {
+                            job.get("selectedUserID").toString().equals("")) {
                         //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
                         //Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);

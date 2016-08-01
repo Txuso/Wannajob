@@ -314,7 +314,7 @@
             android:id="@+id/activity_show_job_bet_button"
             android:layout_width="0dp"
             android:layout_height="70dp"
-            android:textColor="@color/com_facebook_likebutton_text_color"
+            android:textColor="@color/colorWhite"
             android:text="@string/request_job_text_button"
             android:layout_marginLeft="-12dp"
             android:layout_marginStart="-12dp"
