@@ -77,7 +77,7 @@ public class NewBidsIntentService extends IntentService {
 
                                 Intent launchAct = new Intent(NewBidsIntentService.this,
                                         JobBidWannajobersActivity.class);
-                                launchAct.putExtra("jobId", jobId);
+                                launchAct.putExtra("jobID", jobId);
                                 launchAct.putExtra("userId", fromID);
                                 launchAct.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP |
                                         Intent.FLAG_ACTIVITY_CLEAR_TOP);

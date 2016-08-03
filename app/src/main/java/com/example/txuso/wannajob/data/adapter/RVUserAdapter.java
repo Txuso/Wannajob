@@ -13,6 +13,8 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +38,7 @@ import com.firebase.client.Firebase;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Txuso on 09/02/16.
@@ -47,6 +50,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
     OnItemClickListener mItemClickListener;
     Context context;
     Firebase mFirebaseRef;
+
 
     public RVUserAdapter(List<WannajobBidUser> users, Context context){
         this.users = users;
@@ -129,7 +133,8 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
                     myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (!userNumber.getEditText().getText().toString().equals("")) {
+                            if (!userNumber.getEditText().getText().toString().equals("") &&
+                                    isValidPhoneNumber(userNumber.getEditText().getText().toString())) {
                                 mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserNumber").setValue(userNumber.getEditText().getText().toString());
                                 mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
                                 mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
@@ -137,6 +142,9 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
                                 Toast.makeText(context,
                                         "Contacto enviado. Tu Wannajober se pondrá en contacto en seguida. No te olvides de evaluar su servicio!!", Toast.LENGTH_LONG).show();
 
+                            } else {
+                                Toast.makeText(context,
+                                        "Please, introduce a valid phone number", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -165,4 +173,20 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
         this.mItemClickListener = mItemClickListener;
     }
 
+
+    /**
+     * Validation of Phone Number
+     */
+    public final static boolean isValidPhoneNumber(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            if (target.length() < 6 || target.length() > 13) {
+                return false;
+            } else {
+                return android.util.Patterns.PHONE.matcher(target).matches();
+            }
+        }
+    }
 }
+

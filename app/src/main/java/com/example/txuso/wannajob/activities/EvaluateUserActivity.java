@@ -20,10 +20,14 @@ import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.model.classes.UserOpinion;
 import com.example.txuso.wannajob.data.model.classes.UserOpinionListItem;
 import com.example.txuso.wannajob.misc.things.UserManager;
+import com.firebase.client.ChildEventListener;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +48,9 @@ public class EvaluateUserActivity extends AppCompatActivity {
     String jobId;
     String toId;
     Firebase mFirebaseRef;
+    Firebase mUserFirebaseRef;
+    Double ratingNumber = 0.0;
+    int numberOfOpinions = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +63,7 @@ public class EvaluateUserActivity extends AppCompatActivity {
         jobId = extras.getString("jobID");
         toId = extras.getString("toID");
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/userOpinion");
-
+        mUserFirebaseRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
     }
 
     /**
@@ -97,6 +104,8 @@ public class EvaluateUserActivity extends AppCompatActivity {
                                 UserManager.getUserPhoto(getApplicationContext()),toId,
                                 UserManager.getUserId(getApplicationContext()));
                         mFirebaseRef.push().setValue(opinion);
+
+                        updateUserRating(toId);
                         finish();
                         Toast.makeText(getApplicationContext(), "Tu valoración ha sido enviada correctamente." +
                                 "No dudes en seguir Wannajobeando! :)", Toast.LENGTH_SHORT).show();
@@ -120,6 +129,39 @@ public class EvaluateUserActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
 
+    public void updateUserRating(final String userId) {
 
+        mFirebaseRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Map<String, Object> opinion = (Map<String, Object>) dataSnapshot.getValue();
+                if (opinion.get("userID").toString().equals(userId)) {
+                    ratingNumber = Double.parseDouble(opinion.get("stars").toString());
+                    numberOfOpinions++;
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        mUserFirebaseRef.child(userId).child("rating").setValue(ratingNumber/numberOfOpinions);
+    }
 
 }

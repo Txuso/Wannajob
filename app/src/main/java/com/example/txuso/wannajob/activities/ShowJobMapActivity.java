@@ -67,7 +67,7 @@ public class ShowJobMapActivity extends AppCompatActivity {
                 double longitude2 = Double.parseDouble(job.get("longitude").toString());
                 double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
-                if (distance <= 50) {
+                if (distance <= 50 && job.get("selectedUserID").toString().equals("")) {
                     Marker m = map.addMarker(new MarkerOptions().position(new LatLng(latitude2,
                             longitude2)).title(job.get("name").toString()));
                     jobMarkerId.put(m, dataSnapshot.getKey());

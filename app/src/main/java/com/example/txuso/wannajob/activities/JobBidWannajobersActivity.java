@@ -135,9 +135,6 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
 
             }
         }
-
-
-
     }
 
     @Override

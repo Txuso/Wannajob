@@ -10,6 +10,7 @@ import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -125,6 +126,8 @@ public class ShowJobActivity extends AppCompatActivity  {
 
     String fromId;
 
+    boolean repeated = false;
+
     StorageReference storageRef;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     boolean fromMyBids = false;
@@ -182,7 +185,9 @@ public class ShowJobActivity extends AppCompatActivity  {
                             jobBidsLayout.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                                    if (job.get("selectedUserID").toString().equals("")) {
+                                        startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                                    }
                                 }
                             });
                         }
@@ -234,13 +239,20 @@ public class ShowJobActivity extends AppCompatActivity  {
 //                Picasso.with(getApplicationContext()).load(job.get("jobImage").toString()).fit().placeholder(R.drawable.photo_placeholder).into(jobImage);
                         int color = getResources().getColor(R.color.colorGray);
                         collapsingToolbarLayout.setStatusBarScrimColor(color);
-
+                        String when = job.get("doItKnow").toString().equals("true")?
+                                "AS SOON AS POSIBLE" : job.get("initDate").toString();
                         jobName.setText(job.get("name").toString());
-                        jobDescription.setText(job.get("description").toString());
+                        String sourceString = job.get("description").toString() + "<br>"+"<br>"+
+                                "<b>" + "Category: " + "</b> " + job.get("category").toString() +  "<br>"+"<br>"+
+                                "<b>" + "Duration: "+ "</b>"  + job.get("jobDuration").toString() + "<br>" +"<br>"+
+                                "<b>" + "When: " + "</b>" + when;
+
+                        jobDescription.setText(Html.fromHtml(sourceString));
                         jobBids.setText(bidNumber + "");
 
                         jobViews.setText(viewNumber + "");
                         jobMoney.setText(job.get("salary").toString() + "€");
+
                         setUpMapIfNeeded((double)job.get("latitude"), (double)job.get("longitude"));
                         imageURL = job.get("jobImage").toString();
                         Picasso
@@ -556,6 +568,38 @@ public class ShowJobActivity extends AppCompatActivity  {
         });
     }
 
+    //TODO finish this method to overwrite the previous bid
+    public boolean checkIfRepeated(String userId) {
+        mFirebaseRefBids.child("bid").addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                final Map<String, Object> bid = (Map<String, Object>) dataSnapshot.getValue();
+                if (bid.get("fromId").toString().equals(UserManager.getUserId(getApplicationContext()))) {
 
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+        return repeated;
+    }
 }
 

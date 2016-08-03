@@ -29,6 +29,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.txuso.wannajob.R;
@@ -93,6 +94,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
     private SupportMapFragment mMap;
 
     String imageURL = "";
+
+    @Bind(R.id.activity_user_profile_ratingBar)
+    RatingBar userRating;
 
     @Bind(R.id.user_name)
     TextView userName;
@@ -171,7 +175,8 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                             fit().
                             into(userPhoto);
                     setUpMapIfNeeded();
-
+                    Double rating = Double.parseDouble(wannaUser.get("rating").toString());
+                    userRating.setRating(rating.floatValue());
                 }
 
                 @Override
@@ -195,6 +200,21 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
                     into(userPhoto);
             setUpMapIfNeeded();
 
+
+            mFirebaseRef.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
+                    Double rating = Double.parseDouble(wannaUser.get("rating").toString());
+                    userRating.setRating(rating.floatValue());
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
 
         }
 
@@ -343,7 +363,9 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
     @OnClick(R.id.user_menu_photo)
     public void changePhoto() {
-        pickImageChooser().show();
+        if (UserManager.getUserId(this).equals(userID)) {
+            pickImageChooser().show();
+        }
     }
 
     @Override
