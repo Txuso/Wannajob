@@ -2,6 +2,7 @@ package com.example.txuso.wannajob.activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,7 +56,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,8 +67,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 public class UserProfileActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
 
@@ -466,19 +475,31 @@ public class UserProfileActivity extends AppCompatActivity implements Navigation
 
         if (requestCode == PICK_FROM_FILE) {
             mImageCaptureUri = data.getData();
-            path = getRealPathFromURI(mImageCaptureUri); //from Gallery
-
-            if (path == null)
-                path = mImageCaptureUri.getPath(); //from File Manager
-
-            if (path != null)
-                bitmap  = BitmapFactory.decodeFile(path);
-        } else {
-            path    = mImageCaptureUri.getPath();
-            bitmap  = BitmapFactory.decodeFile(path);
+            CropImage.activity(mImageCaptureUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this);
+        } else if (requestCode == PICK_FROM_CAMERA) {
+            File file = new File(Environment.getExternalStorageDirectory().getPath(), "photo.jpg");
+            CropImage.activity(mImageCaptureUri)
+                    .setGuidelines(CropImageView.Guidelines.ON)
+                    .start(this);
         }
-        sService.uploadUserOrTaskImage(userID, bitmap, getApplicationContext());
-        userPhoto.setImageBitmap(bitmap);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                Uri resultUri = result.getUri();
+//                bitmap = BitmapFactory.decodeFile(getRealPathFromURI(resultUri));
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), resultUri);
+                    sService.uploadUserOrTaskImage(userID, bitmap, getApplicationContext());
+                    userPhoto.setImageBitmap(bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            }
+
     }
 
     public String getRealPathFromURI(Uri contentUri) {

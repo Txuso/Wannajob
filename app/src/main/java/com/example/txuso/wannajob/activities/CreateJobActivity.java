@@ -275,8 +275,7 @@ public class CreateJobActivity extends AppCompatActivity {
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .start(this);
         } else if (requestCode == PICK_FROM_CAMERA) {
-            File file = new File(Environment.getExternalStorageDirectory().getPath(), "photo.jpg");
-            Uri uri = Uri.fromFile(file);
+
             CropImage.activity(mImageCaptureUri)
                     .setGuidelines(CropImageView.Guidelines.ON)
                     .start(this);
