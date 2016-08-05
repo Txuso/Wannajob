@@ -27,12 +27,13 @@ public class JobCategoryActivity extends AppCompatActivity {
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
-                Intent intent = getIntent();
-                intent.putExtra("categoryId", gridArray.get(position).categoryId);
-                setResult(RESULT_OK, intent);
-                finish();
+                Intent mainA = MainActivity.newIntent(getApplicationContext(), gridArray.get(position).categoryId);
+                mainA.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(mainA);
+
             }
         });
+
 
     }
 

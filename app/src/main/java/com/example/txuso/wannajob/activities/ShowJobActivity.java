@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -186,7 +187,18 @@ public class ShowJobActivity extends AppCompatActivity  {
                                 @Override
                                 public void onClick(View v) {
                                     if (job.get("selectedUserID").toString().equals("")) {
-                                        startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID));
+                                        startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(),
+                                                jobID,
+                                                true));
+                                    }
+                                }
+                            });
+                        } else {
+                            jobBidsLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (job.get("selectedUserID").toString().equals("")) {
+                                        startActivity(JobBidWannajobersActivity.newIntent(getApplicationContext(), jobID, false));
                                     }
                                 }
                             });
@@ -270,6 +282,8 @@ public class ShowJobActivity extends AppCompatActivity  {
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         final Map<String, Object> user = (Map<String, Object>) dataSnapshot.getValue();
                                         userName.setText(user.get("name").toString());
+                                        Double rating = Double.parseDouble(user.get("rating").toString());
+                                        userRating.setRating(rating.floatValue());
                                         Picasso.with(getApplicationContext()).
                                                 load(user.get("image").toString()).
                                                 centerCrop().

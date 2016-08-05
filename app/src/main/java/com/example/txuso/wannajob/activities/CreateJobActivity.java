@@ -135,11 +135,19 @@ public class CreateJobActivity extends AppCompatActivity {
                 builder.setTitle(getString(R.string.job_category));
                 builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
-                        jobCategoryB.setText(items[item].substring(1,items[item].length()));
+                        jobCategoryB.setText(items[item].substring(2,items[item].length()));
                         category = items[item];
-                        levelDialog.dismiss();
+
                     }
                 });
+                builder.setPositiveButton("ACEPTAR CATEGORÍA",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,
+                                                int item) {
+                                levelDialog.dismiss();
+
+                            }
+                        });
                 levelDialog = builder.create();
                 levelDialog.show();
             }
@@ -151,7 +159,7 @@ public class CreateJobActivity extends AppCompatActivity {
                 if (!checkConditions()) {
                     Job newJob;
                     if (imageURL.equals("")) {
-                        imageURL = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2FWannajob1.jpg?alt=media&token=8670db7c-f1c5-49a3-a0af-337557569353";
+                        imageURL = getCategoryImage(Integer.parseInt(category.substring(0,1)));
                     }
                     if (doItNowCheckbox.isChecked()) {
                         newJob = new Job(jobName.getEditText().getText().toString(),
@@ -175,8 +183,6 @@ public class CreateJobActivity extends AppCompatActivity {
                     Intent intent = new Intent(CreateJobActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-
-
                     Toast.makeText(getApplicationContext(), R.string.job_created_dialog, Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -250,11 +256,8 @@ public class CreateJobActivity extends AppCompatActivity {
 
                     dialog.cancel();
                 } else {
-                    Intent intent = new Intent();
-
+                    Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-
                     startActivityForResult(Intent.createChooser(intent, getString(R.string.dialog_complete_action_using)), PICK_FROM_FILE);
                 }
             }
@@ -374,4 +377,34 @@ public class CreateJobActivity extends AppCompatActivity {
         }
     }
 
+    public String getCategoryImage(int categoryId) {
+        String image = "";
+        switch (categoryId) {
+            case 0: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Felectricista.jpg?alt=media&token=f2974317-95e9-4fa5-8845-509071b7e2b1";
+            } break;
+            case 1: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Fpaquetes.jpg?alt=media&token=70d04596-4080-4cfd-af95-b2e841fb233d";
+            } break;
+            case 2: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Ftaking_out_the_trash.jpg?alt=media&token=ee693c3d-461a-4751-8576-4e703c45610e";
+            } break;
+            case 3: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Fclases.jpg?alt=media&token=f4beca47-8659-484a-94e5-7f11b7cffce3";
+            } break;
+            case 4: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Ffregar_platos.jpg?alt=media&token=1c10a989-7292-4b7f-a569-919be8b6045b";
+            } break;
+            case 5: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Flimpieza.jpg?alt=media&token=e4cd20a5-111b-4947-a9ea-6e0ad57a6c43";
+            } break;
+            case 6: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Fhacer_cola.jpg?alt=media&token=063ac79b-5746-42a7-9e44-6b7da7aee0f4";
+            } break;
+            case 7: {
+                image = "https://firebasestorage.googleapis.com/v0/b/project-6871569626797643888.appspot.com/o/images%2Fcategories%2Fpaseo_perro.jpeg?alt=media&token=70616e52-2ba4-4404-b063-41d27a058e01";
+            } break;
+        }
+        return image;
+    }
 }

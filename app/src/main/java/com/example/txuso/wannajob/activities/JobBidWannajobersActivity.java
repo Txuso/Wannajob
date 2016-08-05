@@ -14,6 +14,7 @@ import android.view.View;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.data.adapter.RVUserAdapter;
 import com.example.txuso.wannajob.data.model.classes.WannajobBidUser;
+import com.example.txuso.wannajob.misc.things.UserManager;
 import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -47,9 +48,10 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
     SwipeRefreshLayout swipeRefreshLayout;
 
 
-    public static Intent newIntent (@NonNull Context context, String jobId) {
+    public static Intent newIntent (@NonNull Context context, String jobId, boolean isMine) {
         Intent myUserIntent = new Intent(context, JobBidWannajobersActivity.class);
         myUserIntent.putExtra("jobID", jobId);
+        myUserIntent.putExtra("isMine", isMine);
         return myUserIntent;
     }
 
@@ -61,10 +63,11 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
         mFirebaseBidRef = new Firebase("https://wannajob.firebaseio.com/bid");
         mFirebaseUserRef = new Firebase("https://wannajob.firebaseio.com/wannajobUsers");
         jobId = getIntent().getExtras().getString("jobID");
+        final Boolean isMine = getIntent().getExtras().getBoolean("isMine");
         ButterKnife.bind(this);
 
         users = new ArrayList<>();
-        adapter = new RVUserAdapter(users, getApplicationContext());
+        adapter = new RVUserAdapter(users, getApplicationContext(), isMine);
         rv.setAdapter(adapter);
         mFirebaseBidRef.addChildEventListener(new ChildEventListener() {
             @Override
@@ -75,7 +78,12 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Map<String, Object> wannaUser = (Map<String, Object>) dataSnapshot.getValue();
-                            fetchUserInfo(wannaUser, dataSnapshot.getKey(), (long)bid.get("number"));
+                            if (isMine)
+                                fetchUserInfo(wannaUser, dataSnapshot.getKey(), (long)bid.get("number"), true);
+                            else {
+                                fetchUserInfo(wannaUser, dataSnapshot.getKey(), (long)bid.get("number"), false);
+
+                            }
                         }
 
                         @Override
@@ -109,7 +117,7 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
         });
 
     }
-    public void fetchUserInfo(final Map<String, Object> wannaUser, final String userId, long bidNumber) {
+    public void fetchUserInfo(final Map<String, Object> wannaUser, final String userId, long bidNumber, boolean isMine) {
         swipeRefreshLayout.setRefreshing(true);
 
         if (wannaUser.get("rating") != null) {
@@ -117,7 +125,7 @@ public class JobBidWannajobersActivity extends AppCompatActivity {
 
             item = new WannajobBidUser(wannaUser.get("name").toString(), wannaUser.get("description").toString(), wannaUser.get("image").toString(), ratingDouble, bidNumber, userId, jobId);
             users.add(item);
-            adapter = new RVUserAdapter(users, JobBidWannajobersActivity.this);
+            adapter = new RVUserAdapter(users, JobBidWannajobersActivity.this, isMine);
 
             adapter.SetOnItemClickListener(new RVUserAdapter.OnItemClickListener() {
                 @Override

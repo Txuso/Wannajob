@@ -175,5 +175,4 @@ public class UserManager {
         editor.clear();
         editor.commit();
     }
-
 }

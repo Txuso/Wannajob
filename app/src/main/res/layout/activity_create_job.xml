@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorWhite"
     android:id="@+id/l2">
 
     <ScrollView
@@ -109,10 +110,11 @@
                 android:layout_marginLeft="24dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:background="@android:color/transparent"
                 android:padding="6dp"
+                android:layout_gravity="center"
+                android:background="@drawable/rounded"
                 android:text="@string/job_category"
-                android:gravity="start" />
+                android:gravity="center" />
 
             <TextView
                 android:layout_marginLeft="24dp"

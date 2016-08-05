@@ -41,14 +41,14 @@
     <string name="cancel_job">Lana Kendu</string>
 
     <string-array name="categories_list">
-        <item>0Manitas, Reparaciones y Obras</item>
-        <item>1Transportes/envíos</item>
-        <item>2Tecnología</item>
-        <item>3Clases</item>
-        <item>4Servicisos Domésticos</item>
-        <item>5Cocina</item>
-        <item>6Ayuda en General</item>
-        <item>7Otros</item>
+        <item>0 Manitas, Reparaciones y Obras</item>
+        <item>1 Transportes/envíos</item>
+        <item>2 Tecnología</item>
+        <item>3 Clases</item>
+        <item>4 Servicisos Domésticos</item>
+        <item>5 Cocina</item>
+        <item>6 Ayuda en General</item>
+        <item>7 Otros</item>
     </string-array>
     <string name="age_text">Adina</string>
     <string name="description_text">Deskribapena</string>

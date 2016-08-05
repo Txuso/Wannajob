@@ -1,9 +1,11 @@
 package com.example.txuso.wannajob.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,13 +44,14 @@ import com.example.txuso.wannajob.misc.things.GPSTracker;
 import com.example.txuso.wannajob.data.model.classes.Job;
 import com.example.txuso.wannajob.data.adapter.RVJobAdapter;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.annotations.Nullable;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener  {
+        implements NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener {
     Firebase mFirebaseRef;
     private List<JobListItem> jobs;
     private List<JobListItem> wordJobs;
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     double latitude;
     double longitude;
     int categoryID;
+    Bundle extras;
     private MenuItem mSearchAction;
     /**
      * Extra data from the login containing the ID of the loged user
@@ -83,15 +87,23 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.activity_main_nav_view)
     NavigationView navigationView;
 
+    public static Intent newIntent(@NonNull Context context, int categoryID) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra("categoryID", categoryID);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        extras = getIntent().getExtras();
+
         setSupportActionBar(toolbar);
         mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
-       // Intent service = new Intent(this, NotificationHandler.class);
+        // Intent service = new Intent(this, NotificationHandler.class);
         //service.putExtra("userID", extras.getString("userID"));
         //this.startService(service);
 
@@ -113,11 +125,11 @@ public class MainActivity extends AppCompatActivity
 
                     latitude = gps.getLatitude();
                     mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("latitude").setValue(latitude);
-                    UserManager.setUserLatitude(this,latitude);
+                    UserManager.setUserLatitude(this, latitude);
 
                     longitude = gps.getLongitude();
                     mFirebaseRef.child("wannajobUsers").child(UserManager.getUserId(this)).child("longitude").setValue(longitude);
-                    UserManager.setUserLongitude(this,longitude);
+                    UserManager.setUserLongitude(this, longitude);
 
 
                 } else
@@ -165,13 +177,13 @@ public class MainActivity extends AppCompatActivity
             drawer.setDrawerListener(toggle);
             toggle.syncState();
         } else {
-                gps = new GPSTracker(MainActivity.this);
-                if (gps.canGetLocation()) {
+            gps = new GPSTracker(MainActivity.this);
+            if (gps.canGetLocation()) {
 
-                    latitude = 41.3850639;
-                    longitude = 2.1734035;
-                } else
-                    gps.showSettingsAlert();
+                latitude = 41.3850639;
+                longitude = 2.1734035;
+            } else
+                gps.showSettingsAlert();
 
             headerName.append("Login now");
             final Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -195,11 +207,16 @@ public class MainActivity extends AppCompatActivity
         //we get data from the Facebook account
 
 
-
         swipeRefreshLayout.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
+                                        if (extras != null) {
+                                            fetchJobs(latitude, longitude, extras.getInt("categoryID"));
+
+                                        } else {
+                                            fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
+                                        }
+
 
                                     }
                                 }
@@ -223,17 +240,13 @@ public class MainActivity extends AppCompatActivity
          */
 
 
-
-
-
         // rv.setLayoutManager(llm);
-      //  rv.setHasFixedSize(true);
+        //  rv.setHasFixedSize(true);
     }
 
 
     private void fetchJobs(final double latitude, final double longitude, final int categoryID) {
         swipeRefreshLayout.setRefreshing(true);
-
         jobs = new ArrayList<>();
         adapter = new RVJobAdapter(jobs, getApplicationContext());
         //rv.setAdapter(adapter);
@@ -252,7 +265,7 @@ public class MainActivity extends AppCompatActivity
 
                         //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
-                       // Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
+                        // Drawable ima = new BitmapDrawable(getApplicationContext().getResources(), pic);
                         item = new JobListItem(dataSnapshot.getKey(),
                                 job.get("name").toString(),
                                 Integer.parseInt(job.get("salary").toString()),
@@ -279,10 +292,13 @@ public class MainActivity extends AppCompatActivity
                             startActivity(showJob);
                         }
                     });
-                    rv.setAdapter(adapter);
-                    rv.setHasFixedSize(true);
-                    swipeRefreshLayout.setRefreshing(false);
-                    rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    if (rv != null) {
+                        ButterKnife.bind(MainActivity.this);
+                        rv.setHasFixedSize(true);
+                        swipeRefreshLayout.setRefreshing(false);
+                        rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                        rv.setAdapter(adapter);
+                    }
 
                 }
 
@@ -356,8 +372,7 @@ public class MainActivity extends AppCompatActivity
                     double longitude2 = Double.parseDouble(job.get("longitude").toString());
                     double distance = GPSTracker.distance(latitude, longitude, latitude2, longitude2, 'K');
 
-                    if (distance <= 25
-                            && Character.getNumericValue(job.get("category").toString().charAt(0)) == categoryID &&
+                    if (distance <= 25 && Integer.parseInt(job.get("category").toString().substring(0, 1)) == categoryID &&
                             job.get("selectedUserID").toString().equals("")) {
                         //pic = ImageManager.getResizedBitmap(ImageManager.decodeBase64(job.getJobImage()), 100, 100);
                         //  Bitmap picRounded = RoundedImageView.getCroppedBitmap(pic, 250);
@@ -388,10 +403,13 @@ public class MainActivity extends AppCompatActivity
                             startActivity(showJob);
                         }
                     });
-                    rv.setAdapter(adapter);
-                    rv.setHasFixedSize(true);
-                    swipeRefreshLayout.setRefreshing(false);
-                    rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                    if (rv != null) {
+                        ButterKnife.bind(MainActivity.this);
+                        rv.setHasFixedSize(true);
+                        rv.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+                        swipeRefreshLayout.setRefreshing(false);
+                        rv.setAdapter(adapter);
+                    }
 
                 }
 
@@ -416,9 +434,9 @@ public class MainActivity extends AppCompatActivity
 
                 }
 
-
             });
         }
+
     }
 
     /**
@@ -433,12 +451,6 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
 
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        onRefresh();
     }
 
     @Override
@@ -486,7 +498,6 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -505,7 +516,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(showJobMap);
             }
 
-            case 0:{
+            case 0: {
                 wordJobs = adapter.sortListBySalary();
                 adapter = new RVJobAdapter(wordJobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
@@ -525,7 +536,7 @@ public class MainActivity extends AppCompatActivity
 
                 return true;
             }
-            case 1:{
+            case 1: {
                 wordJobs = adapter.sortListByDistance();
                 adapter = new RVJobAdapter(wordJobs, getApplicationContext());
                 adapter.SetOnItemClickListener(new RVJobAdapter.OnItemClickListener() {
@@ -567,13 +578,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
      * @param item the navigation drawer
      * @return boolean with the clicked option
      * Here we open the following activities:
-     *  - Messages activity
-     *  - Discovery preferences activity
-     *  - Share wannajob_login_image activity
+     * - Messages activity
+     * - Discovery preferences activity
+     * - Share wannajob_login_image activity
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -581,7 +591,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favorites) {
-            Intent favorites = new Intent(MainActivity.this,UserFavoriteJobsActivity.class);
+            Intent favorites = new Intent(MainActivity.this, UserFavoriteJobsActivity.class);
             startActivity(favorites);
         } else if (id == R.id.nav_my_bids) {
             Intent myBids = new Intent(MainActivity.this, ShowMyBidsActivity.class);
@@ -593,7 +603,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(shareW);
         } else if (id == R.id.nav_categories) {
             Intent showCategories = new Intent(MainActivity.this, JobCategoryActivity.class);
-            startActivityForResult(showCategories, 2);
+            startActivity(showCategories);
         } else if (id == R.id.nav_create_job) {
             Intent createNewJob = new Intent(MainActivity.this, CreateJobActivity.class);
             startActivity(createNewJob);
@@ -606,7 +616,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onRefresh() {
-        fetchJobs(latitude,longitude, UserManager.NOT_CATEGORY_FILTER);
+        fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
         swipeRefreshLayout.setRefreshing(false);
 
     }
@@ -617,7 +627,7 @@ public class MainActivity extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    public void callDiscoveryPreferences () {
+    public void callDiscoveryPreferences() {
         Intent discoPref = new Intent(MainActivity.this, DiscoveryPreferencesActivity.class);
         startActivityForResult(discoPref, 1);
     }
@@ -626,7 +636,7 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == 1){
+        if (resultCode == RESULT_OK && requestCode == 1) {
 
             latitude = data.getDoubleExtra("latitude", latitude);
             longitude = data.getDoubleExtra("longitude", longitude);
@@ -634,16 +644,6 @@ public class MainActivity extends AppCompatActivity
                                         @Override
                                         public void run() {
                                             fetchJobs(latitude, longitude, UserManager.NOT_CATEGORY_FILTER);
-
-                                        }
-                                    }
-            );
-        } else if (resultCode == RESULT_OK && requestCode == 2){
-            swipeRefreshLayout.post(new Runnable() {
-                                        @Override
-                                        public void run() {
-            categoryID = data.getIntExtra("categoryId", categoryID);
-                                            fetchJobs(UserManager.getUserLatitude(getApplicationContext()), UserManager.getUserLongitude(getApplicationContext()), categoryID);
 
                                         }
                                     }
@@ -658,5 +658,5 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
         ButterKnife.unbind(this);
     }
-
 }
+

@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.txuso.wannajob.R;
 import com.example.txuso.wannajob.activities.DiscoveryPreferencesActivity;
+import com.example.txuso.wannajob.activities.MainActivity;
 import com.example.txuso.wannajob.activities.ShowJobActivity;
 import com.example.txuso.wannajob.data.model.classes.Bid;
 import com.example.txuso.wannajob.data.model.classes.WannajobBidUser;
@@ -50,18 +51,19 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
     OnItemClickListener mItemClickListener;
     Context context;
     Firebase mFirebaseRef;
+    Boolean isMine;
 
 
-    public RVUserAdapter(List<WannajobBidUser> users, Context context){
+    public RVUserAdapter(List<WannajobBidUser> users, Context context, Boolean isMine){
         this.users = users;
         this.context = context;
+        this.isMine = isMine;
     }
-
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
-        UserViewHolder pvh = new UserViewHolder(v);
+        UserViewHolder pvh = new UserViewHolder(v,isMine);
         return pvh;
     }
 
@@ -109,7 +111,7 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
         String userId;
         String jobId;
 
-        UserViewHolder(View itemView) {
+        UserViewHolder(View itemView,Boolean isMine) {
             super(itemView);
             userName = (TextView)itemView.findViewById(R.id.user_item_name);
             userRating = (RatingBar) itemView.findViewById(R.id.user_item_rating);
@@ -118,40 +120,44 @@ public class RVUserAdapter extends RecyclerView.Adapter<RVUserAdapter.UserViewHo
             acceptButton = (TextView) itemView.findViewById(R.id.user_item_accept_button);
             userBid = (TextView) itemView.findViewById(R.id.user_item_bid);
             mFirebaseRef = new Firebase("https://wannajob.firebaseio.com/");
+            if (isMine) {
+                acceptButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            acceptButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                        final Dialog myDialog = new Dialog(context);
+                        myDialog.getWindow();
+                        myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        myDialog.setContentView(R.layout.confirm_wannajober_dialog);
+                        final TextInputLayout userNumber = (TextInputLayout) myDialog.findViewById(R.id.confirm_wannajober_dialog_number);
+                        myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (!userNumber.getEditText().getText().toString().equals("") &&
+                                        isValidPhoneNumber(userNumber.getEditText().getText().toString())) {
+                                    mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserNumber").setValue(userNumber.getEditText().getText().toString());
+                                    mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
+                                    mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
+                                    myDialog.dismiss();
+                                    Intent mainActivity = new Intent(context, MainActivity.class);
+                                    mainActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    context.startActivity(mainActivity);
+                                    Toast.makeText(context,
+                                            "Contacto enviado. Tu Wannajober se pondrá en contacto en seguida. No te olvides de evaluar su servicio!!", Toast.LENGTH_LONG).show();
 
-                    final Dialog myDialog = new Dialog(context);
-                    myDialog.getWindow();
-                    myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    myDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    myDialog.setContentView(R.layout.confirm_wannajober_dialog);
-                    final TextInputLayout userNumber = (TextInputLayout)myDialog.findViewById(R.id.confirm_wannajober_dialog_number);
-
-                    myDialog.findViewById(R.id.bid_dialog_bid_text).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (!userNumber.getEditText().getText().toString().equals("") &&
-                                    isValidPhoneNumber(userNumber.getEditText().getText().toString())) {
-                                mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserNumber").setValue(userNumber.getEditText().getText().toString());
-                                mFirebaseRef.child("wannaJobs").child(jobId).child("selectedUserID").setValue(userId);
-                                mFirebaseRef.child("wannajobUsers").child(userId).child("newBidMessage").setValue(UserManager.getUserName(context) + "^" + UserManager.getUserId(context) + "^" + jobId);
-                                myDialog.dismiss();
-                                Toast.makeText(context,
-                                        "Contacto enviado. Tu Wannajober se pondrá en contacto en seguida. No te olvides de evaluar su servicio!!", Toast.LENGTH_LONG).show();
-
-                            } else {
-                                Toast.makeText(context,
-                                        "Please, introduce a valid phone number", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(context,
+                                            "Please, introduce a valid phone number", Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
-                    });
-
-                    myDialog.show();
-                }
-            });
+                        });
+                        myDialog.show();
+                    }
+                });
+            } else {
+                acceptButton.setVisibility(View.GONE);
+            }
             itemView.setOnClickListener(this);
         }
 
