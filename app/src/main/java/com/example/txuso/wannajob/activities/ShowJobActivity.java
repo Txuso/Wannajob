@@ -363,6 +363,8 @@ public class ShowJobActivity extends AppCompatActivity  {
                                 //TODO NOTIFY USER
                                 mFirebaseRef.child("wannajobUsers").child(creatorID).child("newBidMessage").setValue(UserManager.getUserName(getApplicationContext()) + "^" + fromId + "^" + jobID);
                                 myDialog.cancel();
+                                startActivity(OverlapMessageActivity.newIntent(ShowJobActivity.this, "MUCHA SUERTE CON TU PUJA WANNAJOBER",R.drawable.ic_check_circle_black_24dp, OverlapMessageActivity.DEFAULT_DELAY));
+
                             }
                         });
 
